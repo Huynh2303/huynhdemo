@@ -1,0 +1,47 @@
+﻿@model Demo_web_MVC.Models.ViewModel.Oder.OderViewModel
+
+<h2>Chi tiết đơn hàng #@Model.Id</h2>
+
+<div style="margin-bottom:20px;">
+    <p><b>Trạng thái:</b> @Model.Status</p>
+    <p><b>Tổng tiền:</b> @Model.TotalAmount.ToString("N0") đ</p>
+</div>
+
+<hr />
+
+@if (Model.Items.Any())
+{
+    @foreach (var item in Model.Items)
+{
+    <div style="display:flex; gap:20px; margin-bottom:20px; border:1px solid #ddd; padding:15px; border-radius:8px;">
+
+        <!-- Ảnh -->
+        <div>
+            @if (!string.IsNullOrEmpty(item.Img))
+            {
+                <img src="@item.Img"
+                     alt="@item.Name"
+                     style="width:120px; height:120px; object-fit:cover; border-radius:6px;" />
+            }
+            else
+            {
+                <div style="width:120px; height:120px; background:#eee; display:flex; align-items:center; justify-content:center;">
+                    No image
+                </div>
+            }
+        </div>
+
+        <!-- Thông tin -->
+        <div>
+            <h3>@item.Name</h3>
+            <p>Giá: @item.Price.ToString("N0") đ</p>
+            <p>Số lượng: @item.Quantity</p>
+            <p>Thành tiền: @((item.Price * item.Quantity).ToString("N0")) đ</p>
+
+            <!-- debug -->
+            <p style="font-size:12px; color:gray;">Img URL: @item.Img</p>
+        </div>
+
+    </div>
+}
+}
