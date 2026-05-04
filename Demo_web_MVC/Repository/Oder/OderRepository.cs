@@ -171,6 +171,36 @@ namespace Demo_web_MVC.Repository.Oder
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> CancelOrderAsync(int orderId, int userId)
+        {
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);
 
+            if (order == null)
+            {
+                _logger.LogWarning("Không tìm thấy order. orderId={OrderId}, userId={UserId}", orderId, userId);
+                return false;
+            }
+
+
+            if (order.Status == OrderStatus.Completed || order.Status == OrderStatus.Cancelled)
+            {
+                _logger.LogWarning("Không thể huỷ đơn. status={Status}", order.Status);
+                return false;
+            }
+
+            order.Status = OrderStatus.Cancelled;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+
+        }
+        public async Task<decimal> CalculateOrderTotalAsync(int userId)
+        {
+            var result = await _context.Orders.Where(o => o.UserId == userId).SumAsync(o => o.TotalAmount);
+            return result;
+
+        }
     }
 }

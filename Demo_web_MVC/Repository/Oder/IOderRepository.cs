@@ -12,12 +12,12 @@ namespace Demo_web_MVC.Repository.Oder
         //Task<List<OderViewModel>> GetAllOrdersAsync();
 
         Task<bool> UpdateOrderStatusAsync(int orderId, string status);
-        //Task<bool> CancelOrderAsync(int orderId, int userId);
+        Task<bool> CancelOrderAsync(int orderId, int userId);
 
         //Task<bool> CreatePaymentAsync(int orderId, string paymentMethod, decimal amount, string status);
        
 
-        //Task<decimal> CalculateOrderTotalAsync(int userId);
+        Task<decimal> CalculateOrderTotalAsync(int userId);
         //Task<List<OrderItemViewModel>> GetOrderItemsAsync(int orderId);
     }
 }
