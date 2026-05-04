@@ -64,7 +64,7 @@ namespace Demo_web_MVC.Controllers
                 }
 
                 var role = await _context.Roles
-                    .FirstAsync(r => r.Code == "CUSTOMER");
+                    .FirstAsync(r => r.Code == "USER");
 
                 var user = new User
                 {
@@ -105,22 +105,40 @@ namespace Demo_web_MVC.Controllers
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Token xác nhận email cho người dùng {user.Username} đã được tạo.");
 
-                // Gửi email xác nhận tài khoản
-                _ = Task.Run(async () =>
-                {
-                    await _emailService.SendEmailAsync(
-                        user.Email,
-                        "Xác nhận tài khoản",
-                        $"<a href='{Url.Action("Confirm", "User", new { token = token.Token }, Request.Scheme)}'>Xác nhận</a>"
-                    );
-                    _logger.LogInformation($"Email xác nhận tài khoản đã được gửi đến {user.Email}");
-                });
+                //// Gửi email xác nhận tài khoản
+                //_ = Task.Run(async () =>
+                //{
+                //    await _emailService.SendEmailAsync(
+                //        user.Email,
+                //        "Xác nhận tài khoản",
+                //        $"<a href='{Url.Action("Confirm", "User", new { token = token.Token }, Request.Scheme)}'>Xác nhận</a>"
+                //    );
+                //    _logger.LogInformation($"Email xác nhận tài khoản đã được gửi đến {user.Email}");
+                //});
+                var confirmUrl = Url.Action(
+                    "Confirm",
+                    "User",
+                    new { token = token.Token },
+                    Request.Scheme
+                );
 
+                await _emailService.SendEmailAsync(
+                    user.Email,
+                    "Xác nhận tài khoản",
+                    $@"
+                        <p>Chào {user.FullName},</p>
+                        <p>Vui lòng bấm vào link bên dưới để xác nhận tài khoản:</p>
+                        <a href='{confirmUrl}'>Xác nhận tài khoản</a>
+                    "
+                );
+
+                _logger.LogInformation("Email xác nhận tài khoản đã được gửi đến {Email}", user.Email);
                 return RedirectToAction("Login");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Đã xảy ra lỗi trong quá trình đăng ký tài khoản.");
+                _logger.LogError(ex.Message, ex);
                 return StatusCode(500, "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau.");
             }
         }
