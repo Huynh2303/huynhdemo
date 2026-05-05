@@ -1,47 +1,249 @@
-﻿@model Demo_web_MVC.Models.ViewModel.Oder.OderViewModel
+﻿
+<!DOCTYPE html>
 
-<h2>Chi tiết đơn hàng #@Model.Id</h2>
-
-<div style="margin-bottom:20px;">
-    <p><b>Trạng thái:</b> @Model.Status</p>
-    <p><b>Tổng tiền:</b> @Model.TotalAmount.ToString("N0") đ</p>
-</div>
-
-<hr />
-
-@if (Model.Items.Any())
-{
-    @foreach (var item in Model.Items)
-{
-    <div style="display:flex; gap:20px; margin-bottom:20px; border:1px solid #ddd; padding:15px; border-radius:8px;">
-
-        <!-- Ảnh -->
-        <div>
-            @if (!string.IsNullOrEmpty(item.Img))
-            {
-                <img src="@item.Img"
-                     alt="@item.Name"
-                     style="width:120px; height:120px; object-fit:cover; border-radius:6px;" />
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Order Details | ASP.NET Commerce</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-primary-fixed-variant": "#004c6b",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "tertiary-fixed": "#ffdcc0",
+                        "inverse-on-surface": "#ecf1f7",
+                        "on-primary-fixed": "#001e2d",
+                        "on-surface-variant": "#3e4850",
+                        "on-tertiary-container": "#572f00",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#bdc8d1",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#171c20",
+                        "tertiary-fixed-dim": "#ffb876",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#616363",
+                        "inverse-primary": "#82cfff",
+                        "on-primary-container": "#003e58",
+                        "tertiary-container": "#ea8c21",
+                        "surface-tint": "#00658d",
+                        "secondary-container": "#dfe0e0",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#171c20",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-bright": "#f5faff",
+                        "outline": "#6e7881",
+                        "surface-container": "#eaeef4",
+                        "surface": "#f5faff",
+                        "secondary": "#5d5f5f",
+                        "primary": "#00658d",
+                        "surface-container-high": "#e4e9ee",
+                        "surface-variant": "#dee3e8",
+                        "surface-container-highest": "#dee3e8",
+                        "primary-container": "#00aeef",
+                        "inverse-surface": "#2c3135",
+                        "tertiary": "#8d4f00",
+                        "background": "#f5faff",
+                        "primary-fixed-dim": "#82cfff",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#eff4fa",
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-tertiary-fixed": "#2d1600",
+                        "surface-dim": "#d6dae0",
+                        "primary-fixed": "#c6e7ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "container-max": "1200px",
+                        "gutter": "16px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Be Vietnam Pro"],
+                        "price-lg": ["Be Vietnam Pro"],
+                        "label-bold": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-base": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "price-lg": ["24px", {"lineHeight": "1", "fontWeight": "700"}],
+                        "label-bold": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "700"}],
+                        "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-base": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}]
+                    }
+                }
             }
-            else
-            {
-                <div style="width:120px; height:120px; background:#eee; display:flex; align-items:center; justify-content:center;">
-                    No image
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+    </style>
+</head>
+@model Demo_web_MVC.Models.ViewModel.Oder.OderViewModel
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+
+
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 md:px-8 py-8 space-y-lg">
+
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <h1 class="font-display-lg text-display-lg flex items-center gap-4">
+                    @Model.Id
+                    <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 rounded-full">
+                        @Model.Status.ToString()
+                    </span>
+                </h1>
+                <p class="font-body-sm text-on-surface-variant">Placed on October 24, 2024 at 02:45 PM</p>
+            </div>
+            <div class="flex gap-sm">
+                
+                <a asp-action="Index" asp-controller="Cart" class="flex items-center gap-2 px-6 py-2.5 bg-white border border-primary text-primary font-label-bold rounded-lg hover:bg-primary/5 transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+                    Back to Orders
+                </a>
+                <button class="flex items-center gap-2 px-6 py-2.5 bg-primary-container text-white font-label-bold rounded-lg hover:opacity-90 transition-all shadow-md active:scale-95">
+                    <span class="material-symbols-outlined text-sm" data-icon="replay">replay</span>
+                    Buy Again
+                </button>
+            </div>
+        </div>
+        <!-- Info Cards -->
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+            <!-- Địa chỉ giao hàng -->
+            <div class="bg-white rounded-xl p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 space-y-4">
+                <div class="flex items-center gap-2 text-primary">
+                    <span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+                    <h3 class="font-headline-md text-headline-md">Địa chỉ giao hàng</h3>
                 </div>
+                
+                    <div class="space-y-1 font-body-base">
+                        <p class="font-bold">@Model.AddressViewModels.Select(a=>a.RecipientName).FirstOrDefault()</p>
+                    <p class="text-on-surface-variant">@Model.AddressViewModels.Select(a => a.PhoneNumber).FirstOrDefault()</p>
+                    <p class="text-on-surface-variant">@Model.AddressViewModels.Select(a => a.AddressLine).FirstOrDefault()</p>
+                    <p class="text-on-surface-variant">@Model.AddressViewModels.Select(a => a.City).FirstOrDefault(), @Model.AddressViewModels.Select(a => a.Country).FirstOrDefault()</p>
+                    </div>
+                
+                
+            </div>
+
+            <!-- Phương thức thanh toán -->
+            <div class="bg-white rounded-xl p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 space-y-4">
+                <div class="flex items-center gap-2 text-primary">
+                    <span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+                    <h3 class="font-headline-md text-headline-md">Phương thức thanh toán</h3>
+                </div>
+                <div class="space-y-1 font-body-base">
+                    <p class="font-bold">COD</p>
+                    <div class="flex items-center gap-3 py-2 px-3 bg-slate-50 rounded-lg w-fit">
+                        <span class="material-symbols-outlined text-sky-700" data-icon="style">style</span>
+                        <span class="text-on-surface-variant">@Model.AddressViewModels.Select(a=>a.PhoneNumber).FirstOrDefault()</span>
+                    </div>
+                    <p class="text-on-surface-variant text-sm pt-2">Mã giao dịch: @Model.Id</p>
+                </div>
+            </div>
+        </div>
+        <!-- Order Items -->
+        <div class="space-y-md">
+            <h3 class="font-headline-md text-headline-md px-2">Order Items (3)</h3>
+            @if(Model.Items.Any())
+            {
+                <div class="space-y-sm">
+                    @foreach (var item in Model.Items)
+                    {
+                        <!-- Item Card -->
+                        <div class="group flex bg-white rounded-xl overflow-hidden shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 transition-all hover:-translate-y-1 hover:shadow-[0px_8px_24px_rgba(0,0,0,0.1)]">
+                            <div class="w-[120px] h-[120px] overflow-hidden shrink-0">
+                                <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="@item.Name" src="@item.Img" />
+                            </div>
+                            <div class="flex-grow p-4 flex flex-col justify-between">
+                                <div class="flex justify-between items-start gap-4">
+                                    <div>
+                                        <h4 class="font-headline-md text-headline-md group-hover:text-primary transition-colors">@item.Name</h4>
+                                        <p class="font-body-sm text-on-surface-variant">Color: @item.Variant.Color | Size: @item.Variant.Size</p>
+                                    </div>
+                                    <p class="font-label-bold text-primary">@item.Quantity</p>
+                                </div>
+                                <p class="font-price-lg text-primary text-right">@item.Price.ToString("N0") đ</p>
+                            </div>
+                        </div>
+                    }
+                </div> 
             }
+            
+           
+            <!-- else -->
+            <!-- <div class="bg-white rounded-xl p-xl text-center border-2 border-dashed border-slate-200">
+                            <span class="material-symbols-outlined text-6xl text-slate-300" data-icon="shopping_bag">shopping_bag</span>
+                            <p class="mt-4 font-headline-md text-slate-500">Your order has no items.</p>
+                        </div> -->
+            <!-- endif -->
         </div>
-
-        <!-- Thông tin -->
-        <div>
-            <h3>@item.Name</h3>
-            <p>Giá: @item.Price.ToString("N0") đ</p>
-            <p>Số lượng: @item.Quantity</p>
-            <p>Thành tiền: @((item.Price * item.Quantity).ToString("N0")) đ</p>
-
-            <!-- debug -->
-            <p style="font-size:12px; color:gray;">Img URL: @item.Img</p>
+        <!-- Order Summary -->
+        <!-- Order Summary -->
+        <div class="flex justify-end">
+            <div class="w-full md:w-[400px] bg-white rounded-xl p-lg shadow-[0px_8px_24px_rgba(0,0,0,0.1)] border border-slate-100 space-y-4">
+                <h3 class="font-headline-md text-headline-md pb-2 border-b border-slate-100">Order Summary</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between font-body-base text-on-surface-variant">
+                        <span>Subtotal</span>
+                        <span>@Model.TotalAmount.ToString("N0") đ</span> <!-- Tổng tiền -->
+                    </div>
+                    <div class="flex justify-between font-body-base text-on-surface-variant">
+                        <span>Shipping Fee</span>
+                        <span>Miễn Phí</span> <!-- Phí vận chuyển (giả sử bạn có thuộc tính ShippingFee trong item) -->
+                    </div>
+                    <div class="flex justify-between font-body-base text-error">
+                        <span>Discount</span>
+                        <span>0</span> <!-- Giảm giá (giả sử bạn có thuộc tính Discount trong item) -->
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+                        <span class="font-headline-md">Total Amount</span>
+                        <span class="font-price-lg text-primary text-3xl">
+                            @Model.TotalAmount.ToString("N0") đ
+                            
+                           
+                        </span> <!-- Tổng tiền sau giảm giá và phí vận chuyển -->
+                    </div>
+                </div>
+                <div class="pt-4">
+                    <p class="text-[10px] text-center text-on-surface-variant uppercase tracking-widest">Prices include VAT where applicable</p>
+                </div>
+            </div>
         </div>
+    </main>
 
-    </div>
-}
-}
+</body>
+</html>

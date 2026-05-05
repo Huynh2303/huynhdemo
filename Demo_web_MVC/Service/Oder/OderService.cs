@@ -13,7 +13,7 @@ namespace Demo_web_MVC.Service.Oder
             _oderRepository = oderRepository;
             _logger = logger;
         }
-        public async Task<int> CreateOrderFromCartAsyncService(int userId, string paymentMethod)
+        public async Task<int> CreateOrderFromCartAsyncService(int userId, string paymentMethod, List<int> selectedCartItemIds)
         {
 
             if (userId <= 0)
@@ -35,14 +35,16 @@ namespace Demo_web_MVC.Service.Oder
             try
             {
 
-                var orderId = await _oderRepository.CreateOrderFromCartAsync(userId, paymentMethod);
+                var orderId = await _oderRepository.CreateOrderFromCartAsync(userId, paymentMethod,selectedCartItemIds);
                 _logger.LogInformation("Tạo đơn hàng thành công. UserId={UserId}, OrderId={OrderId}", userId, orderId);
 
+                 await _oderRepository.RemoveCartItemsAsync(selectedCartItemIds, userId);
                 return orderId;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Lỗi khi tạo đơn hàng. UserId={UserId}", userId);
+                _logger.LogError(ex.Message, ex);
                 throw;
             }
         }
@@ -170,6 +172,19 @@ namespace Demo_web_MVC.Service.Oder
                 _logger.LogError(ex, "Lỗi khi hủy đơn. OrderId={OrderId}", orderId);
                 throw;
             }
+        }
+
+        public async Task<CheckoutViewModel> CheckoutAsync(int userId, List<int> selectedCartItemIds)
+        {
+            return await _oderRepository.CheckOutAsync(userId , selectedCartItemIds);
+        }
+        public async Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId)
+        {
+             await _oderRepository.RemoveCartItemsAsync(selectedCartItemIds, userId);
+        }
+        public async Task<List<int>> GetAllOrderIdsAsync()
+        {
+            return await _oderRepository.GetAllOrderIdsAsync();
         }
     }
 }

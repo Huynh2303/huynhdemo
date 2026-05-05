@@ -5,7 +5,7 @@ namespace Demo_web_MVC.Service.Oder
     public interface IOderService
     {
         Task<OderViewModel?> GetOrderDetailAsyncService(int userId, int orderId);
-        Task<int> CreateOrderFromCartAsyncService(int userId, string paymentMethod);
+        Task<int> CreateOrderFromCartAsyncService(int userId, string paymentMethod, List<int> selectedCartItemIds);
 
         //Task<Order> GetOrderByIdAsyncService(int orderId);
 
@@ -13,5 +13,8 @@ namespace Demo_web_MVC.Service.Oder
         Task<bool> UpdateOrderStatusAsyncService(int orderId, string status);
         Task<bool> CancelOrderAsyncService(int orderId, int userId);
         //Task<decimal> CalculateOrderTotalAsyncService(int userId);
+        Task<CheckoutViewModel>CheckoutAsync(int userId,List<int> selectedCartItemIds);
+        Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId);
+        Task<List<int>> GetAllOrderIdsAsync();
     }
 }

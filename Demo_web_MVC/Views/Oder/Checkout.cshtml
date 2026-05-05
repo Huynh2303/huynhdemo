@@ -1,0 +1,297 @@
+﻿@model Demo_web_MVC.Models.ViewModel.Oder.CheckoutViewModel
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "outline": "#6e7881",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "background": "#f5faff",
+                        "surface-bright": "#f5faff",
+                        "outline-variant": "#bdc8d1",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "primary-fixed": "#c6e7ff",
+                        "on-tertiary-fixed": "#2d1600",
+                        "surface-dim": "#d6dae0",
+                        "surface-container-high": "#e4e9ee",
+                        "on-surface": "#171c20",
+                        "inverse-primary": "#82cfff",
+                        "on-primary-fixed-variant": "#004c6b",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2c3135",
+                        "surface-tint": "#00658d",
+                        "primary-fixed-dim": "#82cfff",
+                        "on-primary-fixed": "#001e2d",
+                        "surface": "#f5faff",
+                        "on-background": "#171c20",
+                        "surface-container-highest": "#dee3e8",
+                        "primary": "#00658d",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eaeef4",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-surface-variant": "#3e4850",
+                        "tertiary-fixed-dim": "#ffb876",
+                        "on-tertiary-container": "#572f00",
+                        "on-secondary-container": "#616363",
+                        "on-primary-container": "#003e58",
+                        "surface-container-low": "#eff4fa",
+                        "tertiary-container": "#ea8c21",
+                        "secondary-container": "#dfe0e0",
+                        "primary-container": "#00aeef",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc0",
+                        "surface-variant": "#dee3e8",
+                        "secondary": "#5d5f5f",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#ecf1f7",
+                        "tertiary": "#8d4f00",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "xl": "48px",
+                        "gutter": "16px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "price-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"],
+                        "label-bold": ["Be Vietnam Pro"],
+                        "body-base": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "price-lg": ["24px", {"lineHeight": "1", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "700"}],
+                        "body-base": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+
+   
+
+    <main class="max-w-[1200px] mx-auto px-gutter py-xl">
+        <div class="flex flex-col md:flex-row gap-lg">
+            <!-- Left Column: Order Details -->
+            <div class="flex-1 space-y-lg">
+                <!-- Shipping Address Section -->
+                <section class="bg-white rounded-xl p-lg shadow-black/5 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/20">
+                    <div class="flex items-center gap-sm mb-md text-primary">
+                        <span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+                        <h2 class="font-headline-md text-headline-md">Địa Chỉ Nhận Hàng</h2>
+                    </div>
+                    <div class="space-y-md">
+                        @if (Model.AddressViewModels.Any())
+                        {
+                            @foreach (var address in Model.AddressViewModels)
+                            {
+                                <label class="relative flex items-start p-md border rounded-lg cursor-pointer transition-all hover:border-primary-container @(address.IsDefault ? "border-primary-container bg-primary-fixed" : "")">
+                                    <input class="mt-1 text-primary focus:ring-primary h-4 w-4 border-gray-300"
+                                           name="selectedAddressId"
+                                           type="radio"
+                                           value="@address.Id"
+                                           @(address.IsDefault ? "checked" : "") />
+                                    <div class="ml-md flex-1">
+                                        <div class="flex items-center gap-sm">
+                                            <span class="font-label-bold text-body-base text-on-surface">@address.RecipientName | @address.PhoneNumber</span>
+                                            @if (address.IsDefault)
+                                            {
+                                                <span class="bg-primary text-white text-[10px] px-2 py-0.5 rounded-sm uppercase font-bold tracking-wider">Mặc định</span>
+                                            }
+                                        </div>
+                                        @* <p class="text-body-sm text-on-surface-variant mt-1">@address.Detail</p> *@
+                                        <p class="text-body-sm text-on-surface-variant">@address.City</p>
+                                    </div>
+                                </label>
+                            }
+                        }
+                        else
+                        {
+                            <h1>bạn chưa có địa chỉ nào vui lòng tạo địa chỉ </h1>
+                        }
+                    </div>
+                </section>
+                <!-- Order Review Section -->
+                <section class="bg-white rounded-xl p-lg shadow-black/5 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/20">
+                    <div class="flex items-center gap-sm mb-md text-primary">
+                        <span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+                        <h2 class="font-headline-md text-headline-md">Sản Phẩm</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b border-outline-variant/30 text-on-surface-variant font-label-bold text-label-bold uppercase">
+                                    <th class="pb-sm px-2">Sản phẩm</th>
+                                    <th class="pb-sm px-2 text-center">Đơn giá</th>
+                                    <th class="pb-sm px-2 text-center">Số lượng</th>
+                                    <th class="pb-sm px-2 text-right">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant/20">
+                                @foreach (var item in Model.CartItems)
+                                {
+                                    <tr>
+                                        <td class="py-md px-2">
+                                            <div class="flex items-center gap-md">
+                                                <div class="w-16 h-16 rounded-lg bg-surface-container overflow-hidden flex-shrink-0">
+                                                    <img class="w-full h-full object-cover" src="@item.ImageUrl" alt="@item.ProductName" />
+                                                </div>
+                                                <span class="font-body-base text-on-surface">@item.ProductName</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-md px-2 text-center font-body-base">₫@string.Format("{0:N0}", item.Price)</td>
+                                        <td class="py-md px-2 text-center font-body-base">@item.Quantity</td>
+                                        <td class="py-md px-2 text-right font-price-lg text-primary">₫@string.Format("{0:N0}", item.Price * item.Quantity)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <!-- Payment Method Section -->
+                <section class="bg-white rounded-xl p-lg shadow-black/5 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/20">
+                    <div class="flex items-center gap-sm mb-md text-primary">
+                        <span class="material-symbols-outlined" data-icon="payments">payments</span>
+                        <h2 class="font-headline-md text-headline-md">Phương Thức Thanh Toán</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                        <label class="flex items-center gap-md p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary-fixed/10">
+                            <input checked="" class="text-primary focus:ring-primary h-5 w-5" name="paymentMethod" type="radio" value="COD" />
+                            <div class="flex items-center gap-sm">
+                                <span class="material-symbols-outlined text-on-surface-variant">local_shipping</span>
+                                <span class="font-body-base">Thanh toán khi nhận hàng (COD)</span>
+                            </div>
+                        </label>
+                        <label class="flex items-center gap-md p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary-fixed/10">
+                            <input class="text-primary focus:ring-primary h-5 w-5" name="paymentMethod" type="radio" value="VNPay" />
+                            <div class="flex items-center gap-sm">
+                                <span class="material-symbols-outlined text-sky-600">account_balance_wallet</span>
+                                <span class="font-body-base">VNPay (Thẻ ATM / QR Code)</span>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+            </div>
+            <!-- Right Column: Order Summary -->
+            <aside class="w-full md:w-[380px]">
+                <div class="sticky top-24 bg-white rounded-xl p-lg shadow-[0px_8px_24px_rgba(0,0,0,0.1)] border border-outline-variant/30 flex flex-col gap-lg">
+                    <h3 class="font-headline-md text-on-surface border-b border-outline-variant/20 pb-md">Tóm tắt đơn hàng</h3>
+                    <div class="space-y-md">
+                        <div class="flex justify-between text-on-surface-variant">
+                            <span class="font-body-base">Tổng tiền hàng</span>
+                            <span class="font-body-base">₫@string.Format("{0:N0}", Model.TotalAmount)</span>
+                        </div>
+                        <div class="flex justify-between text-on-surface-variant">
+                            <span class="font-body-base">Phí vận chuyển</span>
+                            <span class="font-body-base">Miễn phí</span>
+                        </div>
+                        <div class="flex justify-between text-on-surface-variant">
+                            <span class="font-body-base">Giảm giá</span>
+                            <span class="font-body-base">-₫0</span>
+                        </div>
+                        <div class="pt-md border-t border-dashed border-outline-variant flex justify-between items-end">
+                            <span class="font-label-bold text-on-surface">Tổng thanh toán</span>
+                            <span class="text-primary font-price-lg text-[32px]">₫@string.Format("{0:N0}", Model.TotalAmount)</span>
+                        </div>
+                    </div>
+                    
+                    <form asp-action="CreateOrder" asp-controller="Oder" class="mt-md" method="post" id="createOrderForm">
+                        @Html.AntiForgeryToken()
+
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <input type="hidden" name="selectedCartItemIds" value="@item.Id" />
+                        }
+
+                        <input id="hiddenAddressId"
+                               name="addressId"
+                               type="hidden"
+                               value="@(Model.SelectedAddressId ?? 0)" />
+
+                        <input id="hiddenPayment"
+                               name="paymentMethod"
+                               type="hidden"
+                               value="@Model.PaymentMethod" />
+
+                        <button class="w-full bg-primary-container text-white font-bold py-lg rounded-lg text-body-base shadow-lg shadow-primary-container/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 uppercase tracking-wide"
+                                type="submit">
+                            Đặt hàng
+                        </button>
+                    </form>
+                    
+                    <div class="flex items-center gap-sm justify-center text-on-surface-variant opacity-70">
+                        <span class="material-symbols-outlined text-sm" data-icon="shield_check">shield</span>
+                        <span class="text-xs">Giao dịch được bảo mật bởi VibrantShop</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+    <script>
+        document.getElementById('createOrderForm').addEventListener('submit', function (e) {
+            const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+            const selectedAddress = document.querySelector('input[name="selectedAddressId"]:checked');
+
+            if (!selectedAddress) {
+                e.preventDefault();
+                alert('Vui lòng chọn địa chỉ nhận hàng.');
+                return;
+            }
+
+            if (!selectedPayment) {
+                e.preventDefault();
+                alert('Vui lòng chọn phương thức thanh toán.');
+                return;
+            }
+
+            document.getElementById('hiddenAddressId').value = selectedAddress.value;
+            document.getElementById('hiddenPayment').value = selectedPayment.value;
+        });
+    </script>
+    
+</body>
+</html>

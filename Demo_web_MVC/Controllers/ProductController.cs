@@ -3,6 +3,7 @@ using Demo_web_MVC.Models.ViewModel.Category;
 using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Service;
 using Demo_web_MVC.Service.Category;
+using Demo_web_MVC.Service.Oder;
 using Demo_web_MVC.Service.Product;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -14,13 +15,17 @@ namespace Demo_web_MVC.Controllers
     {
         public readonly IProductService _productService;
         public readonly ICategoryService _categoryService;
-        public ProductController(IProductService productService, ICategoryService categoryService)
+        private readonly IOderService _OderService;
+        public ProductController(IProductService productService, ICategoryService categoryService,IOderService oderService)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _OderService = oderService;
         }
         public async Task<IActionResult> Index()
         {
+           var oroderId = await _OderService.GetAllOrderIdsAsync();
+            ViewBag.oroderId = oroderId;
             return View(await _productService.getAll());
         }
        

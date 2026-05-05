@@ -1,10 +1,12 @@
 ﻿using Demo_web_MVC.Controllers;
 using Demo_web_MVC.Data.AppDatabase;
 using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Address;
 using Demo_web_MVC.Models.ViewModel.Carts;
 using Demo_web_MVC.Models.ViewModel.Oder;
 using Demo_web_MVC.Repository.Addresss;
 using MailKit.Search;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -21,58 +23,68 @@ namespace Demo_web_MVC.Repository.Oder
             _logger = logger;
             _addressRepository = addressRepository;
         }
-        public async Task<int> CreateOrderFromCartAsync(int userId, string paymentMethod)
+        public async Task<int> CreateOrderFromCartAsync(int userId, string paymentMethod, List<int> selectedCartItemIds)
         {
-                        
             var cart = await _context.Carts
-                             .Where(c => c.UserId == userId && c.Status == "active")
-                             .Include(c => c.CartItems)
-                             .FirstOrDefaultAsync();
-            if ( cart == null || cart.CartItems == null || !cart.CartItems.Any())
+                .Where(c => c.UserId == userId && c.Status == "active")
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Variant)
+                .FirstOrDefaultAsync();
+
+            if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
             {
                 _logger.LogWarning("No active cart found for user {UserId}", userId);
                 throw new InvalidOperationException("No active cart found for the user.");
             }
-            if (Enum.TryParse(paymentMethod, out PaymentMethod method))
+
+            var selectedItems = cart.CartItems.Where(ci => selectedCartItemIds.Contains(ci.Id)).ToList();
+
+            if (selectedItems.Count == 0)
             {
-                // Tiến hành tạo đơn hàng nếu parsing thành công
-                var order = new Order
-                {
-                    UserId = userId,
-                    TotalAmount = cart.CartItems.Sum(ci => ci.Quantity * ci.Variant.Price),
-                    Status = 0,
-                    PaymentMethod = method,  // Gán giá trị enum vào PaymentMethod
-                    CreatedAt = DateTime.Now
-                };
-
-                // Lưu đơn hàng vào cơ sở dữ liệu
-                _context.Orders.Add(order);
-                await _context.SaveChangesAsync();
-
-                // Lưu các mục trong đơn hàng
-                foreach (var item in cart.CartItems)
-                {
-                    var orderItem = new OrderItem
-                    {
-                        OrderId = order.Id,
-                        VariantId = item.VariantId,
-                        Quantity = item.Quantity,
-                        Price = item.Variant.Price
-                    };
-                    _context.OrderItems.Add(orderItem);
-                }
-
-                await _context.SaveChangesAsync(); // Lưu các mục trong đơn hàng
-
-                // Trả về ID của đơn hàng vừa tạo
-                return order.Id;
-            }   
-            else
-            {
-                // Trường hợp parsing thất bại (chẳng hạn "COD" không đúng)
-                return -1;  // Hoặc xử lý lỗi khác
+                _logger.LogError("k co san pham nào");
+                throw new InvalidOperationException("No selected items to checkout.");
             }
 
+            // Tiến hành tính tổng số tiền và tạo đơn hàng
+            var totalAmount = selectedItems
+                .Where(ci => ci.Variant != null && ci.Variant.Price > 0)
+                .Sum(ci => ci.Quantity * ci.Variant.Price);
+
+            var order = new Order
+            {
+                UserId = userId,
+                TotalAmount = totalAmount,
+                Status = 0, // Trạng thái đơn hàng (0 = Chờ xác nhận)
+                PaymentMethod = Enum.TryParse(paymentMethod, out PaymentMethod method) ? method : PaymentMethod.COD,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            // Lưu các mục trong đơn hàng
+            foreach (var item in selectedItems)
+            {
+                if (item.Variant == null)
+                {
+                    _logger.LogWarning("Item with VariantId {VariantId} has no variant data, skipping.", item.VariantId);
+                    continue;
+                }
+
+                var orderItem = new OrderItem
+                {
+                    OrderId = order.Id,
+                    VariantId = item.VariantId,
+                    Quantity = item.Quantity,
+                    Price = item.Variant.Price
+                };
+
+                _context.OrderItems.Add(orderItem);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return order.Id;
         }
         public async Task<Order> GetOrderByIdAsync(  int orderId)
         {
@@ -111,13 +123,23 @@ namespace Demo_web_MVC.Repository.Oder
                        Name = item.Variant.Product.Name,
                        Price = item.Price,
                        Quantity = item.Quantity,
-
+                       Variant =item.Variant,
                        Img = item.Variant.ProductVariantImages
                            .OrderBy(img => img.SortOrder)
                            .Select(img => img.Url)
                            .FirstOrDefault()
-                   }).ToList()
+                   }).ToList(),
+                    AddressViewModels = o.User.Addresses.Select(address => new AddressViewModel
+                    {
+                        RecipientName = address.RecipientName,
+                        PhoneNumber = address.PhoneNumber,
+                        AddressLine = address.AddressLine,
+                        City = address.City,
+                        Country = address.Country
+                    }).ToList()
+
                })
+       
                .FirstOrDefaultAsync();
 
             if (result == null)
@@ -201,6 +223,80 @@ namespace Demo_web_MVC.Repository.Oder
             var result = await _context.Orders.Where(o => o.UserId == userId).SumAsync(o => o.TotalAmount);
             return result;
 
+        }
+        public async Task<CheckoutViewModel> CheckOutAsync(int userId,List<int> selectedCartItemIds)
+        {
+            // Lấy các sản phẩm trong giỏ hàng
+            var cartItems = await _context.CartItems
+                .Where(ci => selectedCartItemIds.Contains(ci.Id)&& ci.Cart.UserId == userId && ci.Cart.Status == "active")
+                .Include(ci => ci.Variant)
+                .ThenInclude(ci => ci.ProductVariantImages) 
+                .Include(ci => ci.Variant.Product)   
+                .ToListAsync();
+            if (cartItems.Count > 0)
+                _logger.LogInformation("có sản phẩm");
+             
+            var addressViewModels = await _context.Addresses
+                .Where(a => a.UserId == userId)
+                .Select(a => new AddressViewModel
+                {
+                    Id = a.Id,
+                    RecipientName = a.RecipientName,
+                    PhoneNumber = a.PhoneNumber,
+                    AddressLine = a.AddressLine,
+                    City = a.City,
+                    Country = a.Country,
+                    IsDefault = a.IsDefault
+                })
+                .ToListAsync();
+
+            
+            var totalAmount = cartItems.Sum(ci => ci.Quantity * ci.Variant.Price);
+
+            // Tạo model CheckoutViewModel
+            var model = new CheckoutViewModel
+            {
+                CartItems = cartItems.Select(ci => new CartItemViewModel
+                {
+                    Id = ci.Id,
+                    ProductName = ci.Variant.Product.Name,
+                    Price = ci.Variant.Price,
+                    Quantity = ci.Quantity,
+                    ImageUrl = ci.Variant.ProductVariantImages.FirstOrDefault()?.Url  
+                }).ToList(),
+                AddressViewModels = addressViewModels,
+                TotalAmount = totalAmount,
+                SelectedAddressId = addressViewModels.FirstOrDefault(a => a.IsDefault)?.Id,   
+                PaymentMethod = PaymentMethod.COD
+            };
+            return model;
+        }
+        public async Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId)
+        {
+            // Lấy giỏ hàng của người dùng với trạng thái "active"
+            var cart = await _context.Carts
+                .Where(c => c.UserId == userId && c.Status == "active")
+                .Include(c => c.CartItems) // Bao gồm các CartItems của giỏ hàng
+                .FirstOrDefaultAsync();
+
+            if (cart != null)
+            {
+                // Lọc các CartItem mà ID có trong selectedCartItemIds
+                var selectedItems = cart.CartItems.Where(ci => selectedCartItemIds.Contains(ci.Id)).ToList();
+
+                // Xóa chỉ các CartItem đã chọn
+                _context.CartItems.RemoveRange(selectedItems);
+                await _context.SaveChangesAsync(); // Lưu thay đổi vào database
+            }
+        }
+        public async Task<List<int>> GetAllOrderIdsAsync()
+        {
+            
+            var orderIds = await _context.Orders
+                .Select(o => o.Id) 
+                .ToListAsync();
+
+            return orderIds;
         }
     }
 }

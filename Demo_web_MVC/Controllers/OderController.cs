@@ -41,7 +41,7 @@ namespace Demo_web_MVC.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(string paymentMethod)
+        public async Task<IActionResult> CreateOrder(string paymentMethod, List<int> selectedCartItemIds)
         {
             try
             {
@@ -53,11 +53,12 @@ namespace Demo_web_MVC.Controllers
                 }
 
                 var orderId = await _service
-                    .CreateOrderFromCartAsyncService(userId.Value, paymentMethod);
+                    .CreateOrderFromCartAsyncService(userId.Value, paymentMethod,selectedCartItemIds);
 
                 TempData["SuccessMessage"] = "Đặt hàng thành công.";
 
                 return RedirectToAction("Details", "Oder", new { orderId = orderId });
+                
             }
             catch (ArgumentException ex)
             {
@@ -157,5 +158,25 @@ namespace Demo_web_MVC.Controllers
                 return RedirectToAction("Details", "Oder", new { orderId });
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> Checkout(List<int> selectedCartItemIds)
+        {
+            var userId = GetUserIdFromClaims(); // Lấy userId từ Claims hoặc Session
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (selectedCartItemIds == null || !selectedCartItemIds.Any())
+            {
+                TempData["Error"] = "Vui lòng chọn ít nhất một sản phẩm để thanh toán."; // Thông báo lỗi
+                return RedirectToAction("Index", "Cart");  // Quay lại trang giỏ hàng
+            }
+            // Gọi Service để lấy dữ liệu Checkout (Sản phẩm trong giỏ hàng, Địa chỉ giao hàng, Tổng tiền)
+            var model = await _service.CheckoutAsync(userId.Value, selectedCartItemIds);
+
+            // Trả về view Checkout với model chứa giỏ hàng và thông tin cần thiết
+            return View(model);
+        }
+
     }
 }
