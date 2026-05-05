@@ -24,8 +24,7 @@ namespace Demo_web_MVC.Controllers
         }
         public async Task<IActionResult> Index()
         {
-           var oroderId = await _OderService.GetAllOrderIdsAsync();
-            ViewBag.oroderId = oroderId;
+          
             return View(await _productService.getAll());
         }
        
