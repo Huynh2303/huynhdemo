@@ -100,4 +100,12 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+
+//// Cấu hình route cho seller dashboard (trang người bán)
+//app.MapControllerRoute(
+//    name: "sellerDashboard",   // Tên route mới
+//    pattern: "seller/dashboard",  // Đường dẫn bạn muốn thêm
+//    defaults: new { controller = "Seller", action = "Dashboard", area = "Seller" }); // Controller và action của Seller
+
 app.Run();

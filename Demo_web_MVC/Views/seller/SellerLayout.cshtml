@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;  // Không kế thừa từ layout chung mà là layout riêng
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Add your custom styles here -->
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <aside class="sidebar w-64 bg-blue-900 h-screen text-white fixed left-0 top-0">
+        <div class="sidebar-header text-center p-5">
+            <h2 class="text-xl font-semibold">Seller Pro</h2>
+            <p class="text-sm">Vibrant Blue Dashboard</p>
+        </div>
+        <nav class="sidebar-menu">
+            <ul>
+                <li><a href="@Url.Action("Dashboard", "Seller", new { area = "Seller" })" class="block py-2 px-4 hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="@Url.Action("Products", "Seller", new { area = "Seller" })" class="block py-2 px-4 hover:bg-blue-700">Products</a></li>
+                <li><a href="@Url.Action("Orders", "Seller", new { area = "Seller" })" class="block py-2 px-4 hover:bg-blue-700">Orders</a></li>
+                <li><a href="@Url.Action("Customers", "Seller", new { area = "Seller" })" class="block py-2 px-4 hover:bg-blue-700">Customers</a></li>
+                <li><a href="@Url.Action("Statistics", "Seller", new { area = "Seller" })" class="block py-2 px-4 hover:bg-blue-700">Statistics</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer absolute bottom-5 left-5">
+            <button class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 w-full">Add New Product</button>
+            <button class="bg-red-600 hover:bg-red-500 text-white py-2 px-4 w-full mt-4">Logout</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content ml-64 p-8">
+        @RenderBody()  <!-- Đây là nơi sẽ render các view riêng biệt cho Dashboard, Products, Orders... -->
+    </div>
+</body>
+</html>

@@ -2,10 +2,13 @@
 using Demo_web_MVC.Models.ViewModel.Category;
 using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Service;
+using Demo_web_MVC.Service.Cart;
 using Demo_web_MVC.Service.Category;
 using Demo_web_MVC.Service.Oder;
 using Demo_web_MVC.Service.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Demo_web_MVC.Controllers
@@ -13,22 +16,48 @@ namespace Demo_web_MVC.Controllers
 
     public class ProductController : Controller
     {
-        public readonly IProductService _productService;
-        public readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
         private readonly IOderService _OderService;
-        public ProductController(IProductService productService, ICategoryService categoryService,IOderService oderService)
+        private readonly ICartService _cartService;
+        public ProductController(IProductService productService, ICategoryService categoryService,IOderService oderService,ICartService cartService)
         {
             _productService = productService;
             _categoryService = categoryService;
             _OderService = oderService;
+            _cartService = cartService;
         }
+        private int? GetUserIdFromClaims()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return null;
+            }
+            return userId;
+        }
+        private async Task<int> GetCartCount()
+        {
+            var userId = GetUserIdFromClaims(); // Lấy userId từ claims
+            if (userId == null)
+            {
+                return 0; // Trả về 0 nếu người dùng chưa đăng nhập
+            }
+
+            var cartItems = await _cartService.GetCartItems(userId.Value); // Lấy giỏ hàng của người dùng từ service
+            return cartItems.Count; // Trả về số lượng sản phẩm trong giỏ
+        }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-          
+            var cartCount = await GetCartCount();
+            ViewBag.CartCount = cartCount;
             return View(await _productService.getAll());
         }
        
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,6 +78,7 @@ namespace Demo_web_MVC.Controllers
                 .ToList();
             return View(productDetails);
         }
+        [Authorize(Roles = "ADMIN, SEFF")]
         public async Task<IActionResult> Create()
         {
             // Lấy danh sách các danh mục từ cơ sở dữ liệu
@@ -67,6 +97,7 @@ namespace Demo_web_MVC.Controllers
             return View(productViewModel);
         }
         [HttpPost]
+        [Authorize(Roles = "ADMIN, SEFF")]
         public async Task<IActionResult> Create(ProductViewModel productVM, IFormFile[] imageUrl)
         {
             if (ModelState.IsValid)
@@ -127,6 +158,7 @@ namespace Demo_web_MVC.Controllers
             return View(productVM);
         }
         [HttpPost]
+        [Authorize(Roles = "ADMIN, SEFF")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (id <= 0)
@@ -153,6 +185,7 @@ namespace Demo_web_MVC.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Roles = "ADMIN, SEFF")]
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productService.getbyid(id);
@@ -164,6 +197,7 @@ namespace Demo_web_MVC.Controllers
         }
         
         [HttpPost]
+        [Authorize(Roles = "ADMIN, SEFF")]
         public async Task<IActionResult> Edit(int id, ProductViewModel model)
         {
             if (!ModelState.IsValid)

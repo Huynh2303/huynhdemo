@@ -2,11 +2,13 @@
 using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Models.ViewModel.Search;
 using Demo_web_MVC.Service.Search;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Demo_web_MVC.Controllers
 {
+    [AllowAnonymous]
     public class SearchController : Controller
     {
         private readonly ISearchService _searchService;

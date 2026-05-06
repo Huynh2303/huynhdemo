@@ -1,10 +1,13 @@
 ﻿using Demo_web_MVC.Models.ViewModel.Oder;
 using Demo_web_MVC.Service.Oder;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Demo_web_MVC.Controllers
 {
+    [Authorize(Roles = "ADMIN,SEFF,USER")]
+    
     public class OderController : Controller
     {
         private readonly IOderService _service;
@@ -76,6 +79,7 @@ namespace Demo_web_MVC.Controllers
                 return RedirectToAction("Index", "Cart");
             }
         }
+        
         public async Task<IActionResult> MyOrders()
         {
             var userId = GetUserIdFromClaims();
@@ -89,11 +93,13 @@ namespace Demo_web_MVC.Controllers
 
             return View(orders);
         }
+        [Authorize(Roles = "ADMIN,SEFF")]
         public IActionResult UpdateStatus()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "ADMIN,SEFF")]
         public async Task<IActionResult> UpdateStatus(int orderId, string status)
         {
             try

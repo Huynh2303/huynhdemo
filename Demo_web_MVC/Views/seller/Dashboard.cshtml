@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "_SellerLayout";  // Sử dụng layout riêng cho người bán
+}
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <!-- Thẻ Tổng Đơn Hàng -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-lg font-semibold">Tổng Đơn Hàng</h3>
+        <p class="text-3xl text-blue-600">@ViewBag.TotalOrders</p>
+    </div>
+
+    <!-- Thẻ Đơn Hôm Nay -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-lg font-semibold">Đơn Hôm Nay</h3>
+        <p class="text-3xl text-orange-600">@ViewBag.OrdersToday</p>
+    </div>
+
+    <!-- Thẻ Tổng Doanh Thu -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-lg font-semibold">Tổng Doanh Thu</h3>
+        <p class="text-3xl text-green-600">@ViewBag.TotalRevenue</p>
+    </div>
+
+    <!-- Thẻ Sản Phẩm -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-lg font-semibold">Sản Phẩm</h3>
+        <p class="text-3xl text-purple-600">@ViewBag.TotalProducts</p>
+    </div>
+</div>
+
+<!-- Bảng Đơn Hàng Gần Đây -->
+<div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+    <h3 class="text-xl font-semibold mb-4">Đơn hàng gần đây</h3>
+    <table class="w-full table-auto">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="p-2">Mã đơn</th>
+                <th class="p-2">Khách hàng</th>
+                <th class="p-2">Trạng thái</th>
+                <th class="p-2 text-right">Tổng tiền</th>
+                <th class="p-2 text-center">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="p-2">#12345</td>
+                <td class="p-2">Nguyen Van A</td>
+                <td class="p-2"><span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">Pending</span></td>
+                <td class="p-2 text-right">1.200.000 đ</td>
+                <td class="p-2 text-center"><button class="text-blue-500">Xem chi tiết</button></td>
+            </tr>
+            <tr>
+                <td class="p-2">#12346</td>
+                <td class="p-2">Tran Thi B</td>
+                <td class="p-2"><span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Shipping</span></td>
+                <td class="p-2 text-right">450.000 đ</td>
+                <td class="p-2 text-center"><button class="text-blue-500">Xem chi tiết</button></td>
+            </tr>
+            <tr>
+                <td class="p-2">#12347</td>
+                <td class="p-2">Le Van C</td>
+                <td class="p-2"><span class="bg-green-200 text-green-800 px-2 py-1 rounded-full">Completed</span></td>
+                <td class="p-2 text-right">2.150.000 đ</td>
+                <td class="p-2 text-center"><button class="text-blue-500">Xem chi tiết</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Sản Phẩm Nổi Bật -->
+<div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+    <h3 class="text-xl font-semibold mb-4">Sản phẩm nổi bật</h3>
+    <div class="flex space-x-4">
+        <div class="w-1/4 bg-gray-100 p-4 rounded-lg">
+            <img src="image-link-here" alt="Product 1" class="w-full h-40 object-cover rounded-lg mb-2" />
+            <p class="font-semibold">Đồng hồ thông minh Pro X</p>
+            <p class="text-sm text-gray-600">3.490.000 đ</p>
+            <p class="text-xs text-gray-400">Kho: 24</p>
+        </div>
+        <div class="w-1/4 bg-gray-100 p-4 rounded-lg">
+            <img src="image-link-here" alt="Product 2" class="w-full h-40 object-cover rounded-lg mb-2" />
+            <p class="font-semibold">Tai nghe chống ồn</p>
+            <p class="text-sm text-gray-600">1.250.000 đ</p>
+            <p class="text-xs text-gray-400">Kho: 12</p>
+        </div>
+        <div class="w-1/4 bg-gray-100 p-4 rounded-lg">
+            <img src="image-link-here" alt="Product 3" class="w-full h-40 object-cover rounded-lg mb-2" />
+            <p class="font-semibold">Máy ảnh Mirrorless</p>
+            <p class="text-sm text-gray-600">18.900.000 đ</p>
+            <p class="text-xs text-gray-400">Kho: 5</p>
+        </div>
+    </div>
+</div>
+
+</main>

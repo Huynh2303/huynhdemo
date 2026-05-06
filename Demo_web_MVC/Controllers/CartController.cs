@@ -3,6 +3,7 @@ using Demo_web_MVC.Models.ViewModel.Carts;
 using Demo_web_MVC.Repository.Carts;
 using Demo_web_MVC.Service;
 using Demo_web_MVC.Service.Cart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Demo_web_MVC.Controllers
 {
+    [Authorize(Roles ="ADMIN,SEFF,USER")]
     public class CartController : Controller
     {
         public readonly ICartService _cartService;
