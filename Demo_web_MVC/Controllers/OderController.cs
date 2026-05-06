@@ -1,4 +1,5 @@
-﻿using Demo_web_MVC.Service.Oder;
+﻿using Demo_web_MVC.Models.ViewModel.Oder;
+using Demo_web_MVC.Service.Oder;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -22,10 +23,7 @@ namespace Demo_web_MVC.Controllers
             }
             return userId;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+        
         public async Task<IActionResult> Details (int orderId)
         {
             var userId = GetUserIdFromClaims();
@@ -134,7 +132,7 @@ namespace Demo_web_MVC.Controllers
 
                 if (userId == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "User");
                 }
 
                 var result = await _service.CancelOrderAsyncService(orderId, userId.Value);
@@ -148,7 +146,7 @@ namespace Demo_web_MVC.Controllers
                     TempData["ErrorMessage"] = "Không thể hủy đơn.";
                 }
 
-                return RedirectToAction("Details", "Oder", new { orderId });
+                return RedirectToAction("Index", "Oder", new { userId });
             }
             catch (Exception ex)
             {
@@ -176,6 +174,34 @@ namespace Demo_web_MVC.Controllers
 
             // Trả về view Checkout với model chứa giỏ hàng và thông tin cần thiết
             return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Index(string status)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return NotFound("Không có User nào");
+            }
+            if (string.IsNullOrEmpty(status))
+            {
+                status = "All";  // Nếu không có status thì mặc định là "All"
+            }
+            List<OderViewModel> orders;
+
+            if (status == "All")
+            {
+                orders = await _service.GetAllOrders(userId.Value,status);
+            }
+            else
+            {
+                 orders = await _service.GetAllOrders(userId.Value, status);
+            }
+            
+            _logger.LogInformation("Đã lấy {OrderCount} đơn hàng cho UserId: {UserId}", orders.Count, userId.Value);
+            
+
+            return View(orders);
         }
 
     }

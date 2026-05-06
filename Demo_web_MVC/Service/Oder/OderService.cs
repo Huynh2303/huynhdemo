@@ -186,5 +186,12 @@ namespace Demo_web_MVC.Service.Oder
         {
             return await _oderRepository.GetAllOrderIdsAsync();
         }
+        public async Task<List<OderViewModel>> GetAllOrders(int userId, string status)
+        {
+            var orders = await _oderRepository.GetAllOrders(userId,  status);
+
+           
+            return orders;
+        }
     }
 }

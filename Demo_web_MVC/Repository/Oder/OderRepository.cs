@@ -298,5 +298,44 @@ namespace Demo_web_MVC.Repository.Oder
 
             return orderIds;
         }
+        public async Task<List<OderViewModel>> GetAllOrders(int userId, string status)
+        {
+            IQueryable<Order> ordersQuery = _context.Orders.Where(o => o.UserId == userId);
+
+            if (status != "All")
+            {
+                ordersQuery = ordersQuery.Where(o => o.Status == (OrderStatus)Enum.Parse(typeof(OrderStatus), status));
+            }
+            var orders = await ordersQuery
+                .AsNoTracking()
+                
+                .OrderByDescending(o => o.CreatedAt)
+                .Select(o => new OderViewModel
+                {
+                    Id = o.Id,
+                    TotalAmount = o.TotalAmount,
+                    Status = o.Status,
+                    CreateAt = o.CreatedAt,
+                     
+                    Items = o.OrderItems.Select(item => new OderItemViewModel
+                    {
+                        Name = item.Variant.Product.Name,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+
+                        Img = item.Variant.ProductVariantImages
+                            .OrderBy(img => img.SortOrder)
+                            .Select(img => img.Url)
+                            .FirstOrDefault()
+                            ?? item.Variant.Product.ProductImages
+                                .Select(img => img.Url)
+                                .FirstOrDefault()
+                            ?? "/uploads/images/no-image.jpg"
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            return orders;
+        }
     }
 }

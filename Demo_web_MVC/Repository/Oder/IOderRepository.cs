@@ -9,7 +9,7 @@ namespace Demo_web_MVC.Repository.Oder
         Task<Order> GetOrderByIdAsync( int orderId);
         Task<OderViewModel?> GetOrderDetailAsync(int userId, int orderId);
         Task<List<OderViewModel>> GetOrdersByUserAsync(int userId);
-        //Task<List<OderViewModel>> GetAllOrdersAsync();
+        Task<List<OderViewModel>> GetAllOrders(int userId, string status);
 
         Task<bool> UpdateOrderStatusAsync(int orderId, string status);
         Task<bool> CancelOrderAsync(int orderId, int userId);
