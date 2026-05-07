@@ -1,0 +1,272 @@
+﻿@model Demo_web_MVC.Models.ViewModel.Dashboard.ProductsManagerViewModel
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#00658d",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#eff4fa",
+                        "tertiary": "#8d4f00",
+                        "on-primary-fixed": "#001e2d",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary": "#00658d",
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#3e4850",
+                        "outline": "#6e7881",
+                        "primary-container": "#00aeef",
+                        "on-secondary-container": "#616363",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#003e58",
+                        "tertiary-container": "#ea8c21",
+                        "primary-fixed": "#c6e7ff",
+                        "on-tertiary-container": "#572f00",
+                        "surface-container-high": "#e4e9ee",
+                        "on-primary-fixed-variant": "#004c6b",
+                        "tertiary-fixed-dim": "#ffb876",
+                        "inverse-on-surface": "#ecf1f7",
+                        "surface-bright": "#f5faff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#82cfff",
+                        "surface-container": "#eaeef4",
+                        "outline-variant": "#bdc8d1",
+                        "surface-container-highest": "#dee3e8",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "secondary": "#5d5f5f",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffdcc0",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f5faff",
+                        "surface-dim": "#d6dae0",
+                        "inverse-primary": "#82cfff",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "background": "#f5faff",
+                        "secondary-container": "#dfe0e0",
+                        "on-surface": "#171c20",
+                        "surface-variant": "#dee3e8",
+                        "on-tertiary-fixed": "#2d1600",
+                        "inverse-surface": "#2c3135",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-background": "#171c20"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "container-max": "1200px",
+                        "xs": "4px",
+                        "xl": "48px",
+                        "md": "16px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"],
+                        "price-lg": ["Be Vietnam Pro"],
+                        "body-base": ["Be Vietnam Pro"],
+                        "label-bold": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "price-lg": ["24px", {"lineHeight": "1", "fontWeight": "700"}],
+                        "body-base": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-base text-on-background">
+    <!-- SideNavBar -->
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-surface flex flex-col py-lg px-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] z-40">
+        <div class="mb-xl px-sm">
+            <h1 class="font-headline-md text-headline-md font-bold text-primary">Seller Pro</h1>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Vibrant blue dashboard</p>
+        </div>
+        <nav class="flex-grow space-y-sm">
+            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <!-- Active Tab: Products -->
+            <a class="flex items-center gap-md p-sm rounded-lg text-primary-container font-bold border-r-4 border-primary-container bg-surface-container-high transition-transform duration-150 scale-95" href="#">
+                <span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                <span>Products</span>
+            </a>
+            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                <span>Orders</span>
+            </a>
+            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="groups">groups</span>
+                <span>Customers</span>
+            </a>
+            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+                <span>Statistics</span>
+            </a>
+        </nav>
+        <div class="pt-lg border-t border-outline-variant space-y-sm">
+            <button class="w-full flex items-center justify-center gap-sm bg-primary-container text-on-primary font-label-bold text-label-bold py-sm px-md rounded-lg shadow-sm hover:scale-105 transition-transform duration-200">
+                <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                Add New Product
+            </button>
+            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200 mt-md" href="#">
+                <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="ml-64 pt-24 pb-xl px-lg min-h-screen">
+        <div class="max-w-container-max mx-auto">
+            <!-- Content Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-md mb-xl">
+                <div>
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Danh sách hàng hóa</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Cập nhật và quản lý kho hàng của bạn một cách dễ dàng.</p>
+                </div>
+                <button class="flex items-center gap-sm bg-primary-container text-on-primary font-label-bold text-label-bold py-3 px-lg rounded-lg shadow-[0px_4px_12px_rgba(0,174,239,0.2)] hover:-translate-y-1 transition-all duration-200">
+                    <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                    THÊM SẢN PHẨM
+                </button>
+            </div>
+            <!-- Product Table Container -->
+            <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] overflow-hidden border border-surface-container-high">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low border-b border-surface-container-high">
+                            <th class="px-lg py-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Ảnh</th>
+                            <th class="px-lg py-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Tên sản phẩm</th>
+                            <th class="px-lg py-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Giá</th>
+                            <th class="px-lg py-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-center">Tồn kho</th>
+                            <th class="px-lg py-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-center">Trạng thái</th>
+                            <th class="px-lg py-md font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container-high">
+                        @foreach( var item in Model.Products)
+                        {
+                            <tr class="hover:bg-surface-bright transition-colors duration-150">
+                                <td class="px-lg py-md">
+                                    <div class="w-14 h-14 rounded-lg bg-surface-container overflow-hidden">
+                                        <img alt="Product 1" class="w-full h-full object-cover" data-alt="A professional product shot of a sleek, minimalist white ceramic watch"
+                                             src="@Url.Content(item.imageUrl.FirstOrDefault() ?? "/uploads/images/no-image.jpg")" />
+                                    </div>
+                                </td>
+                                <td class="px-lg py-md">
+                                    <p class="font-body-base font-bold text-on-surface">@item.Name</p>
+                                    <p class="font-body-sm text-outline text-[12px]">SKU: SMW - 001 - X</p>
+                                </td>
+                                <td class="px-lg py-md text-right font-body-base font-bold text-primary">
+                                   @item.Variants!.FirstOrDefault()?.Price
+                                </td>
+                                <td class="px-lg py-md text-center font-body-base text-on-surface-variant">
+                                    @item.Variants!.FirstOrDefault()?.Stock
+                                </td>
+                                <td class="px-lg py-md text-center">
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-primary-fixed text-on-primary-fixed-variant">Đang bán</span>
+                                </td>
+                                <td class="px-lg py-md text-right">
+                                    <div class="flex items-center justify-end gap-sm">
+                                        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                                        </button>
+                                        <button class="p-xs text-on-surface-variant hover:text-error transition-colors">
+                                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        
+                    </tbody>
+                </table>
+                <!-- Pagination -->
+                @* <div class="px-lg py-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-md border-t border-surface-container-high">
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Hiển thị <span class="font-bold text-on-surface">1 - 5</span> trên tổng số <span class="font-bold text-on-surface">24</span> sản phẩm
+                    </p>
+                    <div class="flex items-center gap-xs">
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary-container text-on-primary font-label-bold text-label-bold shadow-sm">
+                            1
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-bold">
+                            2
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-bold">
+                            3
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+                        </button>
+                    </div>
+                </div> *@
+            </div>
+            <!-- Dashboard Stats Summary (Bento Grid Style) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-lg mt-xl">
+                <div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex items-center gap-md">
+                    <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+                        <span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                    </div>
+                    <div>
+                        <p class="text-label-bold font-label-bold text-outline uppercase tracking-wider">Tổng sản phẩm</p>
+                        <p class="text-price-lg font-price-lg text-on-surface">@ViewBag.TotalProducts</p>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex items-center gap-md">
+                    <div class="w-12 h-12 rounded-full bg-tertiary-container/10 flex items-center justify-center text-tertiary-container">
+                        <span class="material-symbols-outlined" data-icon="shopping_cart" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                    </div>
+                    <div>
+                        <p class="text-label-bold font-label-bold text-outline uppercase tracking-wider">Đơn hàng mới</p>
+                        <p class="text-price-lg font-price-lg text-on-surface">15</p>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex items-center gap-md">
+                    <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error">
+                        <span class="material-symbols-outlined" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+                    </div>
+                    <div>
+                        <p class="text-label-bold font-label-bold text-outline uppercase tracking-wider">Sắp hết hàng</p>
+                        <p class="text-price-lg font-price-lg text-on-surface">@ViewBag.LowStockProducts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+</body>
+</html>

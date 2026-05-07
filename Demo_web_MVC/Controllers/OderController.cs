@@ -191,7 +191,7 @@ namespace Demo_web_MVC.Controllers
             }
             if (string.IsNullOrEmpty(status))
             {
-                status = "All";  // Nếu không có status thì mặc định là "All"
+                status = "All"; 
             }
             List<OderViewModel> orders;
 

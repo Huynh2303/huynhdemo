@@ -70,17 +70,7 @@ namespace Demo_web_MVC.Repository.Dashboard
                         }).ToList()
                     })
                     .ToListAsync();
-                foreach(var product in products)
-        {
-                    if (product.imageUrl.Any())
-                    {
-                        _logger.LogInformation("Sản phẩm {ProductName} có {ImageCount} ảnh, đường dẫn: {ImageUrls}", product.Name, product.imageUrl.Count, string.Join(", ", product.imageUrl));
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Sản phẩm {ProductName} không có ảnh.", product.Name);
-                    }
-                }
+                
 
                 _logger.LogInformation("Đã lấy xong danh sách sản phẩm, số lượng sản phẩm: {ProductCount}", products.Count);
 
@@ -99,6 +89,30 @@ namespace Demo_web_MVC.Repository.Dashboard
                 _logger.LogError(ex, "Lỗi khi lấy dữ liệu dashboard: {Message}", ex.Message);
                 throw; // Ném lại lỗi để có thể xử lý ở nơi gọi phương thức
             }
+        }
+        public async Task<ProductsManagerViewModel> GetProductsManagerAsync()
+        {
+            // Lấy danh sách sản phẩm từ cơ sở dữ liệu
+            var products = await _context.Products.Include(p => p.ProductImages)
+                .Select(p => new ProductViewModel
+                {
+                    Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    Name = p.Name,
+                    imageUrl = p.ProductImages.Select(pi => pi.Url).ToList() ?? new List<string>(),
+                    Variants = p.ProductVariants.Select(v => new ProductVariantsViewModel
+                    {
+                        Price = v.Price,
+                        Stock = v.Stock,
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            // Trả về ProductsManagerViewModel chứa danh sách sản phẩm
+            return new ProductsManagerViewModel
+            {
+                Products = products
+            };
         }
     }
 }

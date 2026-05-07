@@ -28,5 +28,9 @@ namespace Demo_web_MVC.Service.Dashboard
                 return null; // Hoặc trả về một đối tượng mặc định
             }
         }
+        public async Task<ProductsManagerViewModel> GetProductsManagerAsync()
+        {
+            return await _dashboardRepository.GetProductsManagerAsync();
+        }
     }
 }

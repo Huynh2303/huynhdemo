@@ -6,5 +6,6 @@ namespace Demo_web_MVC.Repository.Dashboard
     public interface IDashboardRepository
     {
         Task<DashboardViewModel> GetOrdersAndProductsAsync();
+        Task<ProductsManagerViewModel> GetProductsManagerAsync();
     }
 }

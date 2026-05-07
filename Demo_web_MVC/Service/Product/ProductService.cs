@@ -6,9 +6,11 @@ namespace Demo_web_MVC.Service.Product
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-        public ProductService(IProductRepository productRepository)
+        private readonly ILogger<ProductService> _logger;
+        public ProductService(IProductRepository productRepository, ILogger<ProductService> logger)
         {
             _productRepository = productRepository;
+            _logger = logger;
         }       
         public async Task<ProductViewModel> details(int id)    
         {
@@ -19,13 +21,21 @@ namespace Demo_web_MVC.Service.Product
         {
             try
             {
+                if (product == null || string.IsNullOrEmpty(product.Name) || product.CategoryId <= 0)
+                {
+                    throw new ArgumentException("Thông tin sản phẩm không hợp lệ.");
+                }
                 // Gọi phương thức AddAsnyc từ repository để thêm sản phẩm
-                return await _productRepository.AddAsnyc(product);
+                return await _productRepository.AddAsnyc(product) ;
             }
             catch (Exception ex)
             {
-                // Ghi log hoặc xử lý lỗi tùy theo yêu cầu
-                throw new Exception("Có lỗi khi tạo sản phẩm", ex);
+                // Ghi log lỗi chi tiết
+                _logger.LogError(ex, "Lỗi khi tạo sản phẩm");
+                _logger.LogError(ex.Message, ex);
+
+                // Ném lại lỗi với thông báo chi tiết hơn
+                throw new Exception($"Có lỗi khi tạo sản phẩm: {ex.Message}", ex);
             }
         }
         public async Task<ProductViewModel> update(int id, ProductViewModel product)
