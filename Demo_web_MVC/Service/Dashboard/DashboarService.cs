@@ -1,0 +1,32 @@
+﻿using Demo_web_MVC.Models.ViewModel.Dashboard;
+using Demo_web_MVC.Repository.Dashboard;
+using Microsoft.AspNetCore.Mvc;
+using static Demo_web_MVC.Models.ViewModel.Dashboard.DashboardViewModel;
+
+namespace Demo_web_MVC.Service.Dashboard
+{
+    public class DashboarService:IDashboarService
+    {
+        private readonly IDashboardRepository _dashboardRepository;
+        private readonly ILogger<DashboarService> _logger;
+        public DashboarService ( IDashboardRepository dashboardRepository, ILogger<DashboarService> logger)
+        {
+            _dashboardRepository = dashboardRepository;
+            _logger = logger;
+        }
+        public async Task<DashboardViewModel> GetOrdersAndProductsAsync()
+        {
+            try
+            {
+                var result = await _dashboardRepository.GetOrdersAndProductsAsync();
+                
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Có lỗi khi lấy dữ liệu dashboard: {ex.Message}");
+                return null; // Hoặc trả về một đối tượng mặc định
+            }
+        }
+    }
+}

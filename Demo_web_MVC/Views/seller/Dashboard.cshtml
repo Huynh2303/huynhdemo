@@ -1,95 +1,358 @@
-﻿@{
-    Layout = "_SellerLayout";  // Sử dụng layout riêng cho người bán
-}
+﻿@model  Demo_web_MVC.Models.ViewModel.Dashboard.DashboardViewModel
+<!DOCTYPE html>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    <!-- Thẻ Tổng Đơn Hàng -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-lg font-semibold">Tổng Đơn Hàng</h3>
-        <p class="text-3xl text-blue-600">@ViewBag.TotalOrders</p>
-    </div>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "on-secondary-container": "#616363",
+                        "secondary-container": "#dfe0e0",
+                        "primary": "#00658d",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdcc0",
+                        "tertiary-container": "#ea8c21",
+                        "on-secondary-fixed-variant": "#454747",
+                        "tertiary-fixed-dim": "#ffb876",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "outline-variant": "#bdc8d1",
+                        "on-surface-variant": "#3e4850",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#eaeef4",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004c6b",
+                        "on-primary-fixed": "#001e2d",
+                        "on-tertiary-container": "#572f00",
+                        "inverse-on-surface": "#ecf1f7",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#d6dae0",
+                        "surface-container-low": "#eff4fa",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "background": "#f5faff",
+                        "secondary-fixed": "#e2e2e2",
+                        "outline": "#6e7881",
+                        "on-error": "#ffffff",
+                        "tertiary": "#8d4f00",
+                        "on-primary-container": "#003e58",
+                        "on-background": "#171c20",
+                        "inverse-primary": "#82cfff",
+                        "surface-bright": "#f5faff",
+                        "inverse-surface": "#2c3135",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-surface": "#171c20",
+                        "surface-variant": "#dee3e8",
+                        "primary-container": "#00aeef",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#dee3e8",
+                        "surface-container-high": "#e4e9ee",
+                        "surface": "#f5faff",
+                        "surface-tint": "#00658d",
+                        "secondary": "#5d5f5f",
+                        "primary-fixed": "#c6e7ff",
+                        "primary-fixed-dim": "#82cfff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "8px",
+                        "xl": "12px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "xl": "48px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "price-lg": ["Be Vietnam Pro"],
+                        "label-bold": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-base": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "price-lg": ["24px", {"lineHeight": "1", "fontWeight": "700"}],
+                        "label-bold": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-base": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
 
-    <!-- Thẻ Đơn Hôm Nay -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-lg font-semibold">Đơn Hôm Nay</h3>
-        <p class="text-3xl text-orange-600">@ViewBag.OrdersToday</p>
-    </div>
-
-    <!-- Thẻ Tổng Doanh Thu -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-lg font-semibold">Tổng Doanh Thu</h3>
-        <p class="text-3xl text-green-600">@ViewBag.TotalRevenue</p>
-    </div>
-
-    <!-- Thẻ Sản Phẩm -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-lg font-semibold">Sản Phẩm</h3>
-        <p class="text-3xl text-purple-600">@ViewBag.TotalProducts</p>
-    </div>
-</div>
-
-<!-- Bảng Đơn Hàng Gần Đây -->
-<div class="bg-white p-6 rounded-lg shadow-lg mb-8">
-    <h3 class="text-xl font-semibold mb-4">Đơn hàng gần đây</h3>
-    <table class="w-full table-auto">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="p-2">Mã đơn</th>
-                <th class="p-2">Khách hàng</th>
-                <th class="p-2">Trạng thái</th>
-                <th class="p-2 text-right">Tổng tiền</th>
-                <th class="p-2 text-center">Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="p-2">#12345</td>
-                <td class="p-2">Nguyen Van A</td>
-                <td class="p-2"><span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">Pending</span></td>
-                <td class="p-2 text-right">1.200.000 đ</td>
-                <td class="p-2 text-center"><button class="text-blue-500">Xem chi tiết</button></td>
-            </tr>
-            <tr>
-                <td class="p-2">#12346</td>
-                <td class="p-2">Tran Thi B</td>
-                <td class="p-2"><span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Shipping</span></td>
-                <td class="p-2 text-right">450.000 đ</td>
-                <td class="p-2 text-center"><button class="text-blue-500">Xem chi tiết</button></td>
-            </tr>
-            <tr>
-                <td class="p-2">#12347</td>
-                <td class="p-2">Le Van C</td>
-                <td class="p-2"><span class="bg-green-200 text-green-800 px-2 py-1 rounded-full">Completed</span></td>
-                <td class="p-2 text-right">2.150.000 đ</td>
-                <td class="p-2 text-center"><button class="text-blue-500">Xem chi tiết</button></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- Sản Phẩm Nổi Bật -->
-<div class="bg-white p-6 rounded-lg shadow-lg mb-8">
-    <h3 class="text-xl font-semibold mb-4">Sản phẩm nổi bật</h3>
-    <div class="flex space-x-4">
-        <div class="w-1/4 bg-gray-100 p-4 rounded-lg">
-            <img src="image-link-here" alt="Product 1" class="w-full h-40 object-cover rounded-lg mb-2" />
-            <p class="font-semibold">Đồng hồ thông minh Pro X</p>
-            <p class="text-sm text-gray-600">3.490.000 đ</p>
-            <p class="text-xs text-gray-400">Kho: 24</p>
+<body class="bg-background font-body-base text-on-background">
+    <!-- Predicted Component: SideNavBar -->
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-surface dark:bg-surface-container shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col py-lg px-md h-full z-40">
+        <div class="mb-xl px-sm">
+            <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Seller Pro</h1>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Vibrant blue dashboard</p>
         </div>
-        <div class="w-1/4 bg-gray-100 p-4 rounded-lg">
-            <img src="image-link-here" alt="Product 2" class="w-full h-40 object-cover rounded-lg mb-2" />
-            <p class="font-semibold">Tai nghe chống ồn</p>
-            <p class="text-sm text-gray-600">1.250.000 đ</p>
-            <p class="text-xs text-gray-400">Kho: 12</p>
+        <nav class="flex-1 space-y-sm">
+            <!-- Dashboard Tab (Active) -->
+            <a class="flex items-center gap-md p-md rounded-lg text-primary-container dark:text-primary-fixed-dim font-bold border-r-4 border-primary-container bg-surface-container-high transition-colors duration-200 hover:bg-surface-container-high scale-100 hover:scale-[1.02]" href="#">
+                <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                <span class="font-label-bold text-label-bold">Dashboard</span>
+            </a>
+            <!-- Products Tab -->
+            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                <span class="font-label-bold text-label-bold">Products</span>
+            </a>
+            <!-- Orders Tab -->
+            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                <span class="font-label-bold text-label-bold">Orders</span>
+            </a>
+            <!-- Customers Tab -->
+            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="groups">groups</span>
+                <span class="font-label-bold text-label-bold">Customers</span>
+            </a>
+            <!-- Statistics Tab -->
+            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+                <span class="font-label-bold text-label-bold">Statistics</span>
+            </a>
+        </nav>
+        <div class="mt-auto border-t border-outline-variant pt-lg">
+            <button class="w-full mb-md bg-primary-container text-on-primary font-label-bold text-label-bold py-md rounded-lg shadow-[0px_4px_12px_rgba(0,0,0,0.1)] active:scale-95 duration-150 transition-transform">
+                Add New Product
+            </button>
+            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                <span class="font-label-bold text-label-bold">Logout</span>
+            </a>
         </div>
-        <div class="w-1/4 bg-gray-100 p-4 rounded-lg">
-            <img src="image-link-here" alt="Product 3" class="w-full h-40 object-cover rounded-lg mb-2" />
-            <p class="font-semibold">Máy ảnh Mirrorless</p>
-            <p class="text-sm text-gray-600">18.900.000 đ</p>
-            <p class="text-xs text-gray-400">Kho: 5</p>
+    </aside>
+    <!-- Predicted Component: TopNavBar -->
+    <header class="fixed top-0 right-0 w-[calc(100%-256px)] z-30 bg-surface/90 dark:bg-surface-container/90 backdrop-blur-md shadow-[0px_8px_24px_rgba(0,0,0,0.1)] flex justify-between items-center h-16 px-lg w-full ml-64">
+        <div class="flex items-center gap-md bg-surface-container-low px-md py-sm rounded-lg border border-outline-variant w-96">
+            <span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+            <input class="bg-transparent border-none focus:ring-0 text-body-sm w-full" placeholder="Tìm kiếm sản phẩm..." type="text" />
         </div>
-    </div>
-</div>
+        <div class="flex items-center gap-lg">
+            <h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Dashboard Overview</h2>
+            <div class="flex gap-md">
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full hover:bg-surface-container-high" data-icon="notifications">notifications</button>
+                <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full hover:bg-surface-container-high" data-icon="settings">settings</button>
+            </div>
+            <div class="flex items-center gap-sm">
+                <div class="w-10 h-10 rounded-full bg-primary-container overflow-hidden">
+                    <img alt="Seller Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a smiling male executive in his early 40s wearing a modern tailored navy blue suit. The background is a brightly lit, minimalist office space with soft daylight and hints of vibrant blue geometric accents, reflecting a clean tech-savvy branding style. The lighting is high-key and flattering, emphasizing reliability and professional confidence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjO3dFMLzvR5cRZ72danJQmFP5vsC24pWRYdphjRPUqFHnvQ_KxN30yQ4H4h5LvuseYMvpqD__Wt-fEyhHVV20ge7GSxS-gTuggvi5eRKJnZGhCB73tbb2FGEzimBSWcqJzLFvSeGxZwJ4LB9kedYBq74PLHfK0BjNy1I_EAF0BShbFrTpMzj4e-SxH3EYuZpXinsTQPaxNV25QPTWzEsG4pAo-9MAbOhTgZIOlwHcZfBcIsbDDMokDNQtE8DwD47JgjVElwbsK2H6" />
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="ml-64 pt-24 p-lg min-h-screen">
+        <!-- Statistical Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl">
+            <!-- Card 1 -->
+            <div class="bg-surface p-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-primary-container flex items-center justify-between hover:-translate-y-1 transition-transform duration-200">
+                <div>
+                    <p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-xs">Tổng Đơn Hàng</p>
+                    <p class="font-display-lg text-display-lg text-on-surface">@ViewBag.TotalOrders</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary-container" data-icon="shopping_bag" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-surface p-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-tertiary-container flex items-center justify-between hover:-translate-y-1 transition-transform duration-200">
+                <div>
+                    <p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-xs">Đơn Hôm Nay</p>
+                    <p class="font-display-lg text-display-lg text-on-surface">@ViewBag.TotalOrdersToday</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-tertiary-container" data-icon="today" style="font-variation-settings: 'FILL' 1;">today</span>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-surface p-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-primary flex items-center justify-between hover:-translate-y-1 transition-transform duration-200">
+                <div>
+                    <p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-xs">Tổng Doanh Thu</p>
+                    <p class="font-display-lg text-display-lg text-on-surface">@ViewBag.TotalRevenue</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary" data-icon="payments" style="font-variation-settings: 'FILL' ;">payments</span>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-surface p-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-outline flex items-center justify-between hover:-translate-y-1 transition-transform duration-200">
+                <div>
+                    <p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-xs">Sản Phẩm</p>
+                    <p class="font-display-lg text-display-lg text-on-surface">@ViewBag.Product</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-outline/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-outline" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+            <!-- Recent Orders Table (Bento Grid Area 2/3) -->
+            <div class="lg:col-span-2 bg-surface rounded-xl shadow-[0px_8px_24px_rgba(0,0,0,0.1)] overflow-hidden">
+                <div class="p-lg border-b border-outline-variant flex justify-between items-center">
+                    <h3 class="font-headline-md text-headline-md text-primary">Đơn hàng gần đây</h3>
+                    <button class="text-primary font-label-bold text-label-bold hover:underline">Tất cả đơn hàng</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-surface-container-low text-on-surface-variant font-label-bold text-label-bold">
+                            <tr>
+                                <th class="p-md">Mã đơn</th>
+                                <th class="p-md">Khách hàng</th>
+                                <th class="p-md">Trạng thái</th>
+                                <th class="p-md text-right">Tổng tiền</th>
+                                <th class="p-md text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-body-sm">
 
-</main>
+                            @foreach (var order in Model.Orders)
+                            {
+                                <tr class="border-b border-outline-variant hover:bg-surface-container-lowest transition-colors">
+                                    <!-- Hiển thị OrderId -->
+                                    <td class="p-md font-bold">@order.Id</td>
+
+                                    <!-- Hiển thị Name -->
+                                    <td class="p-md">@order.user</td>
+
+                                    <!-- Hiển thị Status -->
+                                    <td class="p-md">
+                                        <span class="px-sm py-xs bg-yellow-100 text-yellow-800 rounded-full font-label-bold text-[10px] uppercase">
+                                            @order.Status
+                                        </span>
+                                    </td>
+
+                                    <!-- Hiển thị Price (Giá) -->
+                                    <td class="p-md text-right font-price-lg text-price-lg">@order.TotalAmount</td>
+
+                                    <!-- Hiển thị button "Xem chi tiết" -->
+                                    <td class="p-md text-center">
+                                        <button class="text-primary-container hover:bg-primary-container/10 px-sm py-xs rounded-lg transition-colors">Xem chi tiết</button>
+                                    </td>
+                                </tr>
+                            }
+                            
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Quick Product Management (Bento Grid Area 1/3) -->
+            <div class="bg-surface rounded-xl shadow-[0px_8px_24px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col">
+                <div class="p-lg border-b border-outline-variant">
+                    <h3 class="font-headline-md text-headline-md text-primary">Sản phẩm nổi bật</h3>
+                </div>
+                <div class="p-md flex-1 space-y-md overflow-y-auto max-h-[400px]">
+                    @foreach(var item in Model.Products)
+                    {
+                        <!-- Simulated Razor Loop for Product Item -->
+                        <div class="flex items-center gap-md p-sm rounded-lg hover:bg-surface-container-low transition-all">
+                            <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                                <img alt="Smart Watch" class="w-full h-full object-cover" data-alt="A premium smart watch with a vibrant blue silicone strap and a sleek black digital face, presented on a clean white surface with soft ambient lighting. The product photography has a minimalist, high-end feel, using a vibrant blue and cool white color palette that fits a modern tech dashboard aesthetic. The lighting creates subtle reflections on the glass face, emphasizing the high-quality materials."
+                                     src="@Url.Content(item.imageUrl.FirstOrDefault() ?? "/uploads/images/no-image.jpg")" />
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-label-bold text-label-bold text-on-surface truncate">@item.Name</p>
+                                <p class="text-primary font-price-lg text-price-lg">@item?.Variants?.FirstOrDefault()?.Price</p>
+                                <p class="text-body-sm text-on-surface-variant">Kho: @item?.Variants?.FirstOrDefault()?.Stock</p>
+                            </div>
+                            <div class="flex flex-col gap-xs">
+                                <button class="material-symbols-outlined text-outline hover:text-primary transition-colors text-[20px]" data-icon="edit">edit</button>
+                                <button class="material-symbols-outlined text-outline hover:text-error transition-colors text-[20px]" data-icon="delete">delete</button>
+                            </div>
+                        </div>
+                    }
+                    
+
+                    <div class="flex items-center gap-md p-sm rounded-lg hover:bg-surface-container-low transition-all">
+                        <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                            <img alt="Headphones" class="w-full h-full object-cover" data-alt="A set of professional studio headphones in matte black with chrome accents, resting on a minimalist desk surface. The background is a soft-focus modern studio environment with cool blue backlighting. The image is captured with professional product lighting, emphasizing the textures and the sleek, energetic brand identity of a high-tech electronics dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWvnR6douhdZO22wAgTql0HWLyk9SqMoKVpW_JKtDmaqFn03fwQmu9GbP8aunCHfjtePnw7lwuaAb0VYoZ72Rr59E5k-8VBzOy8QobS1CzYwhSUqKITjBDKa5d2e0Q2c_BM2L41Fty-ZOYKxH9t1_eWHtOYJVuuBc65yxQ-Ylm-fKd_ZnKN5MubdnVr3Tfx9CSU0wJrr2KLLFeD5eVW8aEDDBAt0harQRix9lq6WMLnjtTigBqcV9Qo67U_qw-o-oLcBTfRQfOXI6G" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-label-bold text-label-bold text-on-surface truncate">Tai nghe chống ồn Bass Boost</p>
+                            <p class="text-primary font-price-lg text-price-lg">1.250.000 đ</p>
+                            <p class="text-body-sm text-on-surface-variant">Kho: 12</p>
+                        </div>
+                        <div class="flex flex-col gap-xs">
+                            <button class="material-symbols-outlined text-outline hover:text-primary transition-colors text-[20px]" data-icon="edit">edit</button>
+                            <button class="material-symbols-outlined text-outline hover:text-error transition-colors text-[20px]" data-icon="delete">delete</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-md p-sm rounded-lg hover:bg-surface-container-low transition-all">
+                        <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                            <img alt="Camera" class="w-full h-full object-cover" data-alt="A vintage-style digital mirrorless camera with a leather wrap and silver body, positioned on a clean marble surface. Soft sunlight streams in from the side, creating long shadows and high-contrast highlights. The overall vibe is clean, minimal, and premium, utilizing a color palette of white, silver, and deep blue accents to match the modern admin interface style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqvgD1vJ4nS4JatSzu6aysQ7nbRKNuGzFiUnOf9GjCY92onswxauWl9BYpwnhtTi8zmEmqxfx6-CMo74TIKlEDDIMpxmMKfTa-LxKYyYwCKbUTjJNkPLMirGoRpOWqn5X1Rmj1P216aFp9PRdPsW0blaPzCY26HlLD4cJbuL8rYWupCowXzbaLkPdV1QmlCp_MdOqrKVJejTk6daqD-9ChJyM0qYK7eFofzxBDx52nVxcxvEImk0IhHIjXbvcA8ZP2-94WaW8OYBar" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-label-bold text-label-bold text-on-surface truncate">Máy ảnh Mirrorless Retro</p>
+                            <p class="text-primary font-price-lg text-price-lg">18.900.000 đ</p>
+                            <p class="text-body-sm text-on-surface-variant">Kho: 5</p>
+                        </div>
+                        <div class="flex flex-col gap-xs">
+                            <button class="material-symbols-outlined text-outline hover:text-primary transition-colors text-[20px]" data-icon="edit">edit</button>
+                            <button class="material-symbols-outlined text-outline hover:text-error transition-colors text-[20px]" data-icon="delete">delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-md bg-surface-container-low text-center">
+                    <button class="text-primary font-label-bold text-label-bold hover:underline">Quản lý kho hàng</button>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Area -->
+        <footer class="mt-xl p-xl bg-surface-container rounded-xl grid grid-cols-1 md:grid-cols-4 gap-lg">
+            <div>
+                <h4 class="font-label-bold text-label-bold text-primary mb-md">Về Seller Pro</h4>
+                <p class="text-body-sm text-on-surface-variant">Hệ thống quản lý bán hàng thông minh hàng đầu cho các nhà bán lẻ hiện đại.</p>
+            </div>
+            <div>
+                <h4 class="font-label-bold text-label-bold text-primary mb-md">Hỗ trợ</h4>
+                <ul class="text-body-sm text-on-surface-variant space-y-sm">
+                    <li><a class="hover:text-primary transition-colors" href="#">Trung tâm trợ giúp</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">Cộng đồng người bán</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-label-bold text-label-bold text-primary mb-md">Pháp lý</h4>
+                <ul class="text-body-sm text-on-surface-variant space-y-sm">
+                    <li><a class="hover:text-primary transition-colors" href="#">Chính sách bảo mật</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">Điều khoản dịch vụ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-label-bold text-label-bold text-primary mb-md">Liên hệ</h4>
+                <p class="text-body-sm text-on-surface-variant">hotline: 1900 1234</p>
+                <p class="text-body-sm text-on-surface-variant">Email: support@sellerpro.vn</p>
+            </div>
+        </footer>
+    </main>
+</body>
+</html>

@@ -4,6 +4,7 @@ using Demo_web_MVC.Repository;
 using Demo_web_MVC.Repository.Addresss;
 using Demo_web_MVC.Repository.Carts;
 using Demo_web_MVC.Repository.Category;
+using Demo_web_MVC.Repository.Dashboard;
 using Demo_web_MVC.Repository.Oder;
 using Demo_web_MVC.Repository.Paging;
 using Demo_web_MVC.Repository.Payment;
@@ -13,6 +14,7 @@ using Demo_web_MVC.Service;
 using Demo_web_MVC.Service.Address;
 using Demo_web_MVC.Service.Cart;
 using Demo_web_MVC.Service.Category;
+using Demo_web_MVC.Service.Dashboard;
 using Demo_web_MVC.Service.Oder;
 using Demo_web_MVC.Service.Payment;
 using Demo_web_MVC.Service.Product;
@@ -26,6 +28,8 @@ using Microsoft.Extensions.FileProviders;
 using NETCore.MailKit.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IDashboarService, DashboarService>();
 builder.Services.AddScoped<IPagingReponsitory, PagingReponsitory>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<ISearchReponsitory, SearchReponsitory>();
@@ -101,11 +105,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-
-//// Cấu hình route cho seller dashboard (trang người bán)
-//app.MapControllerRoute(
-//    name: "sellerDashboard",   // Tên route mới
-//    pattern: "seller/dashboard",  // Đường dẫn bạn muốn thêm
-//    defaults: new { controller = "Seller", action = "Dashboard", area = "Seller" }); // Controller và action của Seller
 
 app.Run();

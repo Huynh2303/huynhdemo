@@ -16,5 +16,6 @@ namespace Demo_web_MVC.Models.ViewModel.Oder
         public List<AddressViewModel> AddressViewModels { get; set; } = new();
         public List<CartItemViewModel> cartItems { get; set; } = new();
         public PaymentMethod PaymentMethod { get; set; }
+        public string? user { get; set; }
     }
 }

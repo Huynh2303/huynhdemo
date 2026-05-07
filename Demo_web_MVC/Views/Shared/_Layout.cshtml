@@ -1,5 +1,6 @@
 ﻿
 @{
+
     var title = ViewData["Title"] ?? "Demo_web_MVC";
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
@@ -9,11 +10,11 @@
         controller.Equals("Product", StringComparison.OrdinalIgnoreCase) ||
         controller.Equals("Cart", StringComparison.OrdinalIgnoreCase) ||
         controller.Equals("Search", StringComparison.OrdinalIgnoreCase) ||
-        controller.Equals("Adress", StringComparison.OrdinalIgnoreCase);
-        
+        controller.Equals("Adress", StringComparison.OrdinalIgnoreCase)||
+        controller.Equals("Oder", StringComparison.OrdinalIgnoreCase);
     var keyword = ViewBag.Keyword != null ? ViewBag.Keyword.ToString() : "";
     var cartCount = ViewBag.CartCount != null ? (int)ViewBag.CartCount : 0;
-    //var cartCountS= ViewBag.CartCounts !=null ? (int)ViewBag.CartCounts : 0;
+    
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -223,7 +224,10 @@
             
         </footer>
     }
-    else
+    <main class="shop-main">
+        @RenderBody()
+    </main>
+    @* else
     {
         <div class="container">
             <main role="main" class="pb-3">
@@ -284,8 +288,10 @@
             </div>
             
         </footer>
-    }
+    } *@
+    
 
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

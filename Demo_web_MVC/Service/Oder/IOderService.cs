@@ -15,7 +15,7 @@ namespace Demo_web_MVC.Service.Oder
         //Task<decimal> CalculateOrderTotalAsyncService(int userId);
         Task<CheckoutViewModel>CheckoutAsync(int userId,List<int> selectedCartItemIds);
         Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId);
-        Task<List<int>> GetAllOrderIdsAsync();
+        
         Task<List<OderViewModel>> GetAllOrders(int userId, string status);
     }
 }

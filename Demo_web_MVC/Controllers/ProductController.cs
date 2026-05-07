@@ -76,6 +76,8 @@ namespace Demo_web_MVC.Controllers
                 .OrderBy(x => Guid.NewGuid()) // 🔥 random
                 .Take(4)
                 .ToList();
+            var cartCount = await GetCartCount();
+            ViewBag.CartCount = cartCount;
             return View(productDetails);
         }
         [Authorize(Roles = "ADMIN, SEFF")]

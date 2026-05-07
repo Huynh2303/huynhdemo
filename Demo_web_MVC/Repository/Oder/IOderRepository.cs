@@ -16,10 +16,12 @@ namespace Demo_web_MVC.Repository.Oder
 
         //Task<bool> CreatePaymentAsync(int orderId, string paymentMethod, decimal amount, string status);
 
-        Task<List<int>> GetAllOrderIdsAsync();
+        Task<List<OderViewModel>> GetAllOrderIdsAsync(int orderId);
         Task<decimal> CalculateOrderTotalAsync(int userId);
         //Task<List<OrderItemViewModel>> GetOrderItemsAsync(int orderId);
         Task<CheckoutViewModel> CheckOutAsync (int userId,List<int> selectedCartItemIds);
         Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId);
+        Task<bool> DeleteOrderAsync(int orderId); // Xóa đơn hàng
+        Task<bool> CreateAsync(int orderId);
     }
 }
