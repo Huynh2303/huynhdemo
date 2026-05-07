@@ -25,16 +25,15 @@ namespace Demo_web_MVC.Service.Product
                 {
                     throw new ArgumentException("Thông tin sản phẩm không hợp lệ.");
                 }
-                // Gọi phương thức AddAsnyc từ repository để thêm sản phẩm
+                
                 return await _productRepository.AddAsnyc(product) ;
             }
             catch (Exception ex)
             {
-                // Ghi log lỗi chi tiết
+               
                 _logger.LogError(ex, "Lỗi khi tạo sản phẩm");
                 _logger.LogError(ex.Message, ex);
-
-                // Ném lại lỗi với thông báo chi tiết hơn
+                
                 throw new Exception($"Có lỗi khi tạo sản phẩm: {ex.Message}", ex);
             }
         }
