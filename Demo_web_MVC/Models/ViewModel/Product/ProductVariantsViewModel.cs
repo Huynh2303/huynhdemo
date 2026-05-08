@@ -13,5 +13,6 @@
 
         public int Stock { get; set; }
         public List<string> ImageUrlsVariants { get; set; } = new List<string>();
+        public List<IFormFile>? ImageFiles { get; set; }
     }
 }

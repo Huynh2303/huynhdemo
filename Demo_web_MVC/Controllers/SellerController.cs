@@ -65,7 +65,7 @@ namespace Demo_web_MVC.Controllers
             // Trả về view với dữ liệu từ service
             return View(productsManagerViewModel);
         }
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> CreateProduct()
         {
             // Lấy danh sách các danh mục từ cơ sở dữ liệu
             var categories = await _categoryService.GetAllCategories();
@@ -78,27 +78,95 @@ namespace Demo_web_MVC.Controllers
             // Tạo ProductViewModel và gán danh sách danh mục vào Categories
             var productViewModel = new ProductViewModel
             {
-                Categories = categoryViewModels  // Truyền vào thuộc tính Categories
+                Categories = categoryViewModels  
             };
+            
             return View(productViewModel);
         }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateProduct(ProductViewModel productVM, IFormFile[] imageUrl)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            // Kiểm tra nếu người dùng tải lên hình ảnh
+        //            if (imageUrl != null && imageUrl.Length > 0)
+        //            {
+        //                var uploadsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");
+        //                if (!Directory.Exists(uploadsDirectory))
+        //                {
+        //                    Directory.CreateDirectory(uploadsDirectory); // Tạo thư mục nếu chưa có
+        //                }
+
+        //                var fileNames = new List<string>();
+        //                foreach (var file in imageUrl)
+        //                {
+        //                    if (file.Length > 0)
+        //                    {
+        //                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+        //                        var filePath = Path.Combine(uploadsDirectory, fileName);
+
+        //                        using (var stream = new FileStream(filePath, FileMode.Create))
+        //                        {
+        //                            await file.CopyToAsync(stream);
+        //                        }
+
+        //                        fileNames.Add(fileName); // Đường dẫn tương đối đúng
+        //                    }
+        //                }
+        //                // Gán đường dẫn của các hình ảnh vào model
+        //                productVM.imageUrl = fileNames;
+
+        //            }
+
+        //            // Gọi phương thức Create từ service để tạo sản phẩm
+        //            var result = await _productService.creat(productVM);
+
+        //            if (result == null)
+        //            {
+        //                // Thêm thông báo lỗi chi tiết
+        //                ModelState.AddModelError("", "Không thể tạo sản phẩm, vui lòng thử lại.");
+        //            }
+        //            else
+        //            {
+        //                // Chuyển hướng nếu tạo sản phẩm thành công
+        //                return RedirectToAction("ProductsManager","Seller");
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Ghi log hoặc xử lý lỗi nếu có ngoại lệ xảy ra
+        //            ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
+        //        }
+        //    }
+
+        //    return View(productVM);
+        //}
         [HttpPost]
-        public async Task<IActionResult> Create(ProductViewModel productVM, IFormFile[] imageUrl)
+        public async Task<IActionResult> CreateProduct(ProductViewModel productVM, IFormFile[] imageUrl)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Kiểm tra nếu người dùng tải lên hình ảnh
+                    // Upload ảnh chính của sản phẩm
                     if (imageUrl != null && imageUrl.Length > 0)
                     {
-                        var uploadsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");
+                        var uploadsDirectory = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot",
+                            "uploads",
+                            "products"
+                        );
+
                         if (!Directory.Exists(uploadsDirectory))
                         {
-                            Directory.CreateDirectory(uploadsDirectory); // Tạo thư mục nếu chưa có
+                            Directory.CreateDirectory(uploadsDirectory);
                         }
 
                         var fileNames = new List<string>();
+
                         foreach (var file in imageUrl)
                         {
                             if (file.Length > 0)
@@ -111,34 +179,77 @@ namespace Demo_web_MVC.Controllers
                                     await file.CopyToAsync(stream);
                                 }
 
-                                fileNames.Add(fileName); // Đường dẫn tương đối đúng
+                                fileNames.Add(fileName);
                             }
                         }
-                        // Gán đường dẫn của các hình ảnh vào model
-                        productVM.imageUrl = fileNames;
 
+                        productVM.imageUrl = fileNames;
                     }
 
-                    // Gọi phương thức Create từ service để tạo sản phẩm
+                    // Upload ảnh riêng của từng variant
+                    if (productVM.Variants != null && productVM.Variants.Any())
+                    {
+                        var variantUploadsDirectory = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot",
+                            "uploads",
+                            "variants"
+                        );
+
+                        if (!Directory.Exists(variantUploadsDirectory))
+                        {
+                            Directory.CreateDirectory(variantUploadsDirectory);
+                        }
+
+                        foreach (var variant in productVM.Variants)
+                        {
+                            variant.ImageUrlsVariants = new List<string>();
+
+                            if (variant.ImageFiles != null && variant.ImageFiles.Any())
+                            {
+                                foreach (var file in variant.ImageFiles)
+                                {
+                                    if (file.Length > 0)
+                                    {
+                                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                                        var filePath = Path.Combine(variantUploadsDirectory, fileName);
+
+                                        using (var stream = new FileStream(filePath, FileMode.Create))
+                                        {
+                                            await file.CopyToAsync(stream);
+                                        }
+
+                                        variant.ImageUrlsVariants.Add($"/uploads/variants/{fileName}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     var result = await _productService.creat(productVM);
 
                     if (result == null)
                     {
-                        // Thêm thông báo lỗi chi tiết
                         ModelState.AddModelError("", "Không thể tạo sản phẩm, vui lòng thử lại.");
                     }
                     else
                     {
-                        // Chuyển hướng nếu tạo sản phẩm thành công
-                        return RedirectToAction("Index");
+                        return RedirectToAction("ProductsManager");
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Ghi log hoặc xử lý lỗi nếu có ngoại lệ xảy ra
                     ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
                 }
             }
+
+            var categories = await _categoryService.GetAllCategories();
+
+            productVM.Categories = categories.Select(c => new CategoryViewModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
 
             return View(productVM);
         }

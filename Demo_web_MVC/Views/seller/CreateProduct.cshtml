@@ -1,103 +1,82 @@
-﻿<!DOCTYPE html>
+﻿@model Demo_web_MVC.Models.ViewModel.Product.ProductViewModel
 
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+}
+
+<!DOCTYPE html>
 <html class="light" lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Thêm sản phẩm | AdminPanel</title>
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
-                    "colors": {
+                    colors: {
                         "surface-dim": "#d6dae0",
-                        "on-tertiary": "#ffffff",
-                        "surface-container-lowest": "#ffffff",
-                        "secondary": "#5d5f5f",
-                        "surface-container-high": "#e4e9ee",
-                        "on-secondary-container": "#616363",
-                        "tertiary": "#8d4f00",
-                        "secondary-fixed-dim": "#c6c6c7",
-                        "tertiary-fixed": "#ffdcc0",
-                        "surface-variant": "#dee3e8",
                         "on-primary": "#ffffff",
-                        "outline": "#6e7881",
-                        "surface-container-low": "#eff4fa",
-                        "surface-container": "#eaeef4",
-                        "background": "#f5faff",
-                        "primary-fixed": "#c6e7ff",
                         "surface-bright": "#f5faff",
-                        "on-secondary-fixed": "#1a1c1c",
-                        "surface-tint": "#00658d",
-                        "tertiary-fixed-dim": "#ffb876",
-                        "secondary-container": "#dfe0e0",
-                        "on-error-container": "#93000a",
-                        "outline-variant": "#bdc8d1",
-                        "inverse-surface": "#2c3135",
-                        "inverse-on-surface": "#ecf1f7",
-                        "on-tertiary-fixed": "#2d1600",
-                        "on-secondary": "#ffffff",
-                        "error-container": "#ffdad6",
-                        "primary-fixed-dim": "#82cfff",
-                        "on-tertiary-fixed-variant": "#6b3b00",
-                        "tertiary-container": "#ea8c21",
-                        "on-primary-container": "#003e58",
-                        "on-error": "#ffffff",
                         "primary-container": "#00aeef",
-                        "inverse-primary": "#82cfff",
-                        "on-secondary-fixed-variant": "#454747",
-                        "on-primary-fixed": "#001e2d",
-                        "error": "#ba1a1a",
-                        "primary": "#00658d",
-                        "on-tertiary-container": "#572f00",
                         "surface-container-highest": "#dee3e8",
+                        "error": "#ba1a1a",
+                        "outline": "#6e7881",
+                        "inverse-surface": "#2c3135",
+                        "on-background": "#171c20",
+                        "background": "#f5faff",
+                        "surface-container": "#eaeef4",
+                        "primary": "#00658d",
                         "on-surface": "#171c20",
-                        "on-surface-variant": "#3e4850",
+                        "secondary": "#5d5f5f",
                         "surface": "#f5faff",
-                        "secondary-fixed": "#e2e2e2",
-                        "on-primary-fixed-variant": "#004c6b",
-                        "on-background": "#171c20"
+                        "outline-variant": "#bdc8d1",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#eff4fa",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e4e9ee",
+                        "on-surface-variant": "#3e4850",
+                        "on-primary-container": "#003e58"
                     },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
                     },
-                    "spacing": {
-                        "md": "16px",
-                        "container-max": "1200px",
-                        "unit": "4px",
-                        "xl": "48px",
-                        "lg": "24px",
-                        "xs": "4px",
-                        "gutter": "16px",
-                        "sm": "8px"
+                    spacing: {
+                        xs: "4px",
+                        sm: "8px",
+                        md: "16px",
+                        lg: "24px",
+                        xl: "48px"
                     },
-                    "fontFamily": {
-                        "headline-md": ["Be Vietnam Pro"],
-                        "body-sm": ["Be Vietnam Pro"],
+                    fontFamily: {
                         "label-bold": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
                         "display-lg": ["Be Vietnam Pro"],
                         "body-base": ["Be Vietnam Pro"],
-                        "price-lg": ["Be Vietnam Pro"]
+                        "body-sm": ["Be Vietnam Pro"]
                     },
-                    "fontSize": {
-                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                        "label-bold": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "700"}],
-                        "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
-                        "body-base": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                        "price-lg": ["24px", {"lineHeight": "1", "fontWeight": "700"}]
+                    fontSize: {
+                        "label-bold": ["12px", { lineHeight: "1.2", letterSpacing: "0.02em", fontWeight: "700" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+                        "headline-md": ["20px", { lineHeight: "1.4", fontWeight: "600" }],
+                        "display-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "body-base": ["16px", { lineHeight: "1.5", fontWeight: "400" }]
                     }
-                },
-            },
+                }
+            }
         }
     </script>
+
     <style>
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
@@ -107,223 +86,513 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
-        .custom-shadow {
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+        .variant-row:hover .variant-actions {
+            opacity: 1;
         }
 
-        .active-shadow {
-            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #00AEEF !important;
-            outline: none;
-            ring: 0;
+        .variant-actions {
+            opacity: 0;
+            transition: opacity 0.2s;
         }
     </style>
 </head>
-<body class="bg-background text-on-surface">
-    <!-- SideNavBar Anchor -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-surface dark:bg-surface-container shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col py-lg px-md z-40">
-        <div class="mb-xl px-sm">
-            <span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Seller Pro</span>
-            <p class="text-on-surface-variant font-body-sm text-body-sm">Vibrant blue dashboard</p>
-        </div>
-        <nav class="flex-grow space-y-unit">
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
-                <span class="material-symbols-outlined">dashboard</span> Dashboard
-            </a>
-            <a class="flex items-center gap-md p-md rounded-lg text-primary-container dark:text-primary-fixed-dim font-bold border-r-4 border-primary-container bg-surface-container-high transition-transform duration-150 scale-95" href="#">
-                <span class="material-symbols-outlined">inventory_2</span> Products
-            </a>
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
-                <span class="material-symbols-outlined">shopping_cart</span> Orders
-            </a>
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
-                <span class="material-symbols-outlined">groups</span> Customers
-            </a>
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
-                <span class="material-symbols-outlined">query_stats</span> Statistics
-            </a>
-        </nav>
-        <div class="mt-auto pt-md border-t border-outline-variant">
-            <button class="w-full flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors">
-                <span class="material-symbols-outlined">logout</span> Logout
-            </button>
-        </div>
-    </aside>
-    <!-- TopNavBar Anchor -->
-    <header class="fixed top-0 right-0 w-[calc(100%-256px)] h-16 bg-surface/90 dark:bg-surface-container/90 backdrop-blur-md shadow-[0px_8px_24px_rgba(0,0,0,0.1)] z-30 flex justify-between items-center px-lg">
-        <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Thêm sản phẩm</h1>
-        <div class="flex items-center gap-lg">
-            <div class="relative hidden lg:block">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary">search</span>
-                <input class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg w-64 text-body-sm focus:ring-0" placeholder="Tìm kiếm..." type="text" />
-            </div>
-            <div class="flex items-center gap-md">
-                <button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
-                </button>
-                <button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-on-surface-variant">settings</span>
-                </button>
-                <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden border-2 border-white shadow-sm cursor-pointer">
-                    <img alt="Seller Profile" data-alt="A professional headshot of a confident tech entrepreneur wearing a modern charcoal suit in a high-key minimalist office environment. The lighting is soft and directional, emphasizing the bright, youthful blue color palette and modern aesthetic of the tech-savvy seller brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUyERIBl3HkfuzOqtJETzV6ckENFve-UIPSGrcvrO2cu9kRpOgKgUnOW2egXeKzwPabxQfp02Do4OfyS4Kh-hnJ-6TshTcTmrGwZ7jcVajg3hOj1XoF1du2pZvyyfOz7SZq2Q98GBZ0AvzFm7jUJSaMK4G88ZrDrjKGtxCOfDFq0o4z7ITNFowzdltrzkKfrqk9I7M4EKpymTRAvv0lpDnQxTXO2ksMQ182jCkT83Z0_h8EtxZhKcdOefXrzVa_96ioEqHkptOwI5U" />
-                </div>
-            </div>
-        </div>
-    </header>
-    <!-- Main Content -->
-    <main class="ml-64 mt-16 p-lg bg-background min-h-screen">
-        @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { @class = "max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-lg" }))
-        {
-            <!-- Left Column: Primary Information -->
-            <div class="lg:col-span-2 space-y-lg">
-                <!-- Section 1: Thông tin sản phẩm -->
-                <section class="bg-surface-container-lowest p-lg rounded-xl custom-shadow">
-                    <div class="flex items-center gap-sm mb-lg">
-                        <span class="material-symbols-outlined text-primary">description</span>
-                        <h2 class="font-headline-md text-headline-md">Thông tin sản phẩm</h2>
-                    </div>
-                    <div class="space-y-md">
-                        <div>
-                            <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Tên sản phẩm *</label>
-                            @Html.TextBoxFor(m = &gt; m.Name, new { @class = "w-full p-md bg-white border border-outline-variant rounded-lg font-body-base", placeholder = "Ví dụ: Áo thun Oversize Cotton" })
-                            @Html.ValidationMessageFor(m = &gt; m.Name, "", new { @class = "text-error font-body-sm text-body-sm mt-xs" })
-                        </div>
-                        <div class="grid grid-cols-2 gap-md">
-                            <div>
-                                <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Thương hiệu</label>
-                                @Html.DropDownListFor(m = &gt; m.BrandId, new SelectList(new[] { "Nike", "Adidas", "Uniqlo", "Coolmate" }), "Chọn thương hiệu", new { @class = "w-full p-md bg-white border border-outline-variant rounded-lg font-body-base" })
-                            </div>
-                            <div>
-                                <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Danh mục *</label>
-                                <select class="w-full p-md bg-white border border-outline-variant rounded-lg font-body-base">
-                                    <option>Áo &gt; Áo thun</option>
-                                    <option>Áo &gt; Áo sơ mi</option>
-                                    <option>Quần &gt; Quần Jean</option>
-                                    <option>Phụ kiện &gt; Túi xách</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block font-label-bold text-label-bold text-on-surface-variant mb-xs">Mô tả sản phẩm</label>
-                            @Html.TextAreaFor(m = &gt; m.Description, new { @class = "w-full p-md bg-white border border-outline-variant rounded-lg font-body-base min-h-[200px]", placeholder = "Mô tả chi tiết về sản phẩm của bạn..." })
-                        </div>
-                    </div>
-                </section>
-                <!-- Section 3: Biến thể sản phẩm -->
-                <section class="bg-surface-container-lowest p-lg rounded-xl custom-shadow">
-                    <div class="flex justify-between items-center mb-lg">
-                        <div class="flex items-center gap-sm">
-                            <span class="material-symbols-outlined text-primary">layers</span>
-                            <h2 class="font-headline-md text-headline-md">Biến thể sản phẩm</h2>
-                        </div>
-                        <button class="flex items-center gap-xs text-primary font-label-bold text-label-bold hover:underline" type="button">
-                            <span class="material-symbols-outlined text-[18px]">add</span> Thêm biến thể
-                        </button>
-                    </div>
-                    <div class="overflow-x-auto">
 
-                        @* @foreach (var variant in Model.Variants) { ... } *@
-                        <table class="w-full border-collapse">
-                            <thead class="bg-surface-container-low text-left">
-                                <tr>
-                                    <th class="p-md font-label-bold text-label-bold text-on-surface-variant">Kích cỡ</th>
-                                    <th class="p-md font-label-bold text-label-bold text-on-surface-variant">Màu sắc</th>
-                                    <th class="p-md font-label-bold text-label-bold text-on-surface-variant">Giá bán</th>
-                                    <th class="p-md font-label-bold text-label-bold text-on-surface-variant">Kho hàng</th>
-                                    <th class="p-md font-label-bold text-label-bold text-on-surface-variant">Ảnh</th>
-                                    <th class="p-md w-12"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-outline-variant">
-                                <!-- Sample Variant Row -->
-                                <tr>
-                                    <td class="p-md">
-                                        <input class="w-full p-xs border border-outline-variant rounded bg-white text-body-sm" type="text" value="XL" />
-                                    </td>
-                                    <td class="p-md">
-                                        <input class="w-full p-xs border border-outline-variant rounded bg-white text-body-sm" type="text" value="Xanh Vibrant" />
-                                    </td>
-                                    <td class="p-md">
-                                        <input class="w-full p-xs border border-outline-variant rounded bg-white text-body-sm" type="number" value="250000" />
-                                    </td>
-                                    <td class="p-md">
-                                        <input class="w-full p-xs border border-outline-variant rounded bg-white text-body-sm" type="number" value="100" />
-                                    </td>
-                                    <td class="p-md">
-                                        <div class="w-10 h-10 rounded border border-dashed border-outline-variant flex items-center justify-center cursor-pointer hover:bg-surface-container-low">
-                                            <span class="material-symbols-outlined text-[16px]">add_a_photo</span>
-                                        </div>
-                                    </td>
-                                    <td class="p-md">
-                                        <button class="text-error hover:bg-error-container p-1 rounded transition-colors" type="button">
-                                            <span class="material-symbols-outlined text-[18px]">delete</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <!-- Dynamic Row Logic Container -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            </div>
-            <!-- Right Column: Media & Status -->
-            <div class="space-y-lg">
-                <!-- Section 2: Ảnh sản phẩm -->
-                <section class="bg-surface-container-lowest p-lg rounded-xl custom-shadow">
-                    <div class="flex items-center gap-sm mb-lg">
-                        <span class="material-symbols-outlined text-primary">image</span>
-                        <h2 class="font-headline-md text-headline-md">Ảnh sản phẩm</h2>
-                    </div>
-                    <div class="grid grid-cols-2 gap-md mb-md">
-                        <!-- Preview Cards -->
-                        <div class="group relative aspect-square bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant">
-                            <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" data-alt="A studio shot of a premium cotton t-shirt displayed on a minimalist white mannequin. The lighting is high-key and soft, highlighting the texture of the vibrant blue fabric against a clean, off-white background in a professional e-commerce style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBh3qEoOi1Vkm_oswOkjiq0GFG4tlqUiguWVvUKpDRr7FynTMqsU1OS42taz2WJ4PFqLx5lG9Ffyy5I5Edjm8LCFXhrZAkNOql4KVNpqiAYzm7WASpxlyqiYTlugjTd21SQjn7E0zw0ZreqCAPncjfw6Va4MFiH6v17Wlx0EBf15nlQ1IvFM7NbxJPgq7SOMIxqS-jHZagq-kFPZvLRaTFLCbZhWUosSxdAlQLCWEsJSNaoXohNVx0V2uvoheNBq80p5GLaSJZZStB-" />
-                            <div class="absolute top-2 right-2 flex gap-xs">
-                                <button class="bg-white/90 p-1 rounded-full shadow-sm text-error hover:bg-white"><span class="material-symbols-outlined text-[16px]">delete</span></button>
-                            </div>
-                            <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-1 text-center">
-                                <span class="text-white text-[10px] font-label-bold uppercase">Ảnh bìa</span>
-                            </div>
-                        </div>
-                        <div class="aspect-square bg-surface-container-low rounded-lg border-2 border-dashed border-primary/30 flex flex-col items-center justify-center cursor-pointer hover:bg-primary-container/10 transition-colors">
-                            <span class="material-symbols-outlined text-primary text-3xl">add_photo_alternate</span>
-                            <span class="text-label-bold font-label-bold text-primary mt-xs">Tải ảnh lên</span>
-                        </div>
-                    </div>
-                    <p class="text-body-sm text-on-surface-variant">Hỗ trợ JPG, PNG. Tối đa 5 ảnh, mỗi ảnh không quá 2MB.</p>
-                </section>
-                <!-- Section 5: Trạng thái & Action -->
-                <section class="bg-surface-container-lowest p-lg rounded-xl custom-shadow">
-                    <div class="flex items-center gap-sm mb-lg">
-                        <span class="material-symbols-outlined text-primary">settings_applications</span>
-                        <h2 class="font-headline-md text-headline-md">Trạng thái &amp; Lưu</h2>
-                    </div>
-                    <div class="flex items-center justify-between p-md bg-surface-container-low rounded-lg mb-lg">
-                        <span class="font-label-bold text-label-bold">Hiển thị sản phẩm</span>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input checked="" class="sr-only peer" type="checkbox" value="" />
-                            <div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
-                        </label>
-                    </div>
-                    <div class="space-y-md">
-                        <button class="w-full bg-primary-container text-white py-lg rounded-lg font-headline-md text-headline-md hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-md" type="submit">
-                            <span class="material-symbols-outlined">save</span> Lưu sản phẩm
-                        </button>
-                        <button class="w-full bg-white border border-outline text-on-surface py-md rounded-lg font-label-bold text-label-bold hover:bg-surface-container-high transition-colors" type="button">
-                            Hủy bỏ
-                        </button>
-                    </div>
-                </section>
-                <!-- Help Card -->
-                <div class="bg-primary/5 p-lg rounded-xl border border-primary/10">
-                    <h3 class="font-label-bold text-label-bold text-primary mb-xs">Mẹo nhỏ:</h3>
-                    <p class="text-body-sm text-on-primary-fixed-variant">Sử dụng ít nhất 3 ảnh từ nhiều góc độ khác nhau để tăng tỷ lệ chuyển đổi lên 40%.</p>
+<body class="bg-background text-on-surface">
+
+    <div class="flex min-h-screen">
+        <!-- SideNavBar -->
+        <nav class="fixed left-0 top-0 h-screen flex flex-col pt-lg pb-md w-64 z-40 bg-surface-container-lowest border-r border-outline-variant">
+            <div class="px-lg mb-xl flex items-center gap-md">
+                <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white">shopping_bag</span>
+                </div>
+
+                <div>
+                    <h2 class="font-headline-md text-headline-md text-primary-container">ShopCentral</h2>
+                    <p class="text-[10px] text-on-surface-variant font-medium tracking-wider uppercase">
+                        Management Hub
+                    </p>
                 </div>
             </div>
+
+            <div class="flex-1 px-md space-y-xs">
+                <a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 rounded-lg group" href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+                    <span class="font-label-bold text-label-bold">Dashboard</span>
+                </a>
+
+                <a class="flex items-center gap-md px-md py-sm bg-primary-container/10 text-primary border-r-4 border-primary rounded-lg translate-x-1 transition-transform" href="#">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+                    <span class="font-label-bold text-label-bold">Products</span>
+                </a>
+
+                <a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 rounded-lg group" href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary">inventory</span>
+                    <span class="font-label-bold text-label-bold">Orders</span>
+                </a>
+
+                <a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 rounded-lg group" href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary">group</span>
+                    <span class="font-label-bold text-label-bold">Customers</span>
+                </a>
+            </div>
+
+            <div class="px-md pt-md border-t border-outline-variant">
+                <a class="flex items-center gap-md px-md py-sm text-error hover:bg-error-container/10 transition-all duration-200 rounded-lg" href="#">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="font-label-bold text-label-bold">Logout</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="ml-64 w-full p-lg">
+            <form asp-action="CreateProduct" asp-controller="Seller" enctype="multipart/form-data" method="post">
+
+                <div class="flex justify-between items-end mb-lg">
+                    <div>
+                        <nav class="flex gap-xs text-[12px] text-on-surface-variant mb-xs">
+                            <span>Sản phẩm</span>
+                            <span>/</span>
+                            <span class="text-primary font-semibold">Thêm mới</span>
+                        </nav>
+
+                        <h1 class="font-display-lg text-display-lg text-on-surface">
+                            Thêm sản phẩm
+                        </h1>
+                    </div>
+
+                    <div class="flex gap-md">
+                        <a asp-action="ProductsManager"
+                           asp-controller="Seller"
+                           class="px-lg py-sm border border-primary text-primary rounded-lg font-label-bold text-label-bold hover:bg-primary-container/5 transition-colors">
+                            Hủy bỏ
+                        </a>
+
+                        <button class="px-lg py-sm bg-primary-container text-white rounded-lg font-label-bold text-label-bold shadow-md hover:shadow-lg hover:bg-primary transition-all flex items-center gap-sm"
+                                type="submit">
+                            <span class="material-symbols-outlined text-[18px]">save</span>
+                            Lưu sản phẩm
+                        </button>
+                    </div>
+                </div>
+
+                <div asp-validation-summary="All" class="text-error text-sm mb-md"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+                    <!-- Left Column -->
+                    <div class="lg:col-span-2 space-y-lg">
+
+                        <!-- Product Information -->
+                        <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+                            <h2 class="font-headline-md text-headline-md mb-lg flex items-center gap-sm text-primary">
+                                <span class="material-symbols-outlined">info</span>
+                                Thông tin chung
+                            </h2>
+
+                            <div class="space-y-md">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                                    <div class="space-y-xs">
+                                        <label asp-for="Name" class="font-label-bold text-label-bold text-on-surface-variant">
+                                            Tên sản phẩm *
+                                        </label>
+
+                                        <input asp-for="Name"
+                                               class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none"
+                                               placeholder="Ví dụ: Áo thun Cotton Premium" />
+
+                                        <span asp-validation-for="Name" class="text-error text-[12px]"></span>
+                                    </div>
+
+                                    <div class="space-y-xs">
+                                        <label asp-for="Brand" class="font-label-bold text-label-bold text-on-surface-variant">
+                                            Thương hiệu
+                                        </label>
+
+                                        <input asp-for="Brand"
+                                               class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none"
+                                               placeholder="Ví dụ: Nike, Adidas..." />
+
+                                        <span asp-validation-for="Brand" class="text-error text-[12px]"></span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-xs">
+                                    <label asp-for="CategoryId" class="font-label-bold text-label-bold text-on-surface-variant">
+                                        Danh mục
+                                    </label>
+
+                                    <select asp-for="CategoryId"
+                                            class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none">
+                                        <option value="">-- Chọn danh mục --</option>
+
+                                        @if (Model.Categories != null)
+                                        {
+                                            foreach (var category in Model.Categories)
+                                            {
+                                                <option value="@category.Id">@category.Name</option>
+                                            }
+                                        }
+                                    </select>
+
+                                    <span asp-validation-for="CategoryId" class="text-error text-[12px]"></span>
+                                </div>
+
+                                <div class="space-y-xs">
+                                    <label asp-for="Description" class="font-label-bold text-label-bold text-on-surface-variant">
+                                        Mô tả sản phẩm
+                                    </label>
+
+                                    <div class="border border-outline-variant rounded-lg overflow-hidden">
+                                        <div class="bg-surface-container-low border-b border-outline-variant p-xs flex gap-xs">
+                                            <button class="p-xs hover:bg-surface-container-high rounded text-on-surface-variant" type="button">
+                                                <span class="material-symbols-outlined text-[20px]">format_bold</span>
+                                            </button>
+
+                                            <button class="p-xs hover:bg-surface-container-high rounded text-on-surface-variant" type="button">
+                                                <span class="material-symbols-outlined text-[20px]">format_italic</span>
+                                            </button>
+
+                                            <button class="p-xs hover:bg-surface-container-high rounded text-on-surface-variant" type="button">
+                                                <span class="material-symbols-outlined text-[20px]">format_list_bulleted</span>
+                                            </button>
+                                        </div>
+
+                                        <textarea asp-for="Description"
+                                                  class="w-full p-md text-body-base outline-none resize-none"
+                                                  placeholder="Nhập mô tả chi tiết cho sản phẩm..."
+                                                  rows="6"></textarea>
+                                    </div>
+
+                                    <span asp-validation-for="Description" class="text-error text-[12px]"></span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Product Images -->
+                        <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+                            <div class="flex justify-between items-center mb-lg">
+                                <h2 class="font-headline-md text-headline-md flex items-center gap-sm text-primary">
+                                    <span class="material-symbols-outlined">image</span>
+                                    Hình ảnh sản phẩm
+                                </h2>
+
+                                <span class="text-body-sm text-on-surface-variant">
+                                    Có thể chọn nhiều ảnh JPG, PNG.
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-md" id="product-preview-wrapper">
+                                <div class="group relative aspect-square bg-surface-container rounded-lg border border-outline-variant overflow-hidden">
+                                    <img id="preview-image"
+                                         alt="Product Preview"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                         src="/uploads/images/vidu.jpg" />
+
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-xs">
+                                        <div class="flex justify-end">
+                                            <button class="w-8 h-8 bg-error text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                                    type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label class="cursor-pointer aspect-square bg-surface-container-low border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center gap-xs hover:bg-surface-container-high hover:border-primary-container transition-all group">
+                                    <input name="imageUrl"
+                                           class="hidden"
+                                           multiple
+                                           type="file"
+                                           id="image-upload"
+                                           onchange="previewProductImage(event)" />
+
+                                    <span class="material-symbols-outlined text-[32px] text-on-surface-variant group-hover:text-primary-container">
+                                        cloud_upload
+                                    </span>
+
+                                    <span class="font-label-bold text-label-bold text-on-surface-variant group-hover:text-primary-container">
+                                        Tải ảnh lên
+                                    </span>
+                                </label>
+                            </div>
+
+                            <span asp-validation-for="imageUrl" class="text-error text-[12px]"></span>
+                        </section>
+
+                        <!-- Variants -->
+                        <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+                            <div class="flex justify-between items-center mb-lg">
+                                <h2 class="font-headline-md text-headline-md flex items-center gap-sm text-primary">
+                                    <span class="material-symbols-outlined">layers</span>
+                                    Biến thể &amp; Giá bán
+                                </h2>
+
+                                <button class="flex items-center gap-sm text-primary font-label-bold text-label-bold hover:underline"
+                                        type="button"
+                                        id="addVariantButton">
+                                    <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                                    Thêm biến thể
+                                </button>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="border-b border-outline-variant text-on-surface-variant">
+                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Ảnh</th>
+                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Biến thể</th>
+                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Giá bán (₫)</th>
+                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Kho hàng</th>
+                                            <th class="pb-sm text-right font-label-bold text-label-bold uppercase">Hành động</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="variants-body" class="divide-y divide-outline-variant/50">
+                                        <tr class="variant-row group">
+                                            <td class="py-md">
+                                                <label class="cursor-pointer block">
+                                                    <input name="Variants[0].ImageFiles"
+                                                           type="file"
+                                                           class="hidden variant-image-input"
+                                                           multiple
+                                                           onchange="previewVariantImage(this)" />
+
+                                                    <div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center border border-outline-variant relative overflow-hidden group-hover:border-primary-container">
+                                                        <img class="variant-preview hidden w-full h-full object-cover" src="" alt="Variant Preview" />
+                                                        <span class="material-symbols-outlined text-outline text-[22px] variant-icon">
+                                                            add_a_photo
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </td>
+
+                                            <td class="py-md">
+                                                <div class="space-y-xs">
+                                                    <input name="Variants[0].Size"
+                                                           class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                                           placeholder="Size" />
+
+                                                    <input name="Variants[0].Color"
+                                                           class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                                           placeholder="Màu sắc" />
+                                                </div>
+                                            </td>
+
+                                            <td class="py-md">
+                                                <input name="Variants[0].Price"
+                                                       class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none font-label-bold"
+                                                       type="number"
+                                                       step="1000"
+                                                       placeholder="Giá" />
+                                            </td>
+
+                                            <td class="py-md">
+                                                <input name="Variants[0].Stock"
+                                                       class="w-24 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none"
+                                                       type="number"
+                                                       placeholder="Kho" />
+                                            </td>
+
+                                            <td class="py-md text-right">
+                                                <div class="variant-actions flex justify-end gap-sm">
+                                                    <button class="p-xs text-on-surface-variant hover:text-primary transition-colors"
+                                                            title="Thêm ảnh biến thể"
+                                                            type="button"
+                                                            onclick="openVariantFile(this)">
+                                                        <span class="material-symbols-outlined text-[20px]">imagesmode</span>
+                                                    </button>
+
+                                                    <button class="p-xs text-on-surface-variant hover:text-error transition-colors remove-variant"
+                                                            title="Xóa"
+                                                            type="button">
+                                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-lg">
+                        <section class="bg-primary/5 rounded-lg p-lg border border-primary/20">
+                            <h3 class="font-label-bold text-label-bold text-primary flex items-center gap-sm mb-xs">
+                                <span class="material-symbols-outlined text-[18px]">lightbulb</span>
+                                Mẹo quản lý
+                            </h3>
+
+                            <p class="text-body-sm text-on-primary-container leading-relaxed">
+                                Bước 1: Ở ô Tên sản phẩm, nhập tên sản phẩm cần bán, ví dụ: Áo thun nam Cotton.<br />
+                                Bước 2: Ở ô Thương hiệu, nhập tên thương hiệu của sản phẩm, ví dụ: Nike, Adidas hoặc Local Brand.<br />
+                                Bước 3: Ở ô Danh mục, chọn nhóm sản phẩm phù hợp, ví dụ: Áo, Quần, Giày hoặc Phụ kiện.<br />
+                                Bước 4: Ở ô Mô tả sản phẩm, nhập thông tin chi tiết như chất liệu, kiểu dáng, công dụng và điểm nổi bật của sản phẩm.<br />
+                                Bước 5: Ở phần Hình ảnh sản phẩm, bấm Tải ảnh lên và chọn một hoặc nhiều ảnh đại diện cho sản phẩm.<br />
+                                Bước 6: Ở phần Biến thể, nhập Size của sản phẩm, ví dụ: S, M, L, XL.<br />
+                                Bước 7: Nhập Màu sắc của biến thể, ví dụ: Đen, Trắng, Xanh hoặc Đỏ.<br />
+                                Bước 8: Nhập Giá bán cho từng biến thể, ví dụ: 150000.<br />
+                                Bước 9: Nhập Số lượng tồn kho cho từng biến thể, ví dụ: 20.<br />
+                                Bước 10: Tải ảnh riêng cho biến thể nếu sản phẩm có nhiều màu hoặc nhiều mẫu khác nhau.<br />
+                                Bước 11: Nếu có nhiều biến thể, bấm Thêm biến thể để nhập thêm size, màu, giá và số lượng khác.<br />
+                                Bước 12: Sau khi nhập xong toàn bộ thông tin, bấm Lưu sản phẩm để thêm sản phẩm vào hệ thống.
+                            </p>
+                        </section>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- Mobile Footer -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 p-md bg-surface-container-lowest border-t border-outline-variant flex gap-md z-50">
+        <button class="flex-1 py-sm border border-primary text-primary rounded-lg font-label-bold text-label-bold" type="button">
+            Hủy
+        </button>
+
+        <button class="flex-1 py-sm bg-primary-container text-white rounded-lg font-label-bold text-label-bold" type="submit">
+            Lưu lại
+        </button>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
-    </main>
+    }
+
+    <script>
+        let variantIndex = 1;
+
+        function previewProductImage(event) {
+            const file = event.target.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById("preview-image").src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function previewVariantImage(input) {
+            const file = input.files[0];
+
+            if (!file) return;
+
+            const row = input.closest(".variant-row");
+            const preview = row.querySelector(".variant-preview");
+            const icon = row.querySelector(".variant-icon");
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.classList.remove("hidden");
+                icon.classList.add("hidden");
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function openVariantFile(button) {
+            const row = button.closest(".variant-row");
+            const input = row.querySelector(".variant-image-input");
+
+            input.click();
+        }
+
+        document.getElementById("addVariantButton").addEventListener("click", function () {
+            const tbody = document.getElementById("variants-body");
+
+            const html = `
+                <tr class="variant-row group">
+                    <td class="py-md">
+                        <label class="cursor-pointer block">
+                            <input name="Variants[${variantIndex}].ImageFiles"
+                                   type="file"
+                                   class="hidden variant-image-input"
+                                   multiple
+                                   onchange="previewVariantImage(this)" />
+
+                            <div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center border border-outline-variant relative overflow-hidden group-hover:border-primary-container">
+                                <img class="variant-preview hidden w-full h-full object-cover" src="" alt="Variant Preview" />
+                                <span class="material-symbols-outlined text-outline text-[22px] variant-icon">
+                                    add_a_photo
+                                </span>
+                            </div>
+                        </label>
+                    </td>
+
+                    <td class="py-md">
+                        <div class="space-y-xs">
+                            <input name="Variants[${variantIndex}].Size"
+                                   class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                   placeholder="Size" />
+
+                            <input name="Variants[${variantIndex}].Color"
+                                   class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                   placeholder="Màu sắc" />
+                        </div>
+                    </td>
+
+                    <td class="py-md">
+                        <input name="Variants[${variantIndex}].Price"
+                               class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none font-label-bold"
+                               type="number"
+                               step="1000"
+                               placeholder="Giá" />
+                    </td>
+
+                    <td class="py-md">
+                        <input name="Variants[${variantIndex}].Stock"
+                               class="w-24 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none"
+                               type="number"
+                               placeholder="Kho" />
+                    </td>
+
+                    <td class="py-md text-right">
+                        <div class="variant-actions flex justify-end gap-sm">
+                            <button class="p-xs text-on-surface-variant hover:text-primary transition-colors"
+                                    title="Thêm ảnh biến thể"
+                                    type="button"
+                                    onclick="openVariantFile(this)">
+                                <span class="material-symbols-outlined text-[20px]">imagesmode</span>
+                            </button>
+
+                            <button class="p-xs text-on-surface-variant hover:text-error transition-colors remove-variant"
+                                    title="Xóa"
+                                    type="button">
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            tbody.insertAdjacentHTML("beforeend", html);
+            variantIndex++;
+        });
+
+        document.addEventListener("click", function (e) {
+            const removeButton = e.target.closest(".remove-variant");
+
+            if (!removeButton) return;
+
+            const rows = document.querySelectorAll(".variant-row");
+
+            if (rows.length <= 1) {
+                alert("Phải có ít nhất 1 biến thể sản phẩm.");
+                return;
+            }
+
+            removeButton.closest(".variant-row").remove();
+        });
+    </script>
 </body>
 </html>
