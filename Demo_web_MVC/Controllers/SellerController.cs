@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Demo_web_MVC.Controllers
 {
-    //[Authorize(Roles = "ADMIN, SEFF")]
+    [Authorize(Roles = " STAFF")]
     public class SellerController : Controller
     {
         private readonly IDashboarService _service;

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Demo_web_MVC.Controllers
 {
-    [Authorize(Roles ="ADMIN,SEFF,USER")]
+    [Authorize(Roles = "ADMIN,STAFF,USER")]
     public class CartController : Controller
     {
         public readonly ICartService _cartService;

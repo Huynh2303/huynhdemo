@@ -30,7 +30,13 @@
                     <span class="material-symbols-outlined" style="margin-right: 12px; font-size: 20px;">package_2</span>
                     Đơn hàng
                 </a>
-
+                @if (User.IsInRole("STAFF"))
+{
+                <a asp-action="Dashboard" asp-controller="Seller" class="flex items-center px-4 py-3 text-sm text-gray-700 no-underline hover:bg-blue-50 hover:text-blue-600" style="display: flex; align-items: center; padding: 8px 16px; text-decoration: none; color: #374151; font-size: 14px;">
+                    <span class="material-symbols-outlined" style="margin-right: 12px; font-size: 20px;">person</span>
+                    Trang bán hàng của bạn 
+                </a>
+}
                 <div style="height: 1px; background-color: #f3f4f6; margin: 4px 0;"></div>
                 @if (User.Identity!.IsAuthenticated)
                 {

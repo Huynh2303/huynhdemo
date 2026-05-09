@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace Demo_web_MVC.Controllers
 {
-    [Authorize(Roles = "ADMIN,SEFF,USER")]
+    [Authorize(Roles = "ADMIN,STAFF,USER")]
     
     public class OderController : Controller
     {
@@ -93,13 +93,13 @@ namespace Demo_web_MVC.Controllers
 
             return View(orders);
         }
-        [Authorize(Roles = "ADMIN,SEFF")]
+        [Authorize(Roles = "ADMIN,STAFF")]
         public IActionResult UpdateStatus()
         {
             return View();
         }
         [HttpPost]
-        [Authorize(Roles = "ADMIN,SEFF")]
+        [Authorize(Roles = "ADMIN,STAFF")]
         public async Task<IActionResult> UpdateStatus(int orderId, string status)
         {
             try

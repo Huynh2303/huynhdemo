@@ -82,7 +82,7 @@ namespace Demo_web_MVC.Controllers
         }
         
         [HttpPost]
-        [Authorize(Roles = "ADMIN, SEFF")]
+        [Authorize(Roles = "ADMIN, STAFF")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (id <= 0)

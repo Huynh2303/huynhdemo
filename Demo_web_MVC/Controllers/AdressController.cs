@@ -1,6 +1,7 @@
 ﻿using Demo_web_MVC.Models;
 using Demo_web_MVC.Models.ViewModel.Address;
 using Demo_web_MVC.Service.Address;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Demo_web_MVC.Controllers
 {
+    [Authorize(Roles = "ADMIN,USER")]
     public class AdressController : Controller
     {
         public readonly IAddressService _addressService;
