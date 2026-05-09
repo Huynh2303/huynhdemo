@@ -108,29 +108,8 @@ namespace Demo_web_MVC.Controllers
                 return RedirectToAction("Index");
             }
         }
-        [HttpGet]
-        [Authorize(Roles = "ADMIN, SEFF")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var product = await _productService.getbyid(id);
-            if (product == null)
-                return NotFound();
-
-            product.Categories = await _categoryService.GetAllCategories();
-            return View(product);
-        }
         
-        [HttpPost]
-        [Authorize(Roles = "ADMIN, SEFF")]
-        public async Task<IActionResult> Edit(int id, ProductViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.Categories = await _categoryService.GetAllCategories();
-                return View(model);
-            }
-            await _productService.update(id, model);
-            return RedirectToAction("Index");
-        }
+
+        
     }
 }

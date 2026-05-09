@@ -115,8 +115,15 @@
                         <p class="text-body-sm text-on-surface-variant">Kho: @item?.Variants?.FirstOrDefault()?.Stock</p>
                     </div>
                     <div class="flex flex-col gap-xs">
-                        <button class="material-symbols-outlined text-outline hover:text-primary transition-colors text-[20px]" data-icon="edit">edit</button>
-                        <button class="material-symbols-outlined text-outline hover:text-error transition-colors text-[20px]" data-icon="delete">delete</button>
+                        <form asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id" method="get">
+                            <button class="material-symbols-outlined text-outline hover:text-primary transition-colors text-[20px]" data-icon="edit">edit</button>
+                        </form>
+
+
+                        <form asp-action="DeleteProduct" asp-controller="Seller" asp-route-id="@item.Id" method="post">
+                            <button class="material-symbols-outlined text-outline hover:text-error transition-colors text-[20px]" data-icon="delete">delete</button>
+
+                        </form>
                     </div>
                 </div>
             }
@@ -152,7 +159,7 @@
             </div>
         </div>
         <div class="p-md bg-surface-container-low text-center">
-            <button class="text-primary font-label-bold text-label-bold hover:underline">Quản lý kho hàng</button>
+            <a asp-action="ProductsManager" asp-controller="Seller" class="text-primary font-label-bold text-label-bold hover:underline">Quản lý kho hàng</a>
         </div>
     </div>
 </div>

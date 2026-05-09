@@ -193,16 +193,19 @@
                                    @item.Variants!.FirstOrDefault()?.Price
                                 </td>
                                 <td class="px-lg py-md text-center font-body-base text-on-surface-variant">
-                                    @item.Variants!.FirstOrDefault()?.Stock
+                                    @(item.Variants?.Sum(v => v.Stock) ?? 0)
                                 </td>
                                 <td class="px-lg py-md text-center">
                                     <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-primary-fixed text-on-primary-fixed-variant">Đang bán</span>
                                 </td>
                                 <td class="px-lg py-md text-right">
                                     <div class="flex items-center justify-end gap-sm">
-                                        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
-                                            <span class="material-symbols-outlined" data-icon="edit">edit</span>
-                                        </button>
+                                        <form asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id" method="get">
+                                            <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
+                                                <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                                            </button>
+                                        </form>
+                                        
                                         <form asp-action="DeleteProduct" asp-controller="Seller" asp-route-id="@item.Id" method="post">
                                             <button class="p-xs text-on-surface-variant hover:text-error transition-colors">
                                                 <span class="material-symbols-outlined" data-icon="delete">delete</span>
