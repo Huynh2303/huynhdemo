@@ -186,31 +186,25 @@ namespace Demo_web_MVC.Repository.Product
             try
             {
                 var product = await _context.Products
-                .Include(p => p.ProductVariants).Include(p => p.ProductImages).Include(p=>p.Category)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                    .FirstOrDefaultAsync(p => p.Id == id);
 
                 if (product == null)
-                   return false;
-                if (product.ProductImages != null && product.ProductImages.Any())
                 {
-                    _context.ProductImages.RemoveRange(product.ProductImages);
+                    _logger.LogWarning("Không tìm thấy sản phẩm với id {ProductId}", id);
+                    return false;
                 }
-                
-                // Xóa variants trước (explicit)
-                _context.ProductVariants.RemoveRange(product.ProductVariants);
 
-                // Sau đó xóa product
-                _context.Products.Remove(product);
+                product.IsDeleted = true;
 
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Đã xóa mềm sản phẩm id {ProductId}", id);
+
                 return true;
             }
             catch (Exception ex)
             {
-                
-                // Log lỗi nếu cần
-                Console.WriteLine($"Error deleting product: {ex.Message}");
-                _logger.LogError(ex, "Error deleting product with id {ProductId}", id);
+                _logger.LogError(ex, "Lỗi khi xóa mềm sản phẩm với id {ProductId}", id);
                 return false;
             }
         }

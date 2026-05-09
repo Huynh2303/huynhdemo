@@ -284,11 +284,13 @@ namespace Demo_web_MVC.Data.AppDatabase
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
+                entity.Property(e => e.IsDeleted)
+                    .HasDefaultValue(false);
                 entity.HasOne(d => d.Category).WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_products_category");
+                entity.HasQueryFilter(e => !e.IsDeleted);
             });
 
             modelBuilder.Entity<ProductVariant>(entity =>

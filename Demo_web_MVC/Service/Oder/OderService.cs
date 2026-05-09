@@ -190,5 +190,44 @@ namespace Demo_web_MVC.Service.Oder
            
             return orders;
         }
+        public async Task<bool> CreateAsync(int orderId)
+        {
+            if (orderId <= 0)
+            {
+                _logger.LogWarning("OrderId không hợp lệ: {OrderId}", orderId);
+                return false;
+            }
+
+            var result = await _oderRepository.CreateAsync(orderId);
+
+            if (!result)
+            {
+                _logger.LogWarning("Service: Không thể cập nhật đơn hàng sang Shipping. orderId={OrderId}", orderId);
+                return false;
+            }
+
+            _logger.LogInformation("Service: Cập nhật đơn hàng sang Shipping thành công. orderId={OrderId}", orderId);
+            return true;
+        }
+
+        public async Task<bool> DeleteOrderAsync(int orderId)
+        {
+            if (orderId <= 0)
+            {
+                _logger.LogWarning("OrderId không hợp lệ: {OrderId}", orderId);
+                return false;
+            }
+
+            var result = await _oderRepository.DeleteOrderAsync(orderId);
+
+            if (!result)
+            {
+                _logger.LogWarning("Service: Không thể hủy đơn hàng. orderId={OrderId}", orderId);
+                return false;
+            }
+
+            _logger.LogInformation("Service: Hủy đơn hàng thành công. orderId={OrderId}", orderId);
+            return true;
+        }
     }
 }

@@ -115,16 +115,16 @@
         </div>
         <nav class="flex-1 space-y-sm">
             <!-- Dashboard Tab (Active) -->
-            <a class="flex items-center gap-md p-md rounded-lg text-primary-container dark:text-primary-fixed-dim font-bold border-r-4 border-primary-container bg-surface-container-high transition-colors duration-200 hover:bg-surface-container-high scale-100 hover:scale-[1.02]" href="#">
+            <a asp-action="Dashboard" asp-controller="Seller" class="flex items-center gap-md p-md rounded-lg text-primary-container dark:text-primary-fixed-dim font-bold border-r-4 border-primary-container bg-surface-container-high transition-colors duration-200 hover:bg-surface-container-high scale-100 hover:scale-[1.02]" >
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span class="font-label-bold text-label-bold">Dashboard</span>
             </a>
             <!-- Products Tab -->
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+            <a asp-action="ProductsManager" asp-controller="Seller" class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" >
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span class="font-label-bold text-label-bold">Products</span>
             </a>
-            <!-- Orders Tab -->
+            @* <!-- Orders Tab -->
             <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
                 <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
                 <span class="font-label-bold text-label-bold">Orders</span>
@@ -138,16 +138,20 @@
             <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
                 <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
                 <span class="font-label-bold text-label-bold">Statistics</span>
-            </a>
+            </a> *@
         </nav>
         <div class="mt-auto border-t border-outline-variant pt-lg">
-            <button class="w-full mb-md bg-primary-container text-on-primary font-label-bold text-label-bold py-md rounded-lg shadow-[0px_4px_12px_rgba(0,0,0,0.1)] active:scale-95 duration-150 transition-transform">
-                Add New Product
-            </button>
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+            <a asp-action="CreateProduct"
+               asp-controller="Seller"
+               class="w-full mb-md bg-primary-container text-on-primary font-label-bold text-label-bold py-md px-lg rounded-lg shadow-[0px_4px_12px_rgba(0,0,0,0.1)] active:scale-95 duration-150 transition-transform flex items-center justify-center gap-sm">
+                <span class="material-symbols-outlined text-[24px]">add</span>
+                <span>Add New Product</span>
+            </a>
+            <a asp-action="Logout" asp-controller="User" class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" >
                 <span class="material-symbols-outlined" data-icon="logout">logout</span>
                 <span class="font-label-bold text-label-bold">Logout</span>
             </a>
+            
         </div>
     </aside>
     

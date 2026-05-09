@@ -83,7 +83,8 @@
 
                             <!-- Hiển thị button "Xem chi tiết" -->
                             <td class="p-md text-center">
-                                <button class="text-primary-container hover:bg-primary-container/10 px-sm py-xs rounded-lg transition-colors">Xem chi tiết</button>
+                                <a asp-action="DetailsOrder" asp-controller="Seller" asp-route-orderId="@order.Id"
+                                   class="text-primary-container hover:bg-primary-container/10 px-sm py-xs rounded-lg transition-colors">Xem chi tiết</a>
                             </td>
                         </tr>
                     }

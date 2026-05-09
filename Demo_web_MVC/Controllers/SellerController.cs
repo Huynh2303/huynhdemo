@@ -3,6 +3,7 @@ using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Service;
 using Demo_web_MVC.Service.Category;
 using Demo_web_MVC.Service.Dashboard;
+using Demo_web_MVC.Service.Oder;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +16,14 @@ namespace Demo_web_MVC.Controllers
         private readonly ILogger<SellerController> _logger;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        public SellerController(IDashboarService dashboarService, ILogger<SellerController> logger, IProductService productService, ICategoryService categoryService)
+        private readonly IOderService _oderService;
+        public SellerController(IDashboarService dashboarService, ILogger<SellerController> logger, IProductService productService, ICategoryService categoryService,IOderService oderService)
         {
             _service = dashboarService;
             _logger = logger;
             _productService = productService;
             _categoryService = categoryService;
+            _oderService = oderService;
         }
 
         public async Task<IActionResult> Dashboard()
@@ -83,67 +86,7 @@ namespace Demo_web_MVC.Controllers
             
             return View(productViewModel);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> CreateProduct(ProductViewModel productVM, IFormFile[] imageUrl)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            // Kiểm tra nếu người dùng tải lên hình ảnh
-        //            if (imageUrl != null && imageUrl.Length > 0)
-        //            {
-        //                var uploadsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");
-        //                if (!Directory.Exists(uploadsDirectory))
-        //                {
-        //                    Directory.CreateDirectory(uploadsDirectory); // Tạo thư mục nếu chưa có
-        //                }
-
-        //                var fileNames = new List<string>();
-        //                foreach (var file in imageUrl)
-        //                {
-        //                    if (file.Length > 0)
-        //                    {
-        //                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-        //                        var filePath = Path.Combine(uploadsDirectory, fileName);
-
-        //                        using (var stream = new FileStream(filePath, FileMode.Create))
-        //                        {
-        //                            await file.CopyToAsync(stream);
-        //                        }
-
-        //                        fileNames.Add(fileName); // Đường dẫn tương đối đúng
-        //                    }
-        //                }
-        //                // Gán đường dẫn của các hình ảnh vào model
-        //                productVM.imageUrl = fileNames;
-
-        //            }
-
-        //            // Gọi phương thức Create từ service để tạo sản phẩm
-        //            var result = await _productService.creat(productVM);
-
-        //            if (result == null)
-        //            {
-        //                // Thêm thông báo lỗi chi tiết
-        //                ModelState.AddModelError("", "Không thể tạo sản phẩm, vui lòng thử lại.");
-        //            }
-        //            else
-        //            {
-        //                // Chuyển hướng nếu tạo sản phẩm thành công
-        //                return RedirectToAction("ProductsManager","Seller");
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Ghi log hoặc xử lý lỗi nếu có ngoại lệ xảy ra
-        //            ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
-        //        }
-        //    }
-
-        //    return View(productVM);
-        //}
-        [HttpPost]
+        [HttpPost]  
         public async Task<IActionResult> CreateProduct(ProductViewModel productVM, IFormFile[] imageUrl)
         {
             if (ModelState.IsValid)
@@ -252,6 +195,63 @@ namespace Demo_web_MVC.Controllers
             }).ToList();
 
             return View(productVM);
+        }
+        public async Task<IActionResult> DetailsOrder(int orderId)
+        {
+            var orderDetails = await _service.GetDetailsOrderDashboardViewmodelAsync(orderId);
+
+            if (orderDetails == null || !orderDetails.Any())
+            {
+                return NotFound();
+            }
+
+            return View(orderDetails);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId)
+        {
+            var result = await _oderService.CreateAsync(orderId);
+
+            if (!result)
+            {
+                TempData["Error"] = "Không thể cập nhật trạng thái đơn hàng.";
+                return RedirectToAction("DetailsOrder", "Seller", new { orderId = orderId });
+            }
+
+            TempData["Success"] = "Đơn hàng đã được chuyển sang trạng thái đang giao.";
+            return RedirectToAction("DetailsOrder", "Seller", new { orderId = orderId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            var result = await _oderService.DeleteOrderAsync(orderId);
+
+            if (!result)
+            {
+                TempData["Error"] = "Không thể hủy đơn hàng.";
+                return RedirectToAction("DetailsOrder","Seller", new { orderId = orderId });
+            }
+
+            TempData["Success"] = "Đơn hàng đã được hủy thành công.";
+            return RedirectToAction("DetailsOrder", "Seller", new { orderId = orderId });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var result = await _productService.delete(id);
+
+            if (!result)
+            {
+                TempData["Error"] = "Không thể xóa sản phẩm.";
+                return RedirectToAction("ProductsManager");
+            }
+
+            TempData["Success"] = "Đã xóa sản phẩm thành công.";
+            return RedirectToAction("ProductsManager");
         }
     }
 }

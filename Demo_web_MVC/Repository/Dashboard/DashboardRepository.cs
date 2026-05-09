@@ -1,5 +1,6 @@
 ﻿using Demo_web_MVC.Data.AppDatabase;
 using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Address;
 using Demo_web_MVC.Models.ViewModel.Dashboard;
 using Demo_web_MVC.Models.ViewModel.Oder;
 using Demo_web_MVC.Models.ViewModel.Product;
@@ -113,6 +114,58 @@ namespace Demo_web_MVC.Repository.Dashboard
             {
                 Products = products
             };
+        }
+        public async Task<List<DetailsOrderDashboardViewmodel>> GetDetailsOrderDashboardViewmodelAsync(int orderId)
+        {
+            var order = await _context.Orders.Where(o => o.Id == orderId)
+                .Include(o => o.User)
+                    .ThenInclude(u => u.Addresses)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Variant)
+                        .ThenInclude(v => v.Product).Select(o => new DetailsOrderDashboardViewmodel
+                        {
+                            OrderId = orderId,
+                            Email = o.User.Email,
+                            OrderStatus = o.Status.ToString(),
+                            TotalAmount = o.TotalAmount,
+                            CreatedAt = o.CreatedAt,
+                            AddressView = o.User.Addresses.Select(a => new AddressViewModel
+                            {
+                                RecipientName = a.RecipientName,
+                                PhoneNumber = a.PhoneNumber,
+                                AddressLine = a.AddressLine,
+                                City = a.City,
+                                Country = a.Country
+
+                            }).FirstOrDefault(),
+                            OderItemViews = o.OrderItems.Select(oi => new OderItemViewModel
+                            {
+                                OrderId = oi.Id,
+                                Name = oi.Variant.Product.Name,
+                                Price = oi.Price,
+                                Quantity = oi.Quantity,
+                                Img = oi.Variant.ProductVariantImages
+                            .OrderBy(img => img.SortOrder)
+                            .Select(img => img.Url)
+                            .FirstOrDefault()
+                            ?? oi.Variant.Product.ProductImages
+                                .Select(img => img.Url)
+                                .FirstOrDefault()
+                            ?? "/uploads/images/no-image.jpg"
+                            }).ToList()
+
+                        }).ToListAsync();
+                
+
+            if (order == null)
+            {
+                _logger.LogError("không có Orderid này ");
+                return null;
+            }
+
+            
+
+            return order;
         }
     }
 }

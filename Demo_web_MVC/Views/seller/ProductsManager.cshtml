@@ -112,16 +112,16 @@
             <p class="font-body-sm text-body-sm text-on-surface-variant">Vibrant blue dashboard</p>
         </div>
         <nav class="flex-grow space-y-sm">
-            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+            <a asp-action ="Dashboard" asp-controller="Seller" class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" >
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span>Dashboard</span>
             </a>
             <!-- Active Tab: Products -->
-            <a class="flex items-center gap-md p-sm rounded-lg text-primary-container font-bold border-r-4 border-primary-container bg-surface-container-high transition-transform duration-150 scale-95" href="#">
+            <a asp-action="ProductsManager" asp-controller="Seller" class="flex items-center gap-md p-sm rounded-lg text-primary-container font-bold border-r-4 border-primary-container bg-surface-container-high transition-transform duration-150 scale-95"  >
                 <span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
                 <span>Products</span>
             </a>
-            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
+            @* <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
                 <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
                 <span>Orders</span>
             </a>
@@ -132,14 +132,15 @@
             <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
                 <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
                 <span>Statistics</span>
-            </a>
+            </a> *@
         </nav>
         <div class="pt-lg border-t border-outline-variant space-y-sm">
-            <button class="w-full flex items-center justify-center gap-sm bg-primary-container text-on-primary font-label-bold text-label-bold py-sm px-md rounded-lg shadow-sm hover:scale-105 transition-transform duration-200">
+            <a asp-action="CreateProduct"
+               asp-controller="Seller" class="w-full flex items-center justify-center gap-sm bg-primary-container text-on-primary font-label-bold text-label-bold py-sm px-md rounded-lg shadow-sm hover:scale-105 transition-transform duration-200">
                 <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
                 Add New Product
-            </button>
-            <a class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200 mt-md" href="#">
+            </a>
+            <a asp-action="Logout" asp-controller="User" class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200 mt-md" >
                 <span class="material-symbols-outlined" data-icon="logout">logout</span>
                 <span>Logout</span>
             </a>
@@ -155,10 +156,11 @@
                     <h3 class="font-headline-md text-headline-md text-on-surface">Danh sách hàng hóa</h3>
                     <p class="font-body-sm text-body-sm text-on-surface-variant">Cập nhật và quản lý kho hàng của bạn một cách dễ dàng.</p>
                 </div>
-                <button class="flex items-center gap-sm bg-primary-container text-on-primary font-label-bold text-label-bold py-3 px-lg rounded-lg shadow-[0px_4px_12px_rgba(0,174,239,0.2)] hover:-translate-y-1 transition-all duration-200">
+                <a asp-action="CreateProduct"
+                   asp-controller="Seller" class="flex items-center gap-sm bg-primary-container text-on-primary font-label-bold text-label-bold py-3 px-lg rounded-lg shadow-[0px_4px_12px_rgba(0,174,239,0.2)] hover:-translate-y-1 transition-all duration-200">
                     <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
                     THÊM SẢN PHẨM
-                </button>
+                </a>
             </div>
             <!-- Product Table Container -->
             <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] overflow-hidden border border-surface-container-high">
@@ -201,9 +203,12 @@
                                         <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
                                             <span class="material-symbols-outlined" data-icon="edit">edit</span>
                                         </button>
-                                        <button class="p-xs text-on-surface-variant hover:text-error transition-colors">
-                                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
-                                        </button>
+                                        <form asp-action="DeleteProduct" asp-controller="Seller" asp-route-id="@item.Id" method="post">
+                                            <button class="p-xs text-on-surface-variant hover:text-error transition-colors">
+                                                <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                                            </button>
+                                        </form>
+                                        
                                     </div>
                                 </td>
                             </tr>
