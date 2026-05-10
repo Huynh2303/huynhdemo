@@ -6,6 +6,7 @@ using Demo_web_MVC.Repository.Carts;
 using Demo_web_MVC.Repository.Category;
 using Demo_web_MVC.Repository.Dashboard;
 using Demo_web_MVC.Repository.Oder;
+using Demo_web_MVC.Repository.OrderRisk;
 using Demo_web_MVC.Repository.Paging;
 using Demo_web_MVC.Repository.Payment;
 using Demo_web_MVC.Repository.Product;
@@ -28,6 +29,7 @@ using Microsoft.Extensions.FileProviders;
 using NETCore.MailKit.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IOrderRiskRepository, OrderRiskRepository>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IDashboarService, DashboarService>();
 builder.Services.AddScoped<IPagingReponsitory, PagingReponsitory>();

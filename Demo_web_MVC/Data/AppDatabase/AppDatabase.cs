@@ -165,24 +165,41 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .HasForeignKey(d => d.ParentId)
                     .HasConstraintName("fk_categories_parent");
             });
+
             modelBuilder.Entity<FraudAnalysis>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK__FraudAna__3214EC07D1803ABB");
 
                 entity.ToTable("FraudAnalysis");
 
-                entity.HasIndex(e => e.OrderId, "idx_fraudanalysis_orderid");
+                entity.HasIndex(e => e.OrderId, "IX_FraudAnalysis_OrderId")
+                    .IsUnique();
 
                 entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("(getdate())")
                     .HasColumnType("datetime");
+
                 entity.Property(e => e.ModelName)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-                entity.Property(e => e.RiskScore).HasColumnType("decimal(4, 3)");
 
-                entity.HasOne(d => d.Order).WithMany(p => p.FraudAnalyses)
-                    .HasForeignKey(d => d.OrderId)
+                entity.Property(e => e.RiskScore)
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.RiskLevel)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RiskReasons)
+                    .HasColumnType("nvarchar(max)");
+
+                entity.Property(e => e.InputSnapshot)
+                    .HasColumnType("nvarchar(max)");
+
+                entity.HasOne(d => d.Order)
+                    .WithOne(p => p.FraudAnalysis)
+                    .HasForeignKey<FraudAnalysis>(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("fk_fraudanalysis_order");
             });
 

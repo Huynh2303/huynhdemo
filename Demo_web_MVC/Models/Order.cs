@@ -16,7 +16,7 @@ public partial class Order
     public DateTime CreatedAt { get; set; }
     public PaymentMethod PaymentMethod { get; set; } // COD / MoMo
 
-    public virtual ICollection<FraudAnalysis> FraudAnalyses { get; set; } = new List<FraudAnalysis>();
+    public virtual FraudAnalysis? FraudAnalysis { get; set; }
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
