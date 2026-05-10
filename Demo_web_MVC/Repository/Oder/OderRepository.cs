@@ -81,9 +81,21 @@ namespace Demo_web_MVC.Repository.Oder
 
                 _context.OrderItems.Add(orderItem);
             }
-
+            var orderLog = new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = null,
+                Status = "Pending",
+                ChangeType = "CREATE_ORDER",
+                ActionBy = userId.ToString(),
+                Reason = "User created order from cart",
+                AdditionalInfo = $"PaymentMethod: {order.PaymentMethod}, TotalAmount: {order.TotalAmount}",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+            _context.OrderLogs.Add(orderLog);
             await _context.SaveChangesAsync();
-
+            
             return order.Id;
         }
         public async Task<Order> GetOrderByIdAsync(  int orderId)
@@ -187,9 +199,21 @@ namespace Demo_web_MVC.Repository.Oder
                 .FirstOrDefaultAsync(o => o.Id == orderId);
 
             if (order == null) return false;
+            var previousStatus = order.Status;
 
             order.Status = parsedStatus;
-            
+            var orderLog = new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = previousStatus.ToString(),
+                Status = parsedStatus.ToString(),
+                ChangeType = GetOrderChangeType(parsedStatus),
+                ActionBy = "System",
+                Reason = GetOrderReason(parsedStatus),
+                AdditionalInfo = null,
+                CreatedAt = DateTime.Now
+            };
+            _context.OrderLogs.Add(orderLog);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -210,9 +234,20 @@ namespace Demo_web_MVC.Repository.Oder
                 _logger.LogWarning("Không thể huỷ đơn. status={Status}", order.Status);
                 return false;
             }
-
+            var previousStatus = order.Status;
             order.Status = OrderStatus.Cancelled;
-
+            var orderLog = new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = previousStatus.ToString(),
+                Status = order.Status.ToString(),
+                ChangeType = "CANCEL_ORDER",
+                ActionBy = userId.ToString(),
+                Reason = "User cancelled order",
+                AdditionalInfo = null,
+                CreatedAt = DateTime.Now
+            };
+            _context.OrderLogs.Add(orderLog);
             await _context.SaveChangesAsync();
 
             return true;
@@ -366,25 +401,25 @@ namespace Demo_web_MVC.Repository.Oder
         //người bán
         public async Task<bool> DeleteOrderAsync(int orderId)
         {
-            // Lấy đơn hàng từ cơ sở dữ liệu
+            
             var order = await _context.Orders
                                       .Where(o => o.Id == orderId)
                                       .FirstOrDefaultAsync();
 
-            // Kiểm tra nếu không tìm thấy đơn hàng
+            
             if (order == null)
             {
                 _logger.LogWarning("Không tìm thấy đơn hàng với orderId={OrderId}", orderId);
-                return false;  // Trả về false nếu không tìm thấy đơn hàng
+                return false;  
             }
 
-            // Cập nhật trạng thái của đơn hàng thành Cancelled
+            
             var status = OrderStatus.Cancelled.ToString();
 
-            // Cập nhật trạng thái thông qua phương thức UpdateOrderStatusAsync
+            
             var update = await UpdateOrderStatusAsync(orderId, status);
 
-            if (update)  // Kiểm tra nếu việc cập nhật thành công
+            if (update)  
             {
                 _logger.LogInformation("Đơn hàng với orderId={OrderId} đã bị hủy thành công.", orderId);
                 return true;
@@ -395,35 +430,73 @@ namespace Demo_web_MVC.Repository.Oder
         }
         public async Task<bool> CreateAsync(int orderId)
         {
-            // Lấy đơn hàng từ cơ sở dữ liệu
+           
             var order = await _context.Orders
                                       .Where(o => o.Id == orderId)
                                       .FirstOrDefaultAsync();
 
-            // Kiểm tra nếu không tìm thấy đơn hàng
+           
             if (order == null)
             {
                 _logger.LogError("Không tìm thấy đơn hàng với orderId={OrderId}", orderId);
                 return false;
             }
 
-            // Kiểm tra nếu trạng thái đơn hàng không phải là "Pending" hoặc "Confirmed"
+            
             if (order.Status != OrderStatus.Pending && order.Status != OrderStatus.Confirmed)
             {
                 _logger.LogWarning("Không thể nhận đơn. Đơn hàng không ở trạng thái hợp lệ (Pending/Confirmed). orderId={OrderId}, Status={Status}", orderId, order.Status);
                 return false;
             }
+            var previousStatus = order.Status;
 
-            // Cập nhật trạng thái đơn hàng thành "Shipping"
+            
             order.Status = OrderStatus.Shipping;
 
-            // Lưu thay đổi vào cơ sở dữ liệu
+            var orderLog = new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = previousStatus.ToString(),
+                Status = order.Status.ToString(),
+                ChangeType = "SHIPPING_ORDER",
+                ActionBy = "System",
+                Reason = "Order shipping",
+                AdditionalInfo = null,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.OrderLogs.Add(orderLog);
+
             await _context.SaveChangesAsync();
 
-            // Ghi log thông tin cập nhật trạng thái thành công
+            
             _logger.LogInformation("Đơn hàng với orderId={OrderId} đã được chuyển sang trạng thái 'Shipping'.", orderId);
 
             return true;
+        }
+        private string GetOrderReason(OrderStatus status)
+        {
+            return status switch
+            {
+                OrderStatus.Pending => "Order created",
+                OrderStatus.Confirmed => "Order confirmed",
+                OrderStatus.Shipping => "Order shipping",
+                OrderStatus.Completed => "Order completed",
+                OrderStatus.Cancelled => "Order cancelled",
+                _ => "Order status updated"
+            };
+        }
+        private string GetOrderChangeType(OrderStatus status)
+        {
+            return status switch
+            {
+                OrderStatus.Pending => "CREATE_ORDER",
+                OrderStatus.Confirmed => "CONFIRM_ORDER",
+                OrderStatus.Shipping => "SHIPPING_ORDER",
+                OrderStatus.Completed => "COMPLETE_ORDER",
+                OrderStatus.Cancelled => "CANCEL_ORDER",
+                _ => "UPDATE_STATUS"
+            };
         }
     }
 }
