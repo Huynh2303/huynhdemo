@@ -27,25 +27,42 @@ namespace Demo_web_MVC.Repository.OrderRisk
             var now = DateTime.Now;
             var userId = order.UserId;
 
-            var userCreatedAt = order.User.CreatedAt;
-            var accountAgeDays = (now - userCreatedAt).Days;
+            var accountAgeDays = (now - order.User.CreatedAt).Days;
 
             var userOrders = _context.Orders
                 .Where(o => o.UserId == userId);
 
+            var ordersLast24hQuery = userOrders
+                .Where(o => o.CreatedAt >= now.AddHours(-24));
+
+            var ordersLast7dQuery = userOrders
+                .Where(o => o.CreatedAt >= now.AddDays(-7));
+
             var totalOrders = await userOrders.CountAsync();
 
-            var ordersLast24h = await userOrders
-                .CountAsync(o => o.CreatedAt >= now.AddHours(-24));
+            var ordersLast24h = await ordersLast24hQuery.CountAsync();
 
-            var ordersLast7d = await userOrders
-                .CountAsync(o => o.CreatedAt >= now.AddDays(-7));
+            var ordersLast7d = await ordersLast7dQuery.CountAsync();
 
             var cancelledOrders = await userOrders
                 .CountAsync(o => o.Status == OrderStatus.Cancelled);
 
+            var cancelledOrdersLast24h = await ordersLast24hQuery
+                .CountAsync(o => o.Status == OrderStatus.Cancelled);
+
+            var cancelledOrdersLast7d = await ordersLast7dQuery
+                .CountAsync(o => o.Status == OrderStatus.Cancelled);
+
             var cancelRate = totalOrders > 0
-                ? (decimal)cancelledOrders / totalOrders
+                ? Math.Round((decimal)cancelledOrders / totalOrders, 3)
+                : 0;
+
+            var cancelRateLast24h = ordersLast24h > 0
+                ? Math.Round((decimal)cancelledOrdersLast24h / ordersLast24h, 3)
+                : 0;
+
+            var cancelRateLast7d = ordersLast7d > 0
+                ? Math.Round((decimal)cancelledOrdersLast7d / ordersLast7d, 3)
                 : 0;
 
             var avgOrderValue = totalOrders > 0
@@ -110,7 +127,11 @@ namespace Demo_web_MVC.Repository.OrderRisk
                 AddressUsedCount = addressUsedCount,
                 ItemCount = itemCount,
                 TotalQuantity = totalQuantity,
-                StatusChangeCount = statusChangeCount
+                StatusChangeCount = statusChangeCount,
+                CancelledOrdersLast24h = cancelledOrdersLast24h,
+                CancelRateLast24h = cancelRateLast24h,
+                CancelledOrdersLast7d = cancelledOrdersLast7d,
+                CancelRateLast7d = cancelRateLast7d
             };
         }
     }

@@ -35,5 +35,12 @@
         public int TotalQuantity { get; set; }
 
         public int StatusChangeCount { get; set; }
+        public int CancelledOrdersLast24h { get; set; }
+
+        public decimal CancelRateLast24h { get; set; }
+
+        public int CancelledOrdersLast7d { get; set; }
+
+        public decimal CancelRateLast7d { get; set; }
     }
 }
