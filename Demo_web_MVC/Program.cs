@@ -30,6 +30,7 @@ using Microsoft.Extensions.FileProviders;
 using NETCore.MailKit.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<OrderRiskAnalysisService>();
 builder.Services.AddScoped<OrderRiskPredictor>();
 builder.Services.AddScoped<OrderRiskModelTrainer>();
 builder.Services.AddScoped<IOrderRiskRepository, OrderRiskRepository>();

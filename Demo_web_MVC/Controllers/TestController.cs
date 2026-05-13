@@ -40,10 +40,7 @@ namespace Demo_web_MVC.Controllers
         {
             var cases = new List<OrderRiskTrainingData>
     {
-        // Case 1: Khách mua lẻ bình thường
-        // Dựa trên pattern retail thật: 1 đơn, vài sản phẩm, giá trị nhỏ
-        // Các cột COD/phone/address/log không có trong dataset public nên để 0
-        // Kỳ vọng: Low
+        
         new OrderRiskTrainingData
         {
             AccountAgeDays = 120,
@@ -360,12 +357,12 @@ namespace Demo_web_MVC.Controllers
                     Source = "Mapped from public real retail dataset patterns",
                     MissingFieldsDefaultedToZero = new[]
                     {
-            "IsCod",
-            "CodOrderCount",
-            "PhoneUsedCount",
-            "AddressUsedCount",
-            "StatusChangeCount"
-        },
+                        "IsCod",
+                        "CodOrderCount",
+                        "PhoneUsedCount",
+                        "AddressUsedCount",
+                        "StatusChangeCount"
+                    },
                     Expected = index switch
                     {
                         0 => "Low",

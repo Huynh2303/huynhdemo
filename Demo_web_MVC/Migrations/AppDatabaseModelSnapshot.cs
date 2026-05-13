@@ -210,6 +210,10 @@ namespace Demo_web_MVC.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<string>("InputSnapshot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ModelName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -219,13 +223,24 @@ namespace Demo_web_MVC.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<string>("RiskLevel")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("RiskReasons")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("RiskScore")
-                        .HasColumnType("decimal(4, 3)");
+                        .HasColumnType("decimal(5, 2)");
 
                     b.HasKey("Id")
                         .HasName("PK__FraudAna__3214EC07D1803ABB");
 
-                    b.HasIndex(new[] { "OrderId" }, "idx_fraudanalysis_orderid");
+                    b.HasIndex(new[] { "OrderId" }, "IX_FraudAnalysis_OrderId")
+                        .IsUnique();
 
                     b.ToTable("FraudAnalysis", (string)null);
                 });
@@ -769,9 +784,9 @@ namespace Demo_web_MVC.Migrations
             modelBuilder.Entity("Demo_web_MVC.Models.FraudAnalysis", b =>
                 {
                     b.HasOne("Demo_web_MVC.Models.Order", "Order")
-                        .WithMany("FraudAnalyses")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("FraudAnalysis")
+                        .HasForeignKey("Demo_web_MVC.Models.FraudAnalysis", "OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_fraudanalysis_order");
 
@@ -950,7 +965,7 @@ namespace Demo_web_MVC.Migrations
 
             modelBuilder.Entity("Demo_web_MVC.Models.Order", b =>
                 {
-                    b.Navigation("FraudAnalyses");
+                    b.Navigation("FraudAnalysis");
 
                     b.Navigation("OrderItems");
 

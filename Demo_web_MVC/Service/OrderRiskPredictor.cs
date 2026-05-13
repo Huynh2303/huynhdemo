@@ -159,7 +159,7 @@ namespace Demo_web_MVC.Service
                 reasons.Add($"Tài khoản mới đặt số lượng sản phẩm lớn: {input.TotalQuantity} sản phẩm.");
             }
 
-            if (prediction.IsRisk)
+            if (prediction.IsRisk && !reasons.Any())
             {
                 reasons.Add("Mô hình AI phát hiện mẫu hành vi có dấu hiệu rủi ro.");
             }

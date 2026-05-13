@@ -1,10 +1,12 @@
 ﻿using Demo_web_MVC.Data.AppDatabase;
 using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel;
 using Demo_web_MVC.Models.ViewModel.Address;
 using Demo_web_MVC.Models.ViewModel.Dashboard;
 using Demo_web_MVC.Models.ViewModel.Oder;
 using Demo_web_MVC.Models.ViewModel.Product;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using static Demo_web_MVC.Models.ViewModel.Dashboard.DashboardViewModel;
 
 namespace Demo_web_MVC.Repository.Dashboard
@@ -34,6 +36,20 @@ namespace Demo_web_MVC.Repository.Dashboard
                         Status = o.Status,
                         CreateAt = o.CreatedAt,
                         user = o.User.FullName,
+                        FraudAnalysis = _context.FraudAnalyses
+                            .Where(f => f.OrderId == o.Id)
+                            .OrderByDescending(f => f.CreatedAt)
+                            .Select(f => new FraudAnalysisViewModel
+                            {
+                                Id = f.Id,
+                                OrderId = f.OrderId,
+                                RiskScore = f.RiskScore,
+                                RiskLevel = f.RiskLevel,
+                                RiskReasons = f.RiskReasons,
+                                ModelName = f.ModelName,
+                                CreatedAt = f.CreatedAt
+                            })
+                            .FirstOrDefault(),
                         Items = o.OrderItems.Select(item => new OderItemViewModel
                         {
                             Name = item.Variant.Product.Name,
@@ -152,18 +168,42 @@ namespace Demo_web_MVC.Repository.Dashboard
                                 .Select(img => img.Url)
                                 .FirstOrDefault()
                             ?? "/uploads/images/no-image.jpg"
-                            }).ToList()
-
+                            }).ToList(),
+                            FraudAnalysis = _context.FraudAnalyses
+                                .Where(f => f.OrderId == o.Id)
+                                .OrderByDescending(f => f.CreatedAt)
+                                .Select(f => new FraudAnalysisViewModel
+                                {
+                                    Id = f.Id,
+                                    OrderId = f.OrderId,
+                                    RiskScore = f.RiskScore,
+                                    RiskLevel = f.RiskLevel,
+                                    RiskReasons = f.RiskReasons,
+                                    ModelName = f.ModelName,
+                                    CreatedAt = f.CreatedAt
+                                })
+                                .FirstOrDefault()
                         }).ToListAsync();
-                
 
-            if (order == null)
+
+            if (!order.Any())
             {
-                _logger.LogError("không có Orderid này ");
-                return null;
+                _logger.LogError("Không có OrderId này: {OrderId}", orderId);
+                return new List<DetailsOrderDashboardViewmodel>();
             }
 
-            
+            foreach (var item in order)
+            {
+                if (item.FraudAnalysis != null &&
+                    !string.IsNullOrEmpty(item.FraudAnalysis.RiskReasons))
+                {
+                    item.FraudAnalysis.Reasons =
+                        JsonSerializer.Deserialize<List<string>>(item.FraudAnalysis.RiskReasons)
+                        ?? new List<string>();
+                }
+            }
+
+
 
             return order;
         }

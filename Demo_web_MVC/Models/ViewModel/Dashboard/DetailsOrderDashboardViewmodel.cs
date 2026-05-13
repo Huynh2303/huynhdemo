@@ -19,7 +19,7 @@ namespace Demo_web_MVC.Models.ViewModel.Dashboard
 
         public AddressViewModel? AddressView { get; set; }
 
-        
+        public FraudAnalysisViewModel? FraudAnalysis { get; set; }
 
         public List<OderItemViewModel> OderItemViews { get; set; } = new List<OderItemViewModel>();
 

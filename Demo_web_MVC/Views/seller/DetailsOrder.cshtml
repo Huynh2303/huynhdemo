@@ -380,37 +380,125 @@
                                 }
 
                             </div>
-
+                            <!-- kết quả AI-->
                             <div class="bg-surface-container-low rounded-lg p-md">
                                 <p class="text-label-bold text-outline-variant uppercase mb-xs">
-                                    Lịch sử cập nhật
+                                    Đánh giá rủi ro AI
                                 </p>
 
-                                <div class="space-y-sm">
-                                    <div class="flex items-start gap-sm">
-                                        <div class="w-2 h-2 mt-2 rounded-full bg-primary"></div>
+                                @if (order.FraudAnalysis != null)
+                                {
+                                    var riskLevel = order.FraudAnalysis.RiskLevel;
 
-                                        <div>
-                                            <p class="text-body-sm font-bold">Tạo đơn hàng</p>
-                                            <p class="text-[10px] text-outline">
-                                                @order.CreatedAt.ToString("dd/MM/yyyy - HH:mm")
-                                            </p>
+                                    var riskText = riskLevel switch
+                                    {
+                                        "High" => "Rủi ro cao",
+                                        "Medium" => "Cần kiểm tra",
+                                        "Low" => "An toàn",
+                                        "DataWarning" => "Thiếu dữ liệu",
+                                        _ => "Không xác định"
+                                    };
+
+                                    var riskBadgeClass = riskLevel switch
+                                    {
+                                        "High" => "bg-red-100 text-red-800 border border-red-200",
+                                        "Medium" => "bg-yellow-100 text-yellow-800 border border-yellow-200",
+                                        "Low" => "bg-green-100 text-green-800 border border-green-200",
+                                        "DataWarning" => "bg-orange-100 text-orange-800 border border-orange-200",
+                                        _ => "bg-gray-100 text-gray-600 border border-gray-200"
+                                    };
+
+                                    var dotClass = riskLevel switch
+                                    {
+                                        "High" => "bg-red-500",
+                                        "Medium" => "bg-yellow-500",
+                                        "Low" => "bg-green-500",
+                                        "DataWarning" => "bg-orange-500",
+                                        _ => "bg-gray-400"
+                                    };
+
+                                    <div class="space-y-sm">
+
+                                        <div class="flex items-start gap-sm">
+                                            <div class="w-2 h-2 mt-2 rounded-full @dotClass"></div>
+
+                                            <div class="flex-1">
+                                                <div class="flex items-center justify-between gap-sm">
+                                                    <p class="text-body-sm font-bold">
+                                                        Mức cảnh báo
+                                                    </p>
+
+                                                    <span class="inline-flex items-center px-sm py-xs rounded-full text-[10px] font-bold uppercase @riskBadgeClass">
+                                                        @riskText
+                                                    </span>
+                                                </div>
+
+                                                @* <p class="text-[10px] text-outline mt-xs">
+                                                    Điểm rủi ro: @order.FraudAnalysis.RiskScore.ToString("N0") điểm
+                                                </p> *@
+                                            </div>
                                         </div>
-                                    </div>
 
+                                        <div class="flex items-start gap-sm">
+                                            <div class="w-2 h-2 mt-2 rounded-full bg-primary-container"></div>
+
+                                            <div>
+                                                <p class="text-body-sm font-bold">
+                                                    Lý do cảnh báo
+                                                </p>
+
+                                                @if (order.FraudAnalysis.Reasons != null && order.FraudAnalysis.Reasons.Any())
+                                                {
+                                                    <ul class="mt-xs space-y-xs">
+                                                        @foreach (var reason in order.FraudAnalysis.Reasons)
+                                                        {
+                                                            <li class="text-[12px] text-outline leading-relaxed">
+                                                                - @reason
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-[12px] text-outline mt-xs leading-relaxed">
+                                                        Chưa có lý do cảnh báo chi tiết.
+                                                    </p>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-start gap-sm">
+                                            <div class="w-2 h-2 mt-2 rounded-full bg-outline"></div>
+
+                                            <div>
+                                                <p class="text-body-sm font-bold">
+                                                    Thời gian phân tích
+                                                </p>
+
+                                                <p class="text-[10px] text-outline">
+                                                    @order.FraudAnalysis.CreatedAt.ToString("dd/MM/yyyy - HH:mm")
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                                else
+                                {
                                     <div class="flex items-start gap-sm">
-                                        <div class="w-2 h-2 mt-2 rounded-full bg-primary-container"></div>
+                                        <div class="w-2 h-2 mt-2 rounded-full bg-gray-400"></div>
 
                                         <div>
                                             <p class="text-body-sm font-bold">
-                                                Trạng thái hiện tại: @order.OrderStatus
+                                                Chưa có kết quả AI
                                             </p>
+
                                             <p class="text-[10px] text-outline">
-                                                Cập nhật từ hệ thống
+                                                Đơn hàng này chưa được hệ thống phân tích rủi ro.
                                             </p>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -465,7 +553,7 @@
                                             </td>
 
                                             <td class="px-lg py-md font-body-base text-on-surface">
-                                                x@item.Quantity
+                                                @item.Quantity
                                             </td>
 
                                             <td class="px-lg py-md text-right font-price-lg text-price-lg text-primary">

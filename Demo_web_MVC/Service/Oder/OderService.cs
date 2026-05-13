@@ -8,10 +8,12 @@ namespace Demo_web_MVC.Service.Oder
     {
         private readonly IOderRepository _oderRepository;
         private readonly ILogger<OderService> _logger;
-        public OderService (IOderRepository oderRepository,ILogger<OderService> logger)
+        private readonly OrderRiskAnalysisService _orderRiskAnalysisService;
+        public OderService (IOderRepository oderRepository,ILogger<OderService> logger, OrderRiskAnalysisService orderRiskAnalysisService)
         {
             _oderRepository = oderRepository;
             _logger = logger;
+            _orderRiskAnalysisService= orderRiskAnalysisService;
         }
         public async Task<int> CreateOrderFromCartAsyncService(int userId, string paymentMethod, List<int> selectedCartItemIds)
         {
@@ -37,8 +39,9 @@ namespace Demo_web_MVC.Service.Oder
 
                 var orderId = await _oderRepository.CreateOrderFromCartAsync(userId, paymentMethod,selectedCartItemIds);
                 _logger.LogInformation("Tạo đơn hàng thành công. UserId={UserId}, OrderId={OrderId}", userId, orderId);
-
-                 await _oderRepository.RemoveCartItemsAsync(selectedCartItemIds, userId);
+                await _orderRiskAnalysisService.AnalyzeOrderAsync(orderId);
+                await _oderRepository.RemoveCartItemsAsync(selectedCartItemIds, userId);
+                
                 return orderId;
             }
             catch (Exception ex)
