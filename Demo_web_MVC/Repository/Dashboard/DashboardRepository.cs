@@ -207,5 +207,83 @@ namespace Demo_web_MVC.Repository.Dashboard
 
             return order;
         }
+        public async Task<StatisticsViewModel> GetDashboardStatisticsAsync()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .Where(o => o.CreatedAt.Date == DateTime.Today) // chỉ lấy đơn hôm nay
+                .ToListAsync();
+
+            var statistics = new StatisticsViewModel();
+
+            statistics.TotalOrders = orders.Count;
+            statistics.TotalProducts = orders.Sum(o => o.OrderItems.Sum(i => i.Quantity));
+            statistics.TotalRevenue = orders.Sum(o => o.TotalAmount);
+
+
+            // --- Biểu đồ ngày: từng đơn hôm nay ---
+            statistics.Orders = orders
+                .Select(o => new OderViewModel
+                {
+                    CreateAt = o.CreatedAt,
+                    TotalAmount = o.OrderItems.Sum(i => i.Price * i.Quantity)
+                })
+                .OrderBy(o => o.CreateAt)
+                .ToList();
+
+            // --- Biểu đồ 7 ngày gần nhất: tổng theo ngày ---
+            var last7Orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .Where(o => o.CreatedAt >= DateTime.Today.AddDays(-6))
+                .ToListAsync();
+
+            statistics.RevenueLast7Days = Enumerable.Range(0, 7)
+                .Select(i => DateTime.Today.AddDays(-6 + i))
+                .ToDictionary(
+                    d => d,
+                    d => last7Orders.Where(o => o.CreatedAt.Date == d)
+                                     .Sum(o => o.OrderItems.Sum(i => i.Price * i.Quantity))
+                );
+
+            // --- Biểu đồ 30 ngày gần nhất: tổng theo ngày ---
+            var last30Orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .Where(o => o.CreatedAt >= DateTime.Today.AddDays(-29))
+                .ToListAsync();
+
+            statistics.RevenueLast30Days = Enumerable.Range(0, 30)
+                .Select(i => DateTime.Today.AddDays(-29 + i))
+                .ToDictionary(
+                    d => d,
+                    d => last30Orders.Where(o => o.CreatedAt.Date == d)
+                                      .Sum(o => o.OrderItems.Sum(i => i.Price * i.Quantity))
+                );
+
+            // Thống kê trạng thái
+            var allOrders = await _context.Orders
+     .Include(o => o.OrderItems)
+     .ToListAsync(); // lấy tất cả đơn, không chỉ hôm nay
+
+            statistics.OrderStatusAll = allOrders
+                .GroupBy(o => o.Status)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            var last7Days = DateTime.Today.AddDays(-6);
+            statistics.OrderStatusLast7Days = Enum.GetValues(typeof(OrderStatus))
+                .Cast<OrderStatus>()
+                .ToDictionary(
+                    s => s,
+                    s => allOrders.Count(o => o.Status == s && o.CreatedAt.Date >= last7Days)
+                );
+
+            var last30Days = DateTime.Today.AddDays(-29);
+            statistics.OrderStatusLast30Days = Enum.GetValues(typeof(OrderStatus))
+                .Cast<OrderStatus>()
+                .ToDictionary(
+                    s => s,
+                    s => allOrders.Count(o => o.Status == s && o.CreatedAt.Date >= last30Days)
+                );
+            return statistics;
+        }
     }
 }

@@ -25,7 +25,12 @@
     <div class="bg-surface p-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-primary flex items-center justify-between hover:-translate-y-1 transition-transform duration-200">
         <div>
             <p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-xs">Tổng Doanh Thu</p>
-            <p class="font-display-lg text-display-lg text-on-surface">@ViewBag.TotalRevenue</p>
+            @* <p class="font-display-lg text-display-lg text-on-surface">@ViewBag.TotalRevenue</p> *@
+            <p class="font-display-lg text-display-lg text-on-surface">
+                @(ViewBag.TotalRevenue >= 1000000
+                                ? $"{ViewBag.TotalRevenue / 1000000m:0.#}M"
+                                : $"{ViewBag.TotalRevenue:N0}")
+            </p>
         </div>
         <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
             <span class="material-symbols-outlined text-primary" data-icon="payments" style="font-variation-settings: 'FILL' ;">payments</span>
@@ -112,7 +117,12 @@
                                 } *@
                             </td>
                             <!-- Hiển thị Price (Giá) -->
-                            <td class="p-md text-right font-price-lg text-price-lg">@order.TotalAmount</td>
+                            @* <td class="p-md text-right font-price-lg text-price-lg">@order.TotalAmount</td> *@
+                            <td class="p-md text-right font-price-lg text-price-lg">
+                                @(order.TotalAmount >= 1000000
+                                                            ? $"{order.TotalAmount / 1000000m:0.#}M"
+                                                            : $"{order.TotalAmount:N0}")
+                            </td>
 
                             <!-- Hiển thị button "Xem chi tiết" -->
                             <td class="p-md text-center">

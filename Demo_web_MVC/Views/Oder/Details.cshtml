@@ -125,7 +125,6 @@
                         @Model.Status.ToString()
                     </span>
                 </h1>
-                <p class="font-body-sm text-on-surface-variant">Placed on October 24, 2024 at 02:45 PM</p>
             </div>
             <div class="flex gap-sm">
                 
@@ -204,14 +203,9 @@
             }
             
            
-            <!-- else -->
-            <!-- <div class="bg-white rounded-xl p-xl text-center border-2 border-dashed border-slate-200">
-                            <span class="material-symbols-outlined text-6xl text-slate-300" data-icon="shopping_bag">shopping_bag</span>
-                            <p class="mt-4 font-headline-md text-slate-500">Your order has no items.</p>
-                        </div> -->
-            <!-- endif -->
+            
         </div>
-        <!-- Order Summary -->
+        
         <!-- Order Summary -->
         <div class="flex justify-end">
             <div class="w-full md:w-[400px] bg-white rounded-xl p-lg shadow-[0px_8px_24px_rgba(0,0,0,0.1)] border border-slate-100 space-y-4">
@@ -219,15 +213,15 @@
                 <div class="space-y-3">
                     <div class="flex justify-between font-body-base text-on-surface-variant">
                         <span>Subtotal</span>
-                        <span>@Model.TotalAmount.ToString("N0") đ</span> <!-- Tổng tiền -->
+                        <span>@Model.TotalAmount.ToString("N0") đ</span> 
                     </div>
                     <div class="flex justify-between font-body-base text-on-surface-variant">
                         <span>Shipping Fee</span>
-                        <span>Miễn Phí</span> <!-- Phí vận chuyển (giả sử bạn có thuộc tính ShippingFee trong item) -->
+                        <span>Miễn Phí</span> 
                     </div>
                     <div class="flex justify-between font-body-base text-error">
                         <span>Discount</span>
-                        <span>0</span> <!-- Giảm giá (giả sử bạn có thuộc tính Discount trong item) -->
+                        <span>0</span> 
                     </div>
                     <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
                         <span class="font-headline-md">Total Amount</span>
@@ -235,12 +229,10 @@
                             @Model.TotalAmount.ToString("N0") đ
                             
                            
-                        </span> <!-- Tổng tiền sau giảm giá và phí vận chuyển -->
+                        </span> 
                     </div>
                 </div>
-                <div class="pt-4">
-                    <p class="text-[10px] text-center text-on-surface-variant uppercase tracking-widest">Prices include VAT where applicable</p>
-                </div>
+                
             </div>
         </div>
     </main>

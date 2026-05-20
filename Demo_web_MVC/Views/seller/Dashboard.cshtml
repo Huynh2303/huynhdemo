@@ -124,21 +124,11 @@
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span class="font-label-bold text-label-bold">Products</span>
             </a>
-            @* <!-- Orders Tab -->
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
-                <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-                <span class="font-label-bold text-label-bold">Orders</span>
+            <a asp-action="Statistics" asp-controller="Seller" class="flex items-center gap-md p-md rounded-xl text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200">
+                <span class="material-symbols-outlined">query_stats</span>
+                <span class="font-body-base">Statistics</span>
             </a>
-            <!-- Customers Tab -->
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
-                <span class="material-symbols-outlined" data-icon="groups">groups</span>
-                <span class="font-label-bold text-label-bold">Customers</span>
-            </a>
-            <!-- Statistics Tab -->
-            <a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high transition-colors duration-200" href="#">
-                <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
-                <span class="font-label-bold text-label-bold">Statistics</span>
-            </a> *@
+            
         </nav>
         <div class="mt-auto border-t border-outline-variant pt-lg">
             <a asp-action="CreateProduct"

@@ -38,14 +38,14 @@ namespace Demo_web_MVC.Controllers
         }
         private async Task<int> GetCartCount()
         {
-            var userId = GetUserIdFromClaims(); // Lấy userId từ claims
+            var userId = GetUserIdFromClaims(); 
             if (userId == null)
             {
-                return 0; // Trả về 0 nếu người dùng chưa đăng nhập
+                return 0; 
             }
 
-            var cartItems = await _cartService.GetCartItems(userId.Value); // Lấy giỏ hàng của người dùng từ service
-            return cartItems.Count; // Trả về số lượng sản phẩm trong giỏ
+            var cartItems = await _cartService.GetCartItems(userId.Value);
+            return cartItems.Count; 
         }
 
         [AllowAnonymous]
@@ -73,7 +73,7 @@ namespace Demo_web_MVC.Controllers
 
             productDetails.RelatedProducts = allProducts
                 .Where(p => p.Id != id.Value)
-                .OrderBy(x => Guid.NewGuid()) // 🔥 random
+                .OrderBy(x => Guid.NewGuid()) 
                 .Take(4)
                 .ToList();
             var cartCount = await GetCartCount();
@@ -102,7 +102,7 @@ namespace Demo_web_MVC.Controllers
             }
             catch (Exception ex)
             {
-                // Ghi log hoặc xử lý lỗi nếu có ngoại lệ xảy ra
+                
                 ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
                 Console.WriteLine($"Error deleting product: {ex.Message}");
                 return RedirectToAction("Index");

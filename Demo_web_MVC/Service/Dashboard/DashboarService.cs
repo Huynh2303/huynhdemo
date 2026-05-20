@@ -36,5 +36,11 @@ namespace Demo_web_MVC.Service.Dashboard
         {
             return await _dashboardRepository.GetDetailsOrderDashboardViewmodelAsync(orderId);
         }
+        public async Task<StatisticsViewModel> GetStatisticsAsync()
+        {
+            
+            var statistics = await _dashboardRepository.GetDashboardStatisticsAsync();
+            return statistics;
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace Demo_web_MVC.Service.Dashboard
         Task<DashboardViewModel> GetOrdersAndProductsAsync();
         Task<ProductsManagerViewModel> GetProductsManagerAsync();
         Task<List<DetailsOrderDashboardViewmodel>> GetDetailsOrderDashboardViewmodelAsync(int orderId);
+        Task<StatisticsViewModel> GetStatisticsAsync();
     }
 }

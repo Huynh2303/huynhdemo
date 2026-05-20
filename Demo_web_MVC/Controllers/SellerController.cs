@@ -1,4 +1,5 @@
 ﻿using Demo_web_MVC.Models.ViewModel.Category;
+using Demo_web_MVC.Models.ViewModel.Dashboard;
 using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Service;
 using Demo_web_MVC.Service.Category;
@@ -368,5 +369,16 @@ namespace Demo_web_MVC.Controllers
                 return View(model);
             }
         }
+        public async Task<IActionResult> Statistics()
+        {
+            var statistics = await _service.GetStatisticsAsync();
+            var total = await _service.GetOrdersAndProductsAsync();
+            ViewBag.TotalOrdersAllTime = total.Orders.Count;
+            ViewBag.TotalRevenueAllTime = total.Orders.Sum(o => o.TotalAmount);
+            ViewBag.TotalProductsAllTime = total.Products.Count;
+
+            return View(statistics);
+        }
+       
     }
 }
