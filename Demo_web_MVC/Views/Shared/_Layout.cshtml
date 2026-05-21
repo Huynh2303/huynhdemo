@@ -1,17 +1,29 @@
 ﻿
 @{
 
+
+
     var title = ViewData["Title"] ?? "Demo_web_MVC";
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 
+
+
     var isShopPage =
+
         //controller.Equals("Home", StringComparison.OrdinalIgnoreCase) ||
+
         controller.Equals("Product", StringComparison.OrdinalIgnoreCase) ||
+
         controller.Equals("Cart", StringComparison.OrdinalIgnoreCase) ||
+
         controller.Equals("Search", StringComparison.OrdinalIgnoreCase) ||
-        controller.Equals("Adress", StringComparison.OrdinalIgnoreCase)||
-        controller.Equals("Oder", StringComparison.OrdinalIgnoreCase);
+
+        // controller.Equals("Adress", StringComparison.OrdinalIgnoreCase) ||
+
+        controller.Equals("Oder", StringComparison.OrdinalIgnoreCase) ||
+
+        controller.Equals("Seller", StringComparison.OrdinalIgnoreCase);
     var keyword = ViewBag.Keyword != null ? ViewBag.Keyword.ToString() : "";
     var cartCount = ViewBag.CartCount != null ? (int)ViewBag.CartCount : 0;
     

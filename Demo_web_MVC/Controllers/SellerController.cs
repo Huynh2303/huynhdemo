@@ -2,11 +2,13 @@
 using Demo_web_MVC.Models.ViewModel.Dashboard;
 using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Service;
+using Demo_web_MVC.Service.Cart;
 using Demo_web_MVC.Service.Category;
 using Demo_web_MVC.Service.Dashboard;
 using Demo_web_MVC.Service.Oder;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Demo_web_MVC.Controllers
 {
@@ -18,60 +20,80 @@ namespace Demo_web_MVC.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IOderService _oderService;
-        public SellerController(IDashboarService dashboarService, ILogger<SellerController> logger, IProductService productService, ICategoryService categoryService,IOderService oderService)
+        private readonly ICartService _cartService;
+        public SellerController(IDashboarService dashboarService, ILogger<SellerController> logger, IProductService productService, ICategoryService categoryService,IOderService oderService, ICartService cartService)
         {
             _service = dashboarService;
             _logger = logger;
             _productService = productService;
             _categoryService = categoryService;
             _oderService = oderService;
+            _cartService = cartService;
         }
+        private int? GetUserIdFromClaims()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return null;
+            }
+            return userId;
+        }
+        private async Task<int> GetCartCount()
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return 0;
+            }
 
+            var cartItems = await _cartService.GetCartItems(userId.Value);
+            return cartItems.Count;
+        }
         public async Task<IActionResult> Dashboard()
         {
-            // Đảm bảo gọi await để lấy kết quả từ phương thức bất đồng bộ
+            
             var dashboardData = await _service.GetOrdersAndProductsAsync();
 
-            // Tính tổng số đơn hàng và doanh thu
+           
             var totalOrders = dashboardData.Orders.Count;
             var totalRevenue = dashboardData.Orders.Sum(o => o.TotalAmount);
-            var today = DateTime.Today; // Lấy ngày hôm nay (không có giờ phút giây)
+            var today = DateTime.Today; 
             var ordersToday = dashboardData.Orders.Where(o => o.CreateAt == today).ToList();
-            // Tính tổng số đơn hàng hôm nay
+            
             var totalOrdersToday = ordersToday.Count;
             var product = dashboardData.Products.Count;
-            // Truyền tổng vào ViewBag hoặc ViewModel
+            
             ViewBag.TotalOrders = totalOrders;
             ViewBag.TotalRevenue = totalRevenue;
             ViewBag.TotalOrdersToday = totalOrdersToday;
             ViewBag.Product = product;
-
-            // Trả về View với dữ liệu thực tế (dashboardData)
+            var cartCount = await GetCartCount();
+            ViewBag.CartCount = cartCount;
+            
             return View(dashboardData);
         }
         public async Task<IActionResult> ProductsManager()
         {
-            // Gọi phương thức trong service để lấy dữ liệu
+          
             var productsManagerViewModel = await _service.GetProductsManagerAsync();
-            // Tính tổng số sản phẩm
+            
             var totalProducts = productsManagerViewModel.Products.Count;
+            var cartCount = await GetCartCount();
+            ViewBag.CartCount = cartCount;
+
 
             
-
-            // Tính tổng sản phẩm sắp hết hàng (tồn kho dưới 5)
             var lowStockProductsCount = productsManagerViewModel.Products.Count(p => p.Variants!.Any(v=>v.Stock<5));
 
-            // Truyền các giá trị vào ViewBag
             ViewBag.TotalProducts = totalProducts;
             
             ViewBag.LowStockProducts = lowStockProductsCount;
 
-            // Trả về view với dữ liệu từ service
             return View(productsManagerViewModel);
         }
         public async Task<IActionResult> CreateProduct()
         {
-            // Lấy danh sách các danh mục từ cơ sở dữ liệu
             var categories = await _categoryService.GetAllCategories();
             var categoryViewModels = categories.Select(c => new CategoryViewModel
             {
@@ -79,12 +101,13 @@ namespace Demo_web_MVC.Controllers
                 Name = c.Name
             }).ToList();
 
-            // Tạo ProductViewModel và gán danh sách danh mục vào Categories
             var productViewModel = new ProductViewModel
             {
                 Categories = categoryViewModels  
             };
-            
+            var cartCount = await GetCartCount();
+            ViewBag.CartCount = cartCount;
+
             return View(productViewModel);
         }
         [HttpPost]  
@@ -376,8 +399,9 @@ namespace Demo_web_MVC.Controllers
             ViewBag.TotalOrdersAllTime = total.Orders.Count;
             ViewBag.TotalRevenueAllTime = total.Orders.Sum(o => o.TotalAmount);
             ViewBag.TotalProductsAllTime = total.Products.Count;
-
-            return View(statistics);
+            var cartCount = await GetCartCount();
+            ViewBag.CartCount = cartCount;
+            return View(statistics); 
         }
        
     }

@@ -94,6 +94,7 @@
                         "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
                         "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
                     }
+
                 },
             },
         }
@@ -107,6 +108,7 @@
             border-bottom: 2px solid #00aeef;
             color: #00658d;
         }
+
     </style>
 </head>
 @model List<Demo_web_MVC.Models.ViewModel.Oder.OderViewModel>
@@ -119,8 +121,8 @@
         <!-- Filter Tabs -->
         <div class="bg-surface-container-lowest rounded-lg shadow-sm mb-lg overflow-x-auto">
             <div class="flex min-w-max">
-                <a href="@Url.Action("Index", "Oder", new { status = "All" })" class="flex-1 px-lg py-md text-label-bold font-label-bold active-tab transition-all">Tất cả</a>
-                <a href="@Url.Action("Index", "Oder", new { status = "Pending" })" class="flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">Chờ xử lý</a>
+                <a href="@Url.Action("Index", "Oder", new { status = "All" })" class="flex-1 px-lg py-md text-label-bold font-label-bold  transition-all">Tất cả</a>
+                <a href="@Url.Action("Index", "Oder", new { status = "Pending" })" class="flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant  hover:text-primary transition-all">Chờ xử lý</a>
                 <a href="@Url.Action("Index", "Oder", new { status = "Shipping" })" class="flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">Đang giao</a>
                 <a href="@Url.Action("Index", "Oder", new { status = "Completed" })" class="flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">Đã giao</a>
                 <a href="@Url.Action("Index", "Oder", new { status = "Cancelled" })" class="flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">Đã hủy</a>

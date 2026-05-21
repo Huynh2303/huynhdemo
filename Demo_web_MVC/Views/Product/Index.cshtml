@@ -31,54 +31,14 @@
     <!-- TopNavBar Component -->
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8">
-        <!-- Category Navigation -->
-        <section class="py-lg overflow-hidden">
-            <div class="flex items-center gap-lg overflow-x-auto no-scrollbar pb-xs">
-                <div class="flex flex-col items-center gap-2 shrink-0 group cursor-pointer">
-                    <div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-white transition-all">
-                        <span class="material-symbols-outlined text-3xl" data-icon="apparel">apparel</span>
-                    </div>
-                    <span class="text-label-bold font-label-bold uppercase">Shirts</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 shrink-0 group cursor-pointer">
-                    <div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-white transition-all">
-                        <span class="material-symbols-outlined text-3xl" data-icon="category">category</span>
-                    </div>
-                    <span class="text-label-bold font-label-bold uppercase">Pants</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 shrink-0 group cursor-pointer">
-                    <div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-white transition-all">
-                        <span class="material-symbols-outlined text-3xl" data-icon="ice_skating">ice_skating</span>
-                    </div>
-                    <span class="text-label-bold font-label-bold uppercase">Shoes</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 shrink-0 group cursor-pointer">
-                    <div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-white transition-all">
-                        <span class="material-symbols-outlined text-3xl" data-icon="watch">watch</span>
-                    </div>
-                    <span class="text-label-bold font-label-bold uppercase">Accessories</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 shrink-0 group cursor-pointer">
-                    <div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-white transition-all">
-                        <span class="material-symbols-outlined text-3xl" data-icon="laptop">laptop</span>
-                    </div>
-                    <span class="text-label-bold font-label-bold uppercase">Tech</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 shrink-0 group cursor-pointer">
-                    <div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-white transition-all">
-                        <span class="material-symbols-outlined text-3xl" data-icon="chair">chair</span>
-                    </div>
-                    <span class="text-label-bold font-label-bold uppercase">Furniture</span>
-                </div>
-            </div>
-        </section>
+       
         <!-- Banner Carousel -->
         <section class="mb-xl relative group overflow-hidden rounded-xl h-[400px]">
             <div class="absolute inset-0 bg-gradient-to-r from-slate-900/60 to-transparent z-10 flex flex-col justify-center px-lg md:px-xl">
-                <span class="text-primary-container font-label-bold text-label-bold uppercase mb-2">New Season Arrivals</span>
-                <h1 class="text-white font-display-lg text-display-lg mb-4 max-w-md">Minimalist Design For Modern Living</h1>
-                <p class="text-white/80 text-body-base max-w-sm mb-6">Explore our curated collection of essential tech and apparel for the contemporary professional.</p>
-                <button class="bg-primary-container text-white w-fit px-8 py-3 rounded-lg font-headline-md hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-primary-container/30">Shop Now</button>
+                <span class="text-primary-container font-label-bold text-label-bold uppercase mb-2">Sản phẩm công nghệ mới</span>
+                <h1 class="text-white font-display-lg text-display-lg mb-4 max-w-md">Thiết kế hiện đại dành cho cuộc sống thông minh</h1>
+                <p class="text-white/80 text-body-base max-w-sm mb-6">Khám phá bộ sưu tập thiết bị công nghệ mới nhất với hiệu năng mạnh mẽ và phong cách hiện đại dành cho nhu cầu hằng ngày.</p>
+                <button class="bg-primary-container text-white w-fit px-8 py-3 rounded-lg font-headline-md hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-primary-container/30">Tham gia ngay</button>
             </div>
             <img class="w-full h-full object-cover" data-alt="Modern bright retail storefront with minimalist clothing displays and soft ambient window lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzjcJDKSjPJjyNESYG-T_lgFxUbSsiWs2o2yW0BEu2IBBnr1SeORK91aO3LaJPyLdYOSYwenkQ1n0DBl6YUE5qJxeNAfA-PhFw_RKVAZyBDG2JqbnOstJlJaIyEsrCw3DrYA0hYvw2EHw0VujWO7Tgs8F4YZyqZPt09hf6G0qzimbpvYJo9CpB0TLiv8Px5kamU7Euumv6BHJ_Q0oXQWh4WPBhVhlTyZP-pWIIS90DV6DAhMV7SKLRL-rBnDnvdlHkh19wO2ivrGkM" />
             <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
@@ -93,28 +53,12 @@
         
         <!-- Main Product List -->
         <section class="mb-xl">
-            @* <div class="flex items-center justify-between mb-lg">
-                <h2 class="font-display-lg text-display-lg">Recommended For You</h2>
-                <div class="flex gap-2">
-                    <button class="px-4 py-2 rounded-full border border-outline-variant text-body-sm font-medium hover:bg-surface-container transition-colors">Popular</button>
-                    <button class="px-4 py-2 rounded-full bg-primary-container text-white text-body-sm font-medium">Newest</button>
-                </div>
-            </div> *@
-            <!-- Product list  -->
             
+            <!-- Product list  -->
             <partial name="ProductList" model="Model" />
         </section>
         <!-- Newsletter Section -->
-        <section class="mb-xl bg-primary-container/10 rounded-3xl p-lg md:p-xl flex flex-col md:flex-row items-center justify-between gap-lg">
-            <div class="max-w-md">
-                <h2 class="font-display-lg text-display-lg text-on-primary-container mb-2">Join Our Newsletter</h2>
-                <p class="text-on-primary-container/70 text-body-base">Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
-            </div>
-            <div class="w-full max-w-sm flex gap-2">
-                <input class="flex-1 rounded-lg border-none focus:ring-2 focus:ring-primary-container py-3 px-4" placeholder="Enter your email" type="email" />
-                <button class="bg-primary-container text-white px-6 py-3 rounded-lg font-label-bold uppercase">Join</button>
-            </div>
-        </section>
+        
     </main>
     
 </body>

@@ -114,16 +114,16 @@
         <nav class="flex-grow space-y-sm">
             <a asp-action ="Dashboard" asp-controller="Seller" class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200" >
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-                <span>Dashboard</span>
+                <span>Bảng điều khiển</span>
             </a>
             <!-- Active Tab: Products -->
             <a asp-action="ProductsManager" asp-controller="Seller" class="flex items-center gap-md p-sm rounded-lg text-primary-container font-bold border-r-4 border-primary-container bg-surface-container-high transition-transform duration-150 scale-95"  >
                 <span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
-                <span>Products</span>
+                <span>Sản phẩm</span>
             </a>
             <a asp-action="Statistics" asp-controller="Seller" class="flex items-center gap-md p-md rounded-xl text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200">
                 <span class="material-symbols-outlined">query_stats</span>
-                <span class="font-body-base">Statistics</span>
+                <span class="font-body-base">Thống kê</span>
             </a>
             
         </nav>
@@ -131,11 +131,11 @@
             <a asp-action="CreateProduct"
                asp-controller="Seller" class="w-full flex items-center justify-center gap-sm bg-primary-container text-on-primary font-label-bold text-label-bold py-sm px-md rounded-lg shadow-sm hover:scale-105 transition-transform duration-200">
                 <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
-                Add New Product
+                Thêm sản phẩm mới
             </a>
             <a asp-action="Logout" asp-controller="User" class="flex items-center gap-md p-sm rounded-lg text-on-surface-variant font-body-base hover:bg-surface-container-high transition-colors duration-200 mt-md" >
                 <span class="material-symbols-outlined" data-icon="logout">logout</span>
-                <span>Logout</span>
+                <span>Đăng xuất</span>
             </a>
         </div>
     </aside>

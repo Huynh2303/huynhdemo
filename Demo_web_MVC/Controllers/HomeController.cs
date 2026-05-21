@@ -1,22 +1,29 @@
-using System.Diagnostics;
 using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel;
+using Demo_web_MVC.Repository.Addresss;
+using Demo_web_MVC.Service.Address;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Demo_web_MVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        // xin chao 
-        public HomeController(ILogger<HomeController> logger)
+        public readonly IAddressService _addressService;
+        
+        public HomeController(ILogger<HomeController> logger, IAddressService address)
         {
             _logger = logger;
+            _addressService = address;
         }
+        
 
-        public IActionResult Index()
+        public  IActionResult Index()
         {
-            return RedirectToAction("Index", "Product");
-            //return View();
+            //return RedirectToAction("Index", "Product");
+            return View();
         }
 
         public IActionResult Privacy()

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Demo_web_MVC.Controllers
 {
@@ -28,7 +29,7 @@ namespace Demo_web_MVC.Controllers
             }
             return userId;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> IndexPartial()
         {
             try
             {
@@ -46,7 +47,7 @@ namespace Demo_web_MVC.Controllers
                     result.Count
                 );
 
-                return View(result);
+                return PartialView("IndexPartial", result); // trả về partial
             }
             catch (Exception ex)
             {
@@ -54,113 +55,128 @@ namespace Demo_web_MVC.Controllers
                 return StatusCode(500, "Đã xảy ra lỗi khi tải danh sách địa chỉ.");
             }
         }
-        public IActionResult Create()
+        
+        public IActionResult CreatePartail()
         {
-            return View("Create");
+            return PartialView("CreatePartail");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Create(AddressViewModel model)
         {
             _logger.LogInformation("POST Create Address nhận model: {@Model}", model);
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("ModelState invalid: {@ModelState}", ModelState);
-                return View(model);
+                _logger.LogWarning("ModelState invalid");
+                return PartialView("CreatePartail", model);
             }
 
             var userId = GetUserIdFromClaims();
+
             if (userId == null)
             {
-                _logger.LogWarning("Người dùng chưa login hoặc claims không hợp lệ.");
                 return Unauthorized("Không xác định được người dùng.");
             }
 
             try
             {
                 var result = await _addressService.Create(userId.Value, model);
+
                 if (!result)
                 {
-                    _logger.LogWarning(
-                        "Tạo địa chỉ thất bại cho UserId {UserId}, Address: {Address}",
-                        userId.Value,
-                        model.AddressLine
-                    );
-                    ModelState.AddModelError("", "Không thể tạo địa chỉ mới. Vui lòng thử lại.");
-                    return View(model);
+                    ModelState.AddModelError("", "Không thể tạo địa chỉ.");
+
+                    return PartialView("CreatePartail", model);
                 }
 
-                _logger.LogInformation(
-                    "Tạo địa chỉ mới thành công cho UserId {UserId}, Address: {Address}",
-                    userId.Value,
-                    model.AddressLine
-                );
-                TempData["SuccessMessage"] = "Tạo địa chỉ thành công!";
-                return RedirectToAction("Index", "Adress");
+                var data = (await _addressService
+                    .GetAllByUserId(userId.Value))
+                    .ToList();
+
+                return PartialView("IndexPartial", data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tạo địa chỉ mới cho UserId {UserId}", userId.Value);
-                return View("Error", new ErrorViewModel { RequestId = "Đã xảy ra lỗi khi tạo địa chỉ mới." });
+                _logger.LogError(ex, "Lỗi create address");
+
+                return StatusCode(500, "Đã xảy ra lỗi.");
             }
         }
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = GetUserIdFromClaims();
+
             if (userId == null)
             {
-                return Unauthorized("Không xác định được người dùng.");
+                return Unauthorized();
             }
+
             try
             {
                 var result = await _addressService.Delete(userId.Value, id);
+
                 if (!result)
                 {
-                    TempData["ErrorMessage"] = "Không thể xóa địa chỉ. Vui lòng thử lại.";
+                    return BadRequest("Không thể xóa địa chỉ.");
                 }
-                else
-                {
-                    TempData["SuccessMessage"] = "Xóa địa chỉ thành công!";
-                }
+
+                var data = (await _addressService
+                    .GetAllByUserId(userId.Value))
+                    .ToList();
+
+                return PartialView("IndexPartial", data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi xóa địa chỉ Id {AddressId} cho UserId {UserId}", id, userId.Value);
-                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi xóa địa chỉ.";
+                _logger.LogError(ex,
+                    "Lỗi khi xóa địa chỉ");
+
+                return StatusCode(500,
+                    "Đã xảy ra lỗi.");
             }
-            return RedirectToAction("Index", "Adress");
         }
         [HttpPost]
         public async Task<IActionResult> SetDefault(int id)
         {
             var userId = GetUserIdFromClaims();
+
             if (userId == null)
             {
-                return Unauthorized("Không xác định được người dùng.");
+                return Unauthorized();
             }
+
             try
             {
-                var result = await _addressService.SetDefaultAddress(userId.Value, id);
+                var result = await _addressService
+                    .SetDefaultAddress(userId.Value, id);
+
                 if (!result)
                 {
-                    TempData["ErrorMessage"] = "Không thể đặt địa chỉ mặc định. Vui lòng thử lại.";
+                    return BadRequest(
+                        "Không thể đặt mặc định.");
                 }
-                else
-                {
-                    TempData["SuccessMessage"] = "Đặt địa chỉ mặc định thành công!";
-                }
+
+                var data = (await _addressService
+                    .GetAllByUserId(userId.Value))
+                    .ToList();
+
+                return PartialView("IndexPartial", data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi đặt địa chỉ Id {AddressId} làm mặc định cho UserId {UserId}", id, userId.Value);
-                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi đặt địa chỉ mặc định.";
+                _logger.LogError(ex,
+                    "Lỗi SetDefault");
+
+                return StatusCode(500,
+                    "Đã xảy ra lỗi.");
             }
-            return RedirectToAction("Index", "Adress");
         }
         [HttpGet]
+        [Route("Adress/Edit/{id}")]
         public async Task<IActionResult>Edit (int id)
         {
             var userId = GetUserIdFromClaims();
@@ -175,41 +191,51 @@ namespace Demo_web_MVC.Controllers
                 return NotFound();
             }
 
-            return View("Create", address); // 🔥 dùng lại view Create
+            return PartialView("~/Views/Adress/CreatePartail.cshtml", address); // 🔥 dùng lại view Create
         }
+        
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Edit (int id , AddressViewModel model)
+        public async Task<IActionResult> Edit(int id,AddressViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return PartialView("~/Views/Adress/CreatePartail.cshtml", model);
             }
+
             var userId = GetUserIdFromClaims();
+
             if (userId == null)
             {
-                _logger.LogWarning("Người dùng chưa login hoặc claims không hợp lệ.");
-                return Unauthorized("Không xác định được người dùng.");
+                return Unauthorized();
             }
+
             try
             {
-               
-                var editer = await _addressService.Update(userId.Value, id, model);
-                if (!editer)
+                var result = await _addressService
+                    .Update(userId.Value, id, model);
+
+                if (!result)
                 {
-                    TempData["ErrorMessage"] = "Không thể cập nhật địa chỉ. Vui lòng thử lại.";
+                    ModelState.AddModelError("",
+                        "Không thể cập nhật.");
+
+                    return PartialView("~/Views/Adress/CreatePartail.cshtml", model);
                 }
-                else
-                {
-                    TempData["SuccessMessage"] = "Cập nhật địa chỉ thành công!";
-                }
+
+                var data = (await _addressService
+                    .GetAllByUserId(userId.Value))
+                    .ToList();
+
+                return PartialView("IndexPartial", data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi cập nhật địa chỉ Id {AddressId} cho UserId {UserId}", id, userId.Value);
-                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật địa chỉ.";
-            }
+                _logger.LogError(ex, "Edit Error");
 
-            return RedirectToAction("Index", "Adress");
+                return StatusCode(500,
+                    "Đã xảy ra lỗi.");
+            }
         }
     }
 }

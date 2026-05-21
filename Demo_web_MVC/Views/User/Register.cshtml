@@ -1,44 +1,5 @@
 ﻿
 
-@* @{
-    ViewData["Title"] = "Đăng ký";
-}
-
-<h2>Đăng ký</h2>
-
-<form asp-action="Register" asp-controller="User" method="post">
-
-    <div>
-        <label>Username</label>
-        <input asp-for="Username" />
-        <span asp-validation-for="Username"></span>
-    </div>
-
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
-    </div>
-
-    <div>
-        <label>Mật khẩu</label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-
-    <div>
-        <label>Họ tên</label>
-        <input asp-for="FullName" />
-        <span asp-validation-for="FullName"></span>
-    </div>
-
-    <button type="submit">Đăng ký</button>
-    <a asp-action="Login" asp-controller="User">Login</a>
-</form>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-} *@
 <!DOCTYPE html>
 
 <html lang="vi">
@@ -160,12 +121,12 @@
             <!-- Identity Section -->
             <div class="text-center mb-lg">
                 <h1 class="font-display-lg text-display-lg text-on-surface mb-2">Đăng ký</h1>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">Tham gia cộng đồng mua sắm ShopVibrant ngay hôm nay</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Tham gia cộng đồng mua sắm ASP .NET ngay hôm nay</p>
             </div>
             <form asp-action="Register" asp-controller="User" class="space-y-md" method="post">
                 <!-- Username Field -->
                 <div class="space-y-xs">
-                    <label asp-for="Username" class="font-label-bold text-label-bold text-on-surface-variant block">USERNAME</label>
+                    <label asp-for="Username" class="font-label-bold text-label-bold text-on-surface-variant block">Tên đăng nhập</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">person</span>
                         <input asp-for="Username" class="w-full pl-10 pr-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-base text-body-base form-input-focus transition-all" placeholder="Nhập username" />

@@ -118,29 +118,24 @@
             <div class="flex-1 px-md space-y-xs">
                 <a asp-action="Dashboard" asp-controller="Seller" class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 rounded-lg group">
                     <span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
-                    <span class="font-label-bold text-label-bold">Dashboard</span>
+                    <span class="font-label-bold text-label-bold">Bảng điều khiển</span>
                 </a>
 
                 <a asp-action="ProductsManager" asp-controller="Seller" class="flex items-center gap-md px-md py-sm bg-primary-container/10 text-primary border-r-4 border-primary rounded-lg translate-x-1 transition-transform">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ;">shopping_bag</span>
-                    <span class="font-label-bold text-label-bold">Products</span>
+                    <span class="font-label-bold text-label-bold">Sản phẩm</span>
                 </a>
-
-                @* <a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 rounded-lg group" href="#">
-                    <span class="material-symbols-outlined group-hover:text-primary">inventory</span>
-                    <span class="font-label-bold text-label-bold">Orders</span>
+                <a asp-action="Statistics" asp-controller="Seller" class="flex items-center gap-md p-md rounded-xl text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200">
+                    <span class="material-symbols-outlined">query_stats</span>
+                    <span class="font-body-base">Thống kê</span>
                 </a>
-
-                <a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 rounded-lg group" href="#">
-                    <span class="material-symbols-outlined group-hover:text-primary">group</span>
-                    <span class="font-label-bold text-label-bold">Customers</span>
-                </a> *@
+               
             </div>
 
             <div class="px-md pt-md border-t border-outline-variant">
                 <a asp-action="Logout" asp-controller="User" class="flex items-center gap-md px-md py-sm text-error hover:bg-error-container/10 transition-all duration-200 rounded-lg" >
                     <span class="material-symbols-outlined">logout</span>
-                    <span class="font-label-bold text-label-bold">Logout</span>
+                    <span class="font-label-bold text-label-bold">Đăng xuất</span>
                 </a>
             </div>
         </nav>

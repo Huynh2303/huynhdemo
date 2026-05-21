@@ -1,5 +1,472 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿
+<!DOCTYPE html>
+<html class="light" lang="en" style="">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f5faff",
+                        "primary-fixed-dim": "#82cfff",
+                        "on-surface-variant": "#3e4850",
+                        "on-surface": "#171c20",
+                        "outline": "#6e7881",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-background": "#171c20",
+                        "on-tertiary-container": "#572f00",
+                        "on-primary-container": "#003e58",
+                        "surface-container-highest": "#dee3e8",
+                        "tertiary": "#8d4f00",
+                        "inverse-on-surface": "#ecf1f7",
+                        "primary-fixed": "#c6e7ff",
+                        "primary-container": "#00aeef",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#001e2d",
+                        "surface-dim": "#d6dae0",
+                        "secondary-container": "#dfe0e0",
+                        "on-tertiary-fixed": "#2d1600",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#82cfff",
+                        "surface-bright": "#f5faff",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2c3135",
+                        "surface-tint": "#00658d",
+                        "secondary": "#5d5f5f",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "surface-container-low": "#eff4fa",
+                        "tertiary-container": "#ea8c21",
+                        "surface-container": "#eaeef4",
+                        "on-primary-fixed-variant": "#004c6b",
+                        "surface-variant": "#dee3e8",
+                        "error": "#ba1a1a",
+                        "background": "#f5faff",
+                        "on-secondary-container": "#616363",
+                        "tertiary-fixed": "#ffdcc0",
+                        "on-secondary-fixed-variant": "#454747",
+                        "primary": "#00658d",
+                        "tertiary-fixed-dim": "#ffb876",
+                        "surface-container-high": "#e4e9ee",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "outline-variant": "#bdc8d1",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "48px",
+                        "container-max": "1200px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Be Vietnam Pro"],
+                        "body-base": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "price-lg": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "700"}],
+                        "body-base": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "price-lg": ["24px", {"lineHeight": "1", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #f5faff;
+        }
+    </style>
+</head>
+<body class="font-body-base text-on-background">
+    <main class="max-w-[1200px] mx-auto px-8 py-xl grid grid-cols-1 md:grid-cols-[288px_1fr] gap-lg">
+        <!-- SideNavBar -->
+        <aside class="w-72 flex flex-col gap-2 p-6 h-fit bg-white rounded-xl shadow-md shadow-black/5 border border-gray-100">
+            <div class="flex items-center gap-3 mb-6 px-3">
+                <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+                    <img alt="User Profile" data-alt="close-up portrait of a friendly young man with a slight smile and clean studio lighting on a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1SJjQP0-k9coIvyMjv7AJix-9BCTMO9K04ikKGkKYJVOHb1AU6vB8KjlS8IAeza7QrLuLLT2Aqcy-OQVho9DfojOFUPUGU4CnyKRl62qQslFeLr9csRWL28BDp5pQ9aXW_tLl-FhezZPgwXY_f5-8uAorceNMUO0122yB1YBdoNUOh3pc5lp_stDpgCMSQVNY9eaze5jeIuJsD0-Jea9-NCOcUk7Z-rQOj_XKup_BmuHOdCdiKPmEOlmQJPQlR3pzdrBFwFAx6Toc">
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 leading-tight">Alex Johnson</h3>
+                    <p class="text-xs text-gray-500">alex.j@example.com</p>
+                </div>
+            </div>
+            <div class="mb-4">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest px-3 mb-2">Danh mục</p>
+                <nav class="flex flex-col gap-1">
+                    <a data-target="ProfileSettings" class="flex items-center gap-3 text-gray-500 hover:bg-gray-50 p-3 rounded-lg hover:translate-x-1 transition-transform active:scale-[0.98]" href="#">
+                        <span class="material-symbols-outlined">person</span>
+                        <span class="font-be-vietnam-pro text-sm">Cài đặt</span>
+                    </a>
+                    <a data-target="OrderHistory" class="flex items-center gap-3 text-gray-500 hover:bg-gray-50 p-3 rounded-lg hover:translate-x-1 transition-transform active:scale-[0.98]" href="#">
+                        <span class="material-symbols-outlined">package_2</span>
+                        <span class="font-be-vietnam-pro text-sm">Đơn hàng</span>
+                    </a>
+                    <a href="#" data-target="MyAddresses" class="flex items-center gap-3 bg-sky-50 text-sky-600 font-bold p-3 rounded-lg hover:translate-x-1 transition-transform active:scale-[0.98]">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                        <span class="font-be-vietnam-pro text-sm">Địa chỉ</span>
+                    </a>
+                    @* <a class="flex items-center gap-3 text-gray-500 hover:bg-gray-50 p-3 rounded-lg hover:translate-x-1 transition-transform active:scale-[0.98]" href="#">
+                        <span class="material-symbols-outlined">payments</span>
+                        <span class="font-be-vietnam-pro text-sm">Payment Methods</span>
+                    </a> *@
+                    @* <a class="flex items-center gap-3 text-gray-500 hover:bg-gray-50 p-3 rounded-lg hover:translate-x-1 transition-transform active:scale-[0.98]" href="#">
+                        <span class="material-symbols-outlined">favorite</span>
+                        <span class="font-be-vietnam-pro text-sm">Wishlist</span>
+                    </a> *@
+                </nav>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+                <a class="flex items-center gap-3 text-red-500 hover:bg-red-50 p-3 rounded-lg transition-transform active:scale-[0.98]" href="#">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="font-be-vietnam-pro text-sm font-semibold">Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Address Management Section -->
+        @* <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Lấy tất cả các menu có data-target
+                const menuItems = document.querySelectorAll('aside nav a[data-target]');
+
+                // Tạo div main-content nếu chưa có
+                let mainContent = document.getElementById('main-content');
+                if(!mainContent){
+                    mainContent = document.createElement('div');
+                    mainContent.id = 'main-content';
+                    mainContent.className = 'flex-1 p-6 bg-gray-50 rounded-xl';
+                    document.querySelector('aside').insertAdjacentElement('afterend', mainContent);
+                }
+                mainContent.innerHTML = '<p>Chọn mục ở bên trái để xem nội dung</p>';
+
+                menuItems.forEach(item => {
+                    item.addEventListener('click', e => {
+                        e.preventDefault(); // ngăn reload trang
+
+                        const target = item.dataset.target;
+                        console.log('Clicked menu:', target); // debug menu click
+
+                        let url = '';
+                        switch(target){
+                            case 'MyAddresses':
+                                url = '/Adress/IndexPartial'; // partial view chuẩn, Layout = null
+                                break;
+                            case 'ProfileSettings':
+                                url = '/User/_ProfilePartial';
+                                break;
+                            case 'OrderHistory':
+                                url = '/Oder/_HistoryPartial';
+                                break;
+                            // thêm các menu khác nếu cần
+                            default:
+                                console.warn('Menu chưa cấu hình fetch:', target);
+                                return;
+                        }
+
+                        // Fetch partial và render
+                        fetch(url)
+                            .then(response => {
+                                if(!response.ok) throw new Error('Fetch failed: ' + response.status);
+                                return response.text();
+                            })
+                            .then(html => {
+                                mainContent.innerHTML = html;
+                                console.log('Partial loaded:', target);
+                            })
+                            .catch(err => {
+                                console.error('Error loading partial:', err);
+                                mainContent.innerHTML = '<p class="text-red-500">Không tải được nội dung. Kiểm tra console.</p>';
+                            });
+
+                        // Cập nhật active class menu
+                        menuItems.forEach(i => i.classList.remove('bg-sky-50','text-sky-600','font-bold'));
+                        item.classList.add('bg-sky-50','text-sky-600','font-bold');
+                    });
+                });
+
+                // Debug: kiểm tra menuItems
+                if(menuItems.length === 0){
+                    console.warn('JS không tìm thấy menu nào. Hãy chắc chắn rằng <a> có data-target.');
+                }
+            });
+                                   document.addEventListener('click', async function(e){
+
+                const btn = e.target.closest('[data-url]');
+
+                if(!btn) return;
+
+                e.preventDefault();
+
+                const url = btn.dataset.url;
+
+                console.log('Load partial:', url);
+
+                try{
+
+                    const response = await fetch(url, { method: 'GET' });
+                        console.log('Response status:', response.status);
+            console.log('Response headers:', [...response.headers]);
+                    if(!response.ok){
+                        throw new Error('Fetch failed: ' + response.status);
+                    }
+
+                    const html = await response.text();
+                    console.log('Response body:', html);
+                    document.getElementById('main-content').innerHTML = html;
+                }
+                catch(err){
+
+                    console.error(err);
+
+                    document.getElementById('main-content').innerHTML =
+                        '<p class="text-red-500">Không tải được dữ liệu.</p>';
+                }
+            });
+                        document.addEventListener('submit', async function(e){
+
+                const form = e.target;
+
+                // bắt form create address
+                if(form.action.includes('/Adress/Create') === false)
+                    return;
+
+                e.preventDefault();
+
+                try{
+
+                    const formData = new FormData(form);
+
+                    const response = await fetch(form.action,{
+                        method:'POST',
+                        body: formData
+                    });
+
+                    if(!response.ok){
+                        throw new Error('Submit failed');
+                    }
+
+                    const html = await response.text();
+
+                    document.getElementById('main-content').innerHTML = html;
+                }
+                catch(err){
+
+                    console.error(err);
+
+                    document.getElementById('main-content').innerHTML =
+                        '<p class="text-red-500">Lưu thất bại</p>';
+                }
+            });
+                        document.addEventListener('submit', async function(e){
+
+                const form = e.target;
+
+                // chỉ bắt delete address
+                if(!form.action.includes('/Adress/Delete'))
+                    return;
+
+                e.preventDefault();
+                try{
+
+                    const formData = new FormData(form);
+
+                    const response = await fetch(form.action,{
+                        method:'POST',
+                        body: formData
+                    });
+
+                    if(!response.ok){
+                        throw new Error('Delete failed');
+                    }
+
+                    const html = await response.text();
+
+                    document.getElementById('main-content').innerHTML = html;
+                }
+                catch(err){
+
+                    console.error(err);
+
+                    document.getElementById('main-content').innerHTML =
+                        '<p class="text-red-500">Xóa thất bại</p>';
+                }
+            });
+                        
+
+            document.addEventListener('submit', async function(e){
+
+                const form = e.target;
+
+                // chỉ bắt các form ajax
+                if(!form.dataset.ajax)
+                    return;
+
+                e.preventDefault();
+
+                try{
+
+                    const formData = new FormData(form);
+
+                    const response = await fetch(form.action,{
+                        method: form.method,
+                        body: formData
+                    });
+
+                    if(!response.ok){
+                        throw new Error('Request failed');
+                    }
+
+                    const html = await response.text();
+
+                    document.getElementById('main-content').innerHTML = html;
+                }
+                catch(err){
+
+                    console.error(err);
+
+                    document.getElementById('main-content').innerHTML =
+                        '<p class="text-red-500">Có lỗi xảy ra.</p>';
+                }
+
+            });
+                        document.addEventListener('submit', async function(e){
+                const form = e.target;
+
+                // chỉ bắt form edit address
+                if(form.action.includes('/Adress/Edit') === false)
+                    return;
+
+                e.preventDefault();
+
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if(!response.ok) throw new Error('Edit failed');
+
+                    const html = await response.text();
+                    document.getElementById('main-content').innerHTML = html;
+                }
+                catch(err){
+                    console.error(err);
+                    document.getElementById('main-content').innerHTML =
+                        '<p class="text-red-500">Cập nhật thất bại</p>';
+                }
+            });
+        
+        </script> *@
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const mainContent = document.getElementById('main-content') || (() => {
+                    const div = document.createElement('div');
+                    div.id = 'main-content';
+                    div.className = 'flex-1 p-6 bg-gray-50 rounded-xl';
+                    document.querySelector('aside').insertAdjacentElement('afterend', div);
+                    return div;
+                })();
+
+                // Menu click fetch partial
+                document.querySelectorAll('aside nav a[data-target]').forEach(item => {
+                    item.addEventListener('click', e => {
+                        e.preventDefault();
+                        const target = item.dataset.target;
+                        console.log('Clicked menu:', target);
+
+                        let url = '';
+                        switch(target){
+                            case 'MyAddresses': url='/Adress/IndexPartial'; break;
+                            case 'ProfileSettings': url='/User/_ProfilePartial'; break;
+                            case 'OrderHistory': url='/Oder/_HistoryPartial'; break;
+                            default: console.warn('Menu chưa cấu hình fetch:', target); return;
+                        }
+
+                        fetch(url)
+                            .then(r => { console.log('Response status:', r.status); return r.text(); })
+                            .then(html => { console.log('Partial loaded:', target); mainContent.innerHTML = html; })
+                            .catch(err => { console.error(err); mainContent.innerHTML = '<p class="text-red-500">Không tải được nội dung.</p>'; });
+                    });
+                });
+
+                // Click button fetch partial (Create/Edit)
+                document.addEventListener('click', async e => {
+                    const btn = e.target.closest('[data-url]');
+                    if(!btn) return;
+                    e.preventDefault();
+
+                    const url = btn.dataset.url;
+                    console.log('Load partial:', url);
+
+                    try {
+                        const response = await fetch(url, { method: 'GET' });
+                        console.log('Response status:', response.status);
+                        const html = await response.text();
+                        console.log('Response body:', html);
+                        if(!response.ok) throw new Error('Fetch failed: ' + response.status);
+                        mainContent.innerHTML = html;
+                    } catch(err) {
+                        console.error('Fetch error:', err);
+                        mainContent.innerHTML = '<p class="text-red-500">Không tải được dữ liệu.</p>';
+                    }
+                });
+
+                // Submit form (Create/Edit/Delete)
+                document.addEventListener('submit', async e => {
+                    const form = e.target;
+                    if(!form.action.includes('/Adress/Create') && !form.action.includes('/Adress/Edit') && !form.action.includes('/Adress/Delete') && !form.action.includes('/Adress/SetDefault')  && !form.dataset.ajax) return;
+                    e.preventDefault();
+
+                    try {
+                        const formData = new FormData(form);
+                        const response = await fetch(form.action, { method: form.method || 'POST', body: formData });
+                        console.log('Form submit response status:', response.status);
+                        const html = await response.text();
+                        console.log('Form submit response body:', html);
+                        if(!response.ok) throw new Error('Submit failed: ' + response.status);
+                        mainContent.innerHTML = html;
+                    } catch(err) {
+                        console.error('Form submit error:', err);
+                        mainContent.innerHTML = '<p class="text-red-500">Lỗi xảy ra khi submit</p>';
+                    }
+                });
+            });
+        </script>
+        <div id="main-content"></div>
+
+        
+    </main>
+    
+</body>
+</html>
