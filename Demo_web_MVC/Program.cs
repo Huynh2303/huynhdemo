@@ -2,6 +2,7 @@
 using Demo_web_MVC.Data.AppDatabase;
 using Demo_web_MVC.Repository;
 using Demo_web_MVC.Repository.Addresss;
+using Demo_web_MVC.Repository.Admin;
 using Demo_web_MVC.Repository.Carts;
 using Demo_web_MVC.Repository.Category;
 using Demo_web_MVC.Repository.Dashboard;
@@ -13,6 +14,7 @@ using Demo_web_MVC.Repository.Product;
 using Demo_web_MVC.Repository.Search;
 using Demo_web_MVC.Service;
 using Demo_web_MVC.Service.Address;
+using Demo_web_MVC.Service.Admin;
 using Demo_web_MVC.Service.Cart;
 using Demo_web_MVC.Service.Category;
 using Demo_web_MVC.Service.Dashboard;
@@ -30,6 +32,8 @@ using Microsoft.Extensions.FileProviders;
 using NETCore.MailKit.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<OrderRiskAnalysisService>();
 builder.Services.AddScoped<OrderRiskPredictor>();
 builder.Services.AddScoped<OrderRiskModelTrainer>();
@@ -106,8 +110,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Product}/{action=Index}/{id?}");
-
+    //pattern: "{controller=Product}/{action=Index}/{id?}");
+    pattern: "{controller=Admin}/{action=Index}/{id?}");
 
 
 app.Run();

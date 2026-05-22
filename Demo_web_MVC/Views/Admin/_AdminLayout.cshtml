@@ -1,0 +1,207 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin Panel - Dashboard Overview</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/admin.css" />
+    <script id="tailwind-config" src="~/js/Admin-tailwind-config.js"></script>
+
+</head>
+
+<body class="bg-background text-on-surface">
+
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-full w-[280px] bg-surface border-r border-outline-variant flex flex-col py-stack-lg z-50">
+
+        <div class="px-6 mb-10 flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-on-primary-container">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+            </div>
+
+            <div>
+                <h1 class="font-headline-sm text-headline-sm font-bold text-primary">
+                    Admin Panel
+                </h1>
+                <p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">
+                    E-commerce Management
+                </p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+
+            <a href="#"
+               data-target="Dashboard"
+               class="admin-menu bg-secondary-fixed text-primary border-l-4 border-primary px-4 py-3 rounded-r-lg flex items-center gap-3 cursor-pointer transition-colors duration-200 no-underline">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-label-md text-label-md">Dashboard</span>
+            </a>
+
+            <a href="#"
+               data-target="Products"
+               class="admin-menu text-on-surface-variant hover:bg-surface-container-low px-4 py-3 rounded-lg flex items-center gap-3 cursor-pointer transition-all no-underline">
+                <span class="material-symbols-outlined">inventory_2</span>
+                <span class="font-label-md text-label-md">Products</span>
+            </a>
+
+            <a href="#"
+               data-target="Orders"
+               class="admin-menu text-on-surface-variant hover:bg-surface-container-low px-4 py-3 rounded-lg flex items-center gap-3 cursor-pointer transition-all no-underline">
+                <span class="material-symbols-outlined">shopping_cart</span>
+                <span class="font-label-md text-label-md">Orders</span>
+            </a>
+
+            <a href="#"
+               data-target="Users"
+               class="admin-menu text-on-surface-variant hover:bg-surface-container-low px-4 py-3 rounded-lg flex items-center gap-3 cursor-pointer transition-all no-underline">
+                <span class="material-symbols-outlined">group</span>
+                <span class="font-label-md text-label-md">Users</span>
+            </a>
+
+            <a href="#"
+               data-target="Categories"
+               class="admin-menu text-on-surface-variant hover:bg-surface-container-low px-4 py-3 rounded-lg flex items-center gap-3 cursor-pointer transition-all no-underline">
+                <span class="material-symbols-outlined">category</span>
+                <span class="font-label-md text-label-md">Categories</span>
+            </a>
+
+        </nav>
+    </aside>
+
+    <!-- Header -->
+    <header class="fixed top-0 right-0 left-[280px] h-16 bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center px-margin-desktop z-40">
+
+        <div class="flex items-center gap-4 flex-1">
+            <div class="relative w-full max-w-md">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">
+                    search
+                </span>
+
+                <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-body-sm text-body-sm"
+                       placeholder="Search orders, users..."
+                       type="text" />
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors relative">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+            </button>
+
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors">
+                <span class="material-symbols-outlined">settings</span>
+            </button>
+        </div>
+
+    </header>
+
+    <!-- Main -->
+    <main id="admin-content" class="ml-[280px] pt-16 min-h-screen p-8">
+        @RenderBody()
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mainContent = document.getElementById('admin-content');
+
+            document.querySelectorAll('.admin-menu[data-target]').forEach(item => {
+
+                item.addEventListener('click', e => {
+
+                    e.preventDefault();
+
+                    // XÓA ACTIVE CŨ
+                    document.querySelectorAll('.admin-menu[data-target]').forEach(a => {
+
+                        a.classList.remove(
+                            'bg-secondary-fixed',
+                            'text-primary',
+                            'border-l-4',
+                            'border-primary',
+                            'rounded-r-lg'
+                        );
+
+                        a.classList.add(
+                            'text-on-surface-variant',
+                            'rounded-lg'
+                        );
+                    });
+
+                    // ACTIVE MENU HIỆN TẠI
+                    item.classList.add(
+                        'bg-secondary-fixed',
+                        'text-primary',
+                        'border-l-4',
+                        'border-primary',
+                        'rounded-r-lg'
+                    );
+
+                    item.classList.remove(
+                        'text-on-surface-variant',
+                        'rounded-lg'
+                    );
+
+                    const target = item.dataset.target;
+
+                    let url = '';
+
+                    switch (target) {
+
+                        case 'Dashboard':
+                            url = '/Admin/Dashboard';
+                            break;
+
+                        case 'Products':
+                            url = '/Admin/ProductsPartial';
+                            break;
+
+                        case 'Orders':
+                            url = '/Admin/OrdersPartial';
+                            break;
+
+                        case 'Users':
+                            url = '/Admin/UsersPartial';
+                            break;
+
+                        case 'Categories':
+                            url = '/Admin/CategoriesPartial';
+                            break;
+
+                        default:
+                            console.warn('Menu admin chưa cấu hình:', target);
+                            return;
+                    }
+
+                    fetch(url)
+                        .then(r => r.text())
+                        .then(html => {
+                            mainContent.innerHTML = html;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            mainContent.innerHTML =
+                                '<p class="text-red-500">Không tải được nội dung admin.</p>';
+                        });
+                });
+            });
+
+            // MẶC ĐỊNH LOAD DASHBOARD
+            const defaultMenu =
+                document.querySelector('.admin-menu[data-target="Dashboard"]');
+
+            if (defaultMenu) {
+                defaultMenu.click();
+            }
+        });
+    </script>
+</body>
+</html>
