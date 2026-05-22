@@ -2,6 +2,7 @@ using Demo_web_MVC.Models;
 using Demo_web_MVC.Models.ViewModel;
 using Demo_web_MVC.Repository.Addresss;
 using Demo_web_MVC.Service.Address;
+using Demo_web_MVC.Service.Cart;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -12,17 +13,38 @@ namespace Demo_web_MVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         public readonly IAddressService _addressService;
-        
-        public HomeController(ILogger<HomeController> logger, IAddressService address)
+        private readonly ICartService _cartService;
+        public HomeController(ILogger<HomeController> logger, IAddressService address ,ICartService cartService)
         {
             _logger = logger;
             _addressService = address;
+            _cartService = cartService;
         }
-        
 
-        public  IActionResult Index()
+        private int? GetUserIdFromClaims()
         {
-            //return RedirectToAction("Index", "Product");
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return null;
+            }
+            return userId;
+        }
+        private async Task<int> GetCartCount()
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+            {
+                return 0;
+            }
+
+            var cartItems = await _cartService.GetCartItems(userId.Value);
+            return cartItems.Count;
+        }
+        public async  Task<IActionResult> Index()
+        {
+            var cartCount = await GetCartCount();
+            ViewBag.CartCount = cartCount;
             return View();
         }
 

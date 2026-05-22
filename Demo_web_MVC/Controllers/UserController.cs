@@ -314,7 +314,7 @@ namespace Demo_web_MVC.Controllers
                 }
 
                 _logger.LogInformation($"Đăng nhập thành công cho người dùng: {input}");
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Product");
             }
             catch (Exception ex)
             {
@@ -416,7 +416,7 @@ namespace Demo_web_MVC.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            return View();
+            return PartialView("ChangePassword");
         }
         [Authorize]
         [HttpPost]

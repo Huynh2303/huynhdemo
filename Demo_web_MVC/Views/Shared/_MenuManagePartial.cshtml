@@ -21,13 +21,20 @@
              style="background-color: white; border-radius: 6px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: 1px solid #f3f4f6;">
 
             <div class="flex flex-col py-1">
-                <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 no-underline hover:bg-blue-50 hover:text-blue-600" style="display: flex; align-items: center; padding: 8px 16px; text-decoration: none; color: #374151; font-size: 14px;">
+                <a asp-action="Index" asp-controller="Home" class="flex items-center px-4 py-3 text-sm text-gray-700 no-underline hover:bg-blue-50 hover:text-blue-600" style="display: flex; align-items: center; padding: 8px 16px; text-decoration: none; color: #374151; font-size: 14px;">
                     <span class="material-symbols-outlined" style="margin-right: 12px; font-size: 20px;">person</span>
-                    Tài khoản
+                    Tài khoản của tôi
                 </a>
                 
-                <a asp-action="Index" asp-controller="Oder" class="flex items-center px-4 py-3 text-sm text-gray-700 no-underline hover:bg-blue-50 hover:text-blue-600" style="display: flex; align-items: center; padding: 8px 16px; text-decoration: none; color: #374151; font-size: 14px;">
-                    <span class="material-symbols-outlined" style="margin-right: 12px; font-size: 20px;">package_2</span>
+                <a href="/Home/Index"
+                   onclick="localStorage.setItem('defaultTab','OrderHistory')"
+                   class="flex items-center px-4 py-3 text-sm text-gray-700 no-underline hover:bg-blue-50 hover:text-blue-600">
+
+                    <span class="material-symbols-outlined"
+                          style="margin-right: 12px; font-size: 20px;">
+                        package_2
+                    </span>
+
                     Đơn hàng
                 </a>
                 

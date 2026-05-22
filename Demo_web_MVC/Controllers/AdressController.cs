@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Demo_web_MVC.Controllers
 {
-    [Authorize(Roles = "ADMIN,USER")]
+    [Authorize(Roles = "ADMIN,USER,STAFF")]
     public class AdressController : Controller
     {
         public readonly IAddressService _addressService;

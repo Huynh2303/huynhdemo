@@ -126,7 +126,7 @@
                 <nav class="flex flex-col gap-1">
                     <a data-target="ProfileSettings" class="flex items-center gap-3 text-gray-500 hover:bg-gray-50 p-3 rounded-lg hover:translate-x-1 transition-transform active:scale-[0.98]" href="#">
                         <span class="material-symbols-outlined">person</span>
-                        <span class="font-be-vietnam-pro text-sm">Cài đặt</span>
+                        <span class="font-be-vietnam-pro text-sm">Đổi mật khẩu</span>
                     </a>
                     <a data-target="OrderHistory" class="flex items-center gap-3 text-gray-500 hover:bg-gray-50 p-3 rounded-lg hover:translate-x-1 transition-transform active:scale-[0.98]" href="#">
                         <span class="material-symbols-outlined">package_2</span>
@@ -207,7 +207,7 @@
                             break;
 
                         case 'ProfileSettings':
-                            url='/User/_ProfilePartial';
+                            url='/User/ChangePassword';
                             break;
 
                         case 'OrderHistory':
@@ -235,13 +235,18 @@
                 });
             });
                         // MẶC ĐỊNH LOAD ĐỊA CHỈ
+                       const tab =
+                localStorage.getItem('defaultTab') || 'MyAddresses';
+
             const defaultMenu =
-                document.querySelector('aside nav a[data-target="MyAddresses"]');
+                document.querySelector(`aside nav a[data-target="${tab}"]`);
 
             if(defaultMenu){
 
                 defaultMenu.click();
             }
+
+            localStorage.removeItem('defaultTab');
                 // Click button fetch partial (Create/Edit)
                 document.addEventListener('click', async e => {
                     const btn = e.target.closest('[data-url]');

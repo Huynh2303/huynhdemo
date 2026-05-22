@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace Demo_web_MVC.Controllers
 {
-    [Authorize(Roles = " STAFF")]
+    [Authorize(Roles = "STAFF")]
     public class SellerController : Controller
     {
         private readonly IDashboarService _service;
