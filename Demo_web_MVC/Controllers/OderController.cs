@@ -182,7 +182,7 @@ namespace Demo_web_MVC.Controllers
             return View(model);
         }
         [HttpGet]
-        public async Task<IActionResult> Index(string status)
+        public async Task<IActionResult> Index(string status, bool onlyList = false)
         {
             var userId = GetUserIdFromClaims();
             if (userId == null)
@@ -195,19 +195,15 @@ namespace Demo_web_MVC.Controllers
             }
             List<OderViewModel> orders;
 
-            if (status == "All")
-            {
-                orders = await _service.GetAllOrders(userId.Value,status);
-            }
-            else
-            {
-                 orders = await _service.GetAllOrders(userId.Value, status);
-            }
-            
-            _logger.LogInformation("Đã lấy {OrderCount} đơn hàng cho UserId: {UserId}", orders.Count, userId.Value);
-            
+            orders = await _service.GetAllOrders(userId.Value, status);
 
-            return View(orders);
+            _logger.LogInformation("Đã lấy {OrderCount} đơn hàng cho UserId: {UserId}", orders.Count, userId.Value);
+            if (onlyList)
+            {
+                return PartialView("_OrderList", orders);
+            }
+
+            return PartialView( "Index",orders);
         }
 
     }

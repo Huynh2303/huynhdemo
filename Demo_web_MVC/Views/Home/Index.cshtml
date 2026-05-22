@@ -166,28 +166,82 @@
                     return div;
                 })();
 
-                // Menu click fetch partial
-                document.querySelectorAll('aside nav a[data-target]').forEach(item => {
-                    item.addEventListener('click', e => {
-                        e.preventDefault();
-                        const target = item.dataset.target;
-                        console.log('Clicked menu:', target);
+                
+                            document.querySelectorAll('aside nav a[data-target]').forEach(item => {
 
-                        let url = '';
-                        switch(target){
-                            case 'MyAddresses': url='/Adress/IndexPartial'; break;
-                            case 'ProfileSettings': url='/User/_ProfilePartial'; break;
-                            case 'OrderHistory': url='/Oder/_HistoryPartial'; break;
-                            default: console.warn('Menu chưa cấu hình fetch:', target); return;
-                        }
+                item.addEventListener('click', e => {
 
-                        fetch(url)
-                            .then(r => { console.log('Response status:', r.status); return r.text(); })
-                            .then(html => { console.log('Partial loaded:', target); mainContent.innerHTML = html; })
-                            .catch(err => { console.error(err); mainContent.innerHTML = '<p class="text-red-500">Không tải được nội dung.</p>'; });
+                    e.preventDefault();
+
+                    // XÓA ACTIVE CŨ
+                    document.querySelectorAll('aside nav a[data-target]').forEach(a => {
+
+                        a.classList.remove(
+                            'bg-sky-50',
+                            'text-sky-600',
+                            'font-bold'
+                        );
+
+                        a.classList.add('text-gray-500');
                     });
-                });
 
+                    // ACTIVE MENU HIỆN TẠI
+                    item.classList.add(
+                        'bg-sky-50',
+                        'text-sky-600',
+                        'font-bold'
+                    );
+
+                    item.classList.remove('text-gray-500');
+
+                    const target = item.dataset.target;
+
+                    console.log('Clicked menu:', target);
+
+                    let url = '';
+
+                    switch(target){
+
+                        case 'MyAddresses':
+                            url='/Adress/IndexPartial';
+                            break;
+
+                        case 'ProfileSettings':
+                            url='/User/_ProfilePartial';
+                            break;
+
+                        case 'OrderHistory':
+                            url='/Oder/Index';
+                            break;
+
+                        default:
+                            console.warn('Menu chưa cấu hình fetch:', target);
+                            return;
+                    }
+
+                    fetch(url)
+                        .then(r => r.text())
+                        .then(html => {
+
+                            mainContent.innerHTML = html;
+                        })
+                        .catch(err => {
+
+                            console.error(err);
+
+                            mainContent.innerHTML =
+                                '<p class="text-red-500">Không tải được nội dung.</p>';
+                        });
+                });
+            });
+                        // MẶC ĐỊNH LOAD ĐỊA CHỈ
+            const defaultMenu =
+                document.querySelector('aside nav a[data-target="MyAddresses"]');
+
+            if(defaultMenu){
+
+                defaultMenu.click();
+            }
                 // Click button fetch partial (Create/Edit)
                 document.addEventListener('click', async e => {
                     const btn = e.target.closest('[data-url]');
