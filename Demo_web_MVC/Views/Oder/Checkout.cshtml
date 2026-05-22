@@ -122,6 +122,16 @@
                     <div class="flex items-center gap-sm mb-md text-primary">
                         <span class="material-symbols-outlined" data-icon="location_on">location_on</span>
                         <h2 class="font-headline-md text-headline-md">Địa Chỉ Nhận Hàng</h2>
+                        <button type="button"
+                                data-url="/Adress/CreatePartail"
+                                class="flex items-center gap-2 bg-primary-container text-white px-4 py-2 rounded-lg hover:brightness-110 transition">
+
+                            <span class="material-symbols-outlined text-[20px]">
+                                add
+                            </span>
+
+                            Thêm địa chỉ mới
+                        </button>
                     </div>
                     <div class="space-y-md">
                         @if (Model.AddressViewModels.Any())
@@ -292,6 +302,99 @@
             document.getElementById('hiddenPayment').value = selectedPayment.value;
         });
     </script>
-    
+    <script>
+        document.addEventListener('click', async e => {
+
+            const btn = e.target.closest('[data-url]');
+
+            if (!btn) return;
+
+            e.preventDefault();
+
+            const url = btn.dataset.url;
+
+            try {
+
+                const response = await fetch(url);
+
+                const html = await response.text();
+
+                // tạo modal tạm
+                let modal = document.getElementById('address-modal');
+
+                if (!modal) {
+                    modal = document.createElement('div');
+
+                    modal.id = 'address-modal';
+
+                    modal.className =
+                        'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+
+                    document.body.appendChild(modal);
+                }
+
+                modal.innerHTML = `
+                    <div class="bg-white rounded-xl p-6 w-full max-w-2xl relative overflow-auto max-h-[90vh]">
+
+                        <button id="close-modal"
+                                class="absolute top-4 right-4 text-gray-500 hover:text-red-500">
+                            ✕
+                        </button>
+
+                        ${html}
+                    </div>
+                `;
+
+            } catch (err) {
+
+                console.error(err);
+
+                alert('Không tải được form');
+            }
+        });
+
+        document.addEventListener('click', e => {
+
+            if (e.target.id === 'close-modal') {
+
+                document.getElementById('address-modal')?.remove();
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('click', async function (e) {
+
+            const submitBtn = e.target.closest('#address-modal button[type="submit"]');
+
+            if (!submitBtn) return;
+
+            e.preventDefault();
+
+            const form = submitBtn.closest('form');
+
+            if (!form) return;
+
+            try {
+
+                const formData = new FormData(form);
+
+                // submit ngầm
+                await fetch(form.action, {
+                    method: form.method || 'POST',
+                    body: formData
+                });
+
+                // submit xong -> F5 checkout
+                window.location.href = window.location.href;
+
+            } catch (err) {
+
+                console.error(err);
+
+                alert('Lỗi khi tạo địa chỉ');
+            }
+
+        }, true);
+    </script>
 </body>
 </html>

@@ -6,10 +6,12 @@ namespace Demo_web_MVC.Service.Address
 {
     public class AddressService : IAddressService
     {
-        public readonly IAddressRepository _addressRepository;
-        public AddressService(IAddressRepository addressRepository)
+        private readonly IAddressRepository _addressRepository;
+        private readonly ILogger<AddressService> _logger;
+        public AddressService(IAddressRepository addressRepository, ILogger<AddressService> logger)
         {
             _addressRepository = addressRepository;
+            _logger = logger;
         }
         public async Task<IEnumerable<AddressViewModel>> GetAllByUserId(int userId)
         {
@@ -21,11 +23,30 @@ namespace Demo_web_MVC.Service.Address
         }
         public async Task<AddressViewModel?> GetById(int addressId, int userId)
         {
+            _logger.LogInformation("===== SERVICE GET BY ID =====");
+
+            _logger.LogInformation($"addressId = {addressId}");
+            _logger.LogInformation($"userId = {userId}");
+
             if (addressId <= 0 || userId <= 0)
             {
+                _logger.LogWarning("addressId hoặc userId không hợp lệ");
+
                 throw new ArgumentException("Invalid address ID or user ID.");
             }
-            return await _addressRepository.GetByIdAsync(addressId, userId);
+
+            var result = await _addressRepository.GetByIdAsync(addressId, userId);
+
+            if (result == null)
+            {
+                _logger.LogWarning("Repository trả về NULL");
+            }
+            else
+            {
+                _logger.LogInformation($"Tìm thấy address Id = {result.Id}");
+            }
+
+            return result;
         }
         public async Task<bool> Create(int userId, AddressViewModel model)
         {

@@ -58,10 +58,10 @@ namespace Demo_web_MVC.Controllers
         
         public IActionResult CreatePartail()
         {
-            return PartialView("CreatePartail");
+            return PartialView("CreatePartail", new AddressViewModel());
         }
 
-        [HttpPost]
+        
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Create(AddressViewModel model)
@@ -176,24 +176,37 @@ namespace Demo_web_MVC.Controllers
             }
         }
         [HttpGet]
-        [Route("Adress/Edit/{id}")]
-        public async Task<IActionResult>Edit (int id)
+        public async Task<IActionResult> Edit(int id)
         {
+            _logger.LogInformation("===== BAT DAU EDIT =====");
+
             var userId = GetUserIdFromClaims();
-            if ( userId == null)
+
+            _logger.LogInformation($"UserId lay tu claims: {userId}");
+
+            if (userId == null)
             {
-                _logger.LogWarning("Người dùng chưa login hoặc claims không hợp lệ.");
-                return Unauthorized("Không xác định được người dùng.");
+                _logger.LogWarning("Nguoi dung chua login hoac claims khong hop le.");
+
+                return Unauthorized("Khong xac dinh duoc nguoi dung.");
             }
-            var address = await _addressService.GetById(userId.Value,id);
+
+            var address = await _addressService.GetById( id,userId.Value);
+
+            _logger.LogInformation($"Tim dia chi voi id = {id}");
+
             if (address == null)
             {
+                _logger.LogWarning("Khong tim thay dia chi.");
+
                 return NotFound();
             }
 
-            return PartialView("~/Views/Adress/CreatePartail.cshtml", address); // 🔥 dùng lại view Create
+            _logger.LogInformation("Render partial Edit thanh cong.");
+
+            return PartialView("~/Views/Adress/CreatePartail.cshtml", address);
         }
-        
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(int id,AddressViewModel model)

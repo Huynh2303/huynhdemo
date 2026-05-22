@@ -12,29 +12,35 @@
             <h1 class="text-headline-md font-display-lg text-on-surface">Thêm Địa Chỉ Mới</h1>
             <p class="text-body-sm text-outline mt-1">Vui lòng điền thông tin để nhận hàng chính xác nhất.</p>
         </div>
-        <form asp-action="Create" asp-controller="Adress" class="space-y-lg" method="post">
+        @* <form asp-action="Create" asp-controller="Adress" class="space-y-lg" method="post"> *@
+        <form asp-action="@(Model?.Id > 0 ? "Edit" : "Create")"
+              asp-controller="Adress"
+              asp-route-id="@Model?.Id"
+              method="post"
+              class="space-y-lg">
             @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
             <!-- ASP.NET Anti-forgery Token would go here -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                 <!-- RecipientName -->
                 <div class="space-y-xs">
                     <label class="text-label-bold text-on-surface-variant block" for="RecipientName">Tên người nhận</label>
                     <input class="w-full px-md py-sm bg-surface-container-low border border-outline-variant rounded-lg font-body-base text-on-surface form-input-focus transition-all" id="RecipientName" asp-for="RecipientName" placeholder="VD: Nguyễn Văn A" type="text" />
-                    <!-- <span asp-validation-for="RecipientName" class="text-error text-xs font-medium"></span> -->
+                    
                     <span class="text-error text-[12px] font-medium hidden">Vui lòng nhập tên người nhận</span>
                 </div>
                 <!-- PhoneNumber -->
                 <div class="space-y-xs">
                     <label class="text-label-bold text-on-surface-variant block" for="PhoneNumber">Số điện thoại</label>
                     <input class="w-full px-md py-sm bg-surface-container-low border border-outline-variant rounded-lg font-body-base text-on-surface form-input-focus transition-all" id="PhoneNumber" asp-for="PhoneNumber" placeholder="09xx xxx xxx" type="text" />
-                    <!-- <span asp-validation-for="PhoneNumber" class="text-error text-xs font-medium"></span> -->
+                    
                 </div>
             </div>
             <!-- AddressLine -->
             <div class="space-y-xs">
                 <label class="text-label-bold text-on-surface-variant block" for="AddressLine">Địa chỉ cụ thể</label>
                 <input class="w-full px-md py-sm bg-surface-container-low border border-outline-variant rounded-lg font-body-base text-on-surface form-input-focus transition-all" id="AddressLine" asp-for="AddressLine" placeholder="Số nhà, tên đường, phường/xã..." type="text" />
-                <!-- <span asp-validation-for="AddressLine" class="text-error text-xs font-medium"></span> -->
+               
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                 <!-- City -->

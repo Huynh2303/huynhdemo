@@ -43,23 +43,50 @@ namespace Demo_web_MVC.Repository.Addresss
         {
             try
             {
-                return await _context.Addresses.AsNoTracking()
-                .Where(a => a.Id == addressId && a.UserId == userid)
-                .Select(a => new AddressViewModel
+                _logger.LogInformation("===== REPOSITORY GET BY ID =====");
+
+                _logger.LogInformation($"addressId = {addressId}");
+                _logger.LogInformation($"userid = {userid}");
+
+                var query = _context.Addresses
+                    .AsNoTracking()
+                    //.IgnoreQueryFilters() // bật dòng này để test query filter
+                    .Where(a => a.Id == addressId && a.UserId == userid);
+
+                _logger.LogInformation("Đang query database...");
+
+                var result = await query
+                    .Select(a => new AddressViewModel
+                    {
+                        Id = a.Id,
+                        AddressLine = a.AddressLine,
+                        City = a.City,
+                        Country = a.Country,
+                        IsDefault = a.IsDefault,
+                        RecipientName = a.RecipientName,
+                        PhoneNumber = a.PhoneNumber
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (result == null)
                 {
-                    Id = a.Id,
-                    AddressLine = a.AddressLine,
-                    City = a.City,
-                    Country = a.Country,
-                    IsDefault = a.IsDefault,
-                    RecipientName = a.RecipientName,
-                    PhoneNumber = a.PhoneNumber
-                }).FirstOrDefaultAsync();
+                    _logger.LogWarning("Database trả về NULL");
+                }
+                else
+                {
+                    _logger.LogInformation($"Tìm thấy address Id = {result.Id}");
+                    _logger.LogInformation($"RecipientName = {result.RecipientName}");
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching address with ID {AddressId} for user {UserId}", addressId, userid);
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex,
+                    "Error fetching address with ID {AddressId} for user {UserId}",
+                    addressId,
+                    userid);
+
                 return null;
             }
         }
