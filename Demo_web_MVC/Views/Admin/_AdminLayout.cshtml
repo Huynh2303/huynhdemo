@@ -113,15 +113,26 @@
 
             const mainContent = document.getElementById('admin-content');
 
+            function loadAdminContent(url) {
+                fetch(url)
+                    .then(r => r.text())
+                    .then(html => {
+                        mainContent.innerHTML = html;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        mainContent.innerHTML =
+                            '<p class="text-red-500">Không tải được nội dung admin.</p>';
+                    });
+            }
+
             document.querySelectorAll('.admin-menu[data-target]').forEach(item => {
 
                 item.addEventListener('click', e => {
 
                     e.preventDefault();
 
-                    // XÓA ACTIVE CŨ
                     document.querySelectorAll('.admin-menu[data-target]').forEach(a => {
-
                         a.classList.remove(
                             'bg-secondary-fixed',
                             'text-primary',
@@ -136,7 +147,6 @@
                         );
                     });
 
-                    // ACTIVE MENU HIỆN TẠI
                     item.classList.add(
                         'bg-secondary-fixed',
                         'text-primary',
@@ -155,17 +165,16 @@
                     let url = '';
 
                     switch (target) {
-
                         case 'Dashboard':
                             url = '/Admin/Dashboard';
                             break;
 
                         case 'Products':
-                            url = '/Admin/ProductsPartial';
+                            url = '/Admin/ProductManagement';
                             break;
 
                         case 'Orders':
-                            url = '/Admin/OrdersPartial';
+                            url = '/Admin/OrderManagement';
                             break;
 
                         case 'Users':
@@ -181,20 +190,29 @@
                             return;
                     }
 
-                    fetch(url)
-                        .then(r => r.text())
-                        .then(html => {
-                            mainContent.innerHTML = html;
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            mainContent.innerHTML =
-                                '<p class="text-red-500">Không tải được nội dung admin.</p>';
-                        });
+                    loadAdminContent(url);
                 });
             });
 
-            // MẶC ĐỊNH LOAD DASHBOARD
+            mainContent.addEventListener('click', function (e) {
+
+                const orderButton = e.target.closest('.order-page-btn');
+
+                if (orderButton) {
+                    const page = orderButton.dataset.page;
+                    loadAdminContent(`/Admin/OrderManagement?page=${page}`);
+                    return;
+                }
+
+                const productButton = e.target.closest('.product-page-btn');
+
+                if (productButton) {
+                    const page = productButton.dataset.page;
+                    loadAdminContent(`/Admin/ProductManagement?page=${page}`);
+                    return;
+                }
+            });
+
             const defaultMenu =
                 document.querySelector('.admin-menu[data-target="Dashboard"]');
 

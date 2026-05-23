@@ -2,19 +2,32 @@
 {
     public class PaginatedList<T>
     {
-        public List<T> Items { get; private set; }
-        public int TotalCount { get; private set; }
-        public int CurrentPage { get; private set; }
-        public int TotalPages { get; private set; }
-        public int PageSize { get; private set; }
+        public List<T> Items { get; set; }
 
-        public PaginatedList(List<T> items, int totalCount, int currentPage, int pageSize)
+        public int PageIndex { get; set; }
+
+        public int TotalPages { get; set; }
+
+        public int TotalCount { get; set; }
+
+        public bool HasPreviousPage => PageIndex > 1;
+
+        public bool HasNextPage => PageIndex < TotalPages;
+
+        public PaginatedList(
+            List<T> items,
+            int totalCount,
+            int pageIndex,
+            int pageSize)
         {
             Items = items;
+
             TotalCount = totalCount;
-            CurrentPage = currentPage;
-            TotalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);  // Tính số trang
-            PageSize = pageSize;
+
+            PageIndex = pageIndex;
+
+            TotalPages = (int)Math.Ceiling(
+                totalCount / (double)pageSize);
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using Demo_web_MVC.Models.ViewModel.Admin;
+﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Admin;
+using Demo_web_MVC.Models.ViewModel.Oder;
+using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Repository.Admin;
 using System;
 
@@ -35,6 +38,62 @@ namespace Demo_web_MVC.Service.Admin
                 _logger.LogError(ex, "Lỗi service khi lấy dashboard admin.");
                 throw;
             }
+        }
+        public async Task<OderManagementViewModel> GetOrderManagementAsync(int page, int pageSize)
+        {
+            var model = await _adminRepository
+            .GetOrderManagementAsync(page, pageSize);
+
+            if (model == null)
+            {
+                return new OderManagementViewModel
+                {
+                    Orders = new PaginatedList<OderViewModel>(
+                        new List<OderViewModel>(),
+                        0,
+                        page,
+                        pageSize
+                    )
+                };
+            }
+
+            return model;
+        }
+        public async Task<ProductManagementViewModel> GetProductManagementAsync(int page,int pageSize)
+        {
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            if (pageSize <= 0)
+            {
+                pageSize = 10;
+            }
+
+            var model = await _adminRepository
+                .GetProductManagementAsync(page, pageSize);
+
+            if (model == null)
+            {
+                return new ProductManagementViewModel
+                {
+                    Products = new PaginatedList<ProductViewModel>(
+                        new List<ProductViewModel>(),
+                        0,
+                        page,
+                        pageSize
+                    )
+                };
+            }
+            model.Products ??= new PaginatedList<ProductViewModel>(
+                new List<ProductViewModel>(),
+                0,
+                page,
+                pageSize
+            );
+
+            return model;
         }
     }
 }

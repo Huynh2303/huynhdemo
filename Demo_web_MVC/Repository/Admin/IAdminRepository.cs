@@ -5,6 +5,8 @@ namespace Demo_web_MVC.Repository.Admin
 {
     public interface IAdminRepository
     {
-         Task<AdminViewModel> GetAdminDashboardAsync();
+        Task<AdminViewModel> GetAdminDashboardAsync();
+        Task<OderManagementViewModel> GetOrderManagementAsync(int page, int pageSize);
+        Task<ProductManagementViewModel> GetProductManagementAsync(int page, int pageSize);
     }
 }

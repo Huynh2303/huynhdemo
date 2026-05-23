@@ -2,10 +2,12 @@
 using Demo_web_MVC.Models;
 using Demo_web_MVC.Models.ViewModel;
 using Demo_web_MVC.Models.ViewModel.Admin;
+using Demo_web_MVC.Models.ViewModel.Category;
 using Demo_web_MVC.Models.ViewModel.Dashboard;
 using Demo_web_MVC.Models.ViewModel.Oder;
 using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Repository.Dashboard;
+using Demo_web_MVC.Repository.Paging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo_web_MVC.Repository.Admin
@@ -14,10 +16,12 @@ namespace Demo_web_MVC.Repository.Admin
     {
         private readonly AppDatabase _context;
         private readonly ILogger<AdminRepository> _logger;
-        public AdminRepository(AppDatabase context, ILogger<AdminRepository> logger)
+        private readonly IPagingReponsitory _pagingReponsitory;
+        public AdminRepository(AppDatabase context, ILogger<AdminRepository> logger, IPagingReponsitory pagingReponsitory)
         {
             _context = context;
             _logger = logger;
+            _pagingReponsitory = pagingReponsitory;
         }
         public async Task<AdminViewModel> GetAdminDashboardAsync()
         {
@@ -111,6 +115,154 @@ namespace Demo_web_MVC.Repository.Admin
                 throw;
             }
         }
+        public async Task<OderManagementViewModel> GetOrderManagementAsync(int page, int pageSize)
+        {
+            var ordersQuery = _context.Orders
+                .AsNoTracking();
 
+            var totalOrders = await ordersQuery.CountAsync();
+
+            var pendingOrders = await ordersQuery
+                .CountAsync(o => o.Status == OrderStatus.Pending);
+
+            var cancelledOrders = await ordersQuery
+                .CountAsync(o => o.Status == OrderStatus.Cancelled);
+
+            var revenue = await ordersQuery
+                .Where(o => o.Status == OrderStatus.Completed)
+                .SumAsync(o => o.TotalAmount);
+
+           var orders = ordersQuery
+    .OrderByDescending(o => o.CreatedAt)
+    .Select(o => new OderViewModel
+    {
+        Id = o.Id,
+        TotalAmount = o.TotalAmount,
+        Status = o.Status,
+        CreateAt = o.CreatedAt,
+        PaymentMethod = o.PaymentMethod,
+
+        user = o.User.FullName ?? o.User.Username,
+
+        Items = o.OrderItems.Select(item => new OderItemViewModel
+        {
+            Name = item.Variant.Product.Name,
+            Price = item.Price,
+            Quantity = item.Quantity,
+
+            Img = item.Variant.ProductVariantImages
+                .OrderBy(img => img.SortOrder)
+                .Select(img => img.Url)
+                .FirstOrDefault()
+                ?? item.Variant.Product.ProductImages
+                    .Select(img => img.Url)
+                    .FirstOrDefault()
+                ?? "/uploads/images/no-image.jpg"
+        }).ToList()
+    });
+            var pagedOrders = await _pagingReponsitory.GetPagedDataAsync(
+                orders,
+                page,
+                pageSize
+            );
+            return new OderManagementViewModel
+            {
+                TotalOrders = totalOrders,
+                PendingOrders = pendingOrders,
+                CancelledOrders = cancelledOrders,
+                Revenue = revenue,
+                Orders = pagedOrders
+            };
+        }
+        public async Task<ProductManagementViewModel> GetProductManagementAsync(
+    int page,
+    int pageSize)
+        {
+            var productsQuery = _context.Products
+                .AsNoTracking();
+
+            // Dashboard stats
+            var totalProducts = await productsQuery.CountAsync();
+
+            var totalCategories = await _context.Categories
+                .CountAsync();
+
+            var lowStockProducts = await productsQuery
+                .CountAsync(p => p.ProductVariants
+                    .Sum(v => v.Stock) > 0
+                    && p.ProductVariants.Sum(v => v.Stock) < 10);
+
+            var outOfStockProducts = await productsQuery
+                .CountAsync(p => p.ProductVariants
+                    .Sum(v => v.Stock) <= 0);
+
+            // Query product list
+            var productVmQuery = productsQuery
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new ProductViewModel
+                {
+                    Id = p.Id,
+
+                    Name = p.Name,
+
+                    Description = p.Description,
+
+                    Brand = p.Brand,
+
+                    CreatedAt = p.CreatedAt,
+
+                    imageUrl = p.ProductImages
+                        .OrderBy(i => i.SortOrder)
+                        .Select(i => i.Url)
+                        .ToList(),
+
+                    Categories = new List<CategoryViewModel>
+                    {
+                new CategoryViewModel
+                {
+                    Id = p.Category.Id,
+                    Name = p.Category.Name
+                }
+                    },
+
+                    Variants = p.ProductVariants
+                        .Select(v => new ProductVariantsViewModel
+                        {
+                            Id = v.Id,
+
+                            Price = v.Price,
+
+                            Stock = v.Stock
+                        })
+                        .ToList()
+                });
+
+            var totalCount = await productVmQuery.CountAsync();
+
+            var items = await productVmQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var pagedProducts = new PaginatedList<ProductViewModel>(
+                items,
+                totalCount,
+                page,
+                pageSize
+            );
+
+            return new ProductManagementViewModel
+            {
+                TotalProducts = totalProducts,
+
+                LowStockProducts = lowStockProducts,
+
+                OutOfStockProducts = outOfStockProducts,
+
+                TotalCategories = totalCategories,
+
+                Products = pagedProducts
+            };
+        }
     }
 }

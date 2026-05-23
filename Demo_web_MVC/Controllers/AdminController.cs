@@ -11,15 +11,39 @@ namespace Demo_web_MVC.Controllers
         {
             _adminDashboardService = adminDashboardService;
         }
+        //private bool IsAjaxRequest()
+        //{
+        //    return Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+        //}
         public IActionResult Index()
         {
+            
             return View();
         }
         public async Task<IActionResult> Dashboard()
         {
+            
+
             var model = await _adminDashboardService.GetAdminDashboardAsync();
 
             return PartialView("Dashboard", model);
+        }
+        public async Task<IActionResult> OrderManagement(int page = 1)
+        {
+            int pageSize = 10;
+            var model = await _adminDashboardService
+        .GetOrderManagementAsync(page, pageSize);
+            return PartialView("OrderManagement", model);
+        }
+        public async Task<IActionResult> ProductManagement(
+            int page = 1)
+        {
+            int pageSize = 1;
+
+            var model = await _adminDashboardService
+                .GetProductManagementAsync(page, pageSize);
+
+            return PartialView("ProductManagement", model);
         }
     }
 }
