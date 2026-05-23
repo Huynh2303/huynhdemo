@@ -174,9 +174,7 @@ namespace Demo_web_MVC.Repository.Admin
                 Orders = pagedOrders
             };
         }
-        public async Task<ProductManagementViewModel> GetProductManagementAsync(
-    int page,
-    int pageSize)
+        public async Task<ProductManagementViewModel> GetProductManagementAsync(int page,int pageSize)
         {
             var productsQuery = _context.Products
                 .AsNoTracking();
@@ -262,6 +260,54 @@ namespace Demo_web_MVC.Repository.Admin
                 TotalCategories = totalCategories,
 
                 Products = pagedProducts
+            };
+        }
+        public async Task<UserManagementViewModel> GetUserManagementAsync(int page, int pageSize)
+        {
+            var now = DateTime.Now;
+
+            var usersQuery = _context.Users
+                .AsNoTracking();
+
+            var totalUsers = await usersQuery.CountAsync();
+
+            var activeUsers = await usersQuery
+                .CountAsync(u => u.IsActive);
+
+            var lockedUsers = await usersQuery
+                .CountAsync(u => u.LockoutUntil != null && u.LockoutUntil > now);
+
+            var userVmQuery = usersQuery
+                .OrderByDescending(u => u.CreatedAt)
+                .Select(u => new UserItemViewModel
+                {
+                    Id = u.Id,
+                    Username = u.Username,
+                    Email = u.Email,
+                    FullName = u.FullName,
+                    IsActive = u.IsActive,
+                    CreatedAt = u.CreatedAt,
+                    LockoutUntil = u.LockoutUntil,
+
+                    IsLocked = u.LockoutUntil != null && u.LockoutUntil > now,
+
+                    RoleName = u.UserRoles
+                        .Select(ur => ur.Role.Name)
+                        .FirstOrDefault() ?? "Customer"
+                });
+
+            var pagedUsers = await _pagingReponsitory.GetPagedDataAsync(
+                userVmQuery,
+                page,
+                pageSize
+            );
+
+            return new UserManagementViewModel
+            {
+                TotalUsers = totalUsers,
+                ActiveUsers = activeUsers,
+                LockedUsers = lockedUsers,
+                Users = pagedUsers
             };
         }
     }

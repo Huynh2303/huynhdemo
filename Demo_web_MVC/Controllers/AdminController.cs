@@ -38,12 +38,19 @@ namespace Demo_web_MVC.Controllers
         public async Task<IActionResult> ProductManagement(
             int page = 1)
         {
-            int pageSize = 1;
+            int pageSize = 10;
 
             var model = await _adminDashboardService
                 .GetProductManagementAsync(page, pageSize);
 
             return PartialView("ProductManagement", model);
+        }
+        public async Task<IActionResult> UserManagement(int page = 1)
+        {
+            int pageSize = 10;
+            var model = await _adminDashboardService.GetUserManagementAsync(page, pageSize);
+
+            return PartialView("UserManagement", model);
         }
     }
 }

@@ -95,5 +95,34 @@ namespace Demo_web_MVC.Service.Admin
 
             return model;
         }
+        public async Task<UserManagementViewModel> GetUserManagementAsync(int page, int pageSize)
+        {
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            if (pageSize <= 0)
+            {
+                pageSize = 10;
+            }
+
+            var model = await _adminRepository.GetUserManagementAsync(page, pageSize);
+
+            if (model == null)
+            {
+                return new UserManagementViewModel
+                {
+                    Users = new PaginatedList<UserItemViewModel>(
+                        new List<UserItemViewModel>(),
+                        0,
+                        page,
+                        pageSize
+                    )
+                };
+            }
+
+            return model;
+        }
     }
 }

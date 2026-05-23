@@ -178,7 +178,7 @@
                             break;
 
                         case 'Users':
-                            url = '/Admin/UsersPartial';
+                            url = '/Admin/UserManagement';
                             break;
 
                         case 'Categories':
@@ -211,6 +211,13 @@
                     loadAdminContent(`/Admin/ProductManagement?page=${page}`);
                     return;
                 }
+                        const userButton = e.target.closest('.user-page-btn');
+
+        if (userButton) {
+            const page = userButton.dataset.page;
+            loadAdminContent(`/Admin/UserManagement?page=${page}`);
+            return;
+        }
             });
 
             const defaultMenu =
@@ -219,6 +226,7 @@
             if (defaultMenu) {
                 defaultMenu.click();
             }
+
         });
     </script>
 </body>
