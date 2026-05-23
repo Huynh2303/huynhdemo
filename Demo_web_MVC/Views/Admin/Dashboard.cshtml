@@ -30,7 +30,7 @@
 }
 <div class="mb-8">
     <h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">
-        Dashboard Overview
+        Dashboard
     </h2>
     <p class="font-body-md text-body-md text-on-surface-variant">
         Tổng quan hoạt động hệ thống
@@ -48,7 +48,7 @@
         </div>
 
         <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
-            Total Revenue
+            TỔNG DOANH THU
         </p>
         <p class="font-display-lg text-display-lg text-on-surface">
             @Model.TotalRevenue.ToString("N0") đ
@@ -66,7 +66,7 @@
         </div>
 
         <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
-            Total Orders
+            TỔNG ĐƠN HÀNG
         </p>
         <p class="font-display-lg text-display-lg text-on-surface">
             @Model.TotalOrders
@@ -84,7 +84,7 @@
         </div>
 
         <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
-            Total Products
+            TỔNG SẢN PHẨM
         </p>
         <p class="font-display-lg text-display-lg text-on-surface">
             @Model.TotalProducts
@@ -102,7 +102,7 @@
         </div>
 
         <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
-            Total Users
+            TỔNG NGƯỜI DÙNG
         </p>
         <p class="font-display-lg text-display-lg text-on-surface">
             @Model.TotalUsers
@@ -119,12 +119,12 @@
 
     <div class="px-6 py-5 border-b border-outline-variant/30 flex justify-between items-center">
         <h3 class="font-headline-sm text-headline-sm text-on-surface">
-            Recent Orders
+            Đơn hàng gần đây
         </h3>
 
         <a asp-controller="Oder" asp-action="Index"
            class="text-primary font-label-md text-label-md hover:underline no-underline">
-            View all orders
+            Xem tất cả đơn hàng
         </a>
     </div>
 
@@ -134,19 +134,19 @@
             <thead>
                 <tr class="bg-surface-container-low/50">
                     <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
-                        Order ID
+                        MÃ ĐƠN HÀNG
                     </th>
                     <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
-                        Customer
+                        KHÁCH HÀNG
                     </th>
                     <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
-                        Total
+                        TỔNG TIỀN
                     </th>
                     <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
-                        Status
+                        TRẠNG THÁI
                     </th>
                     <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">
-                        Actions
+                        THAO TÁC
                     </th>
                 </tr>
             </thead>

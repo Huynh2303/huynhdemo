@@ -56,17 +56,17 @@
             <!-- Header Section -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h2 class="font-display-lg text-display-lg text-on-surface">Order Management</h2>
-                    <p class="font-body-md text-body-md text-on-surface-variant">Monitor and fulfill customer transactions across all channels.</p>
+            <h2 class="font-display-lg text-display-lg text-on-surface"> Quản lý đơn hàng</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">Theo dõi và xử lý đơn hàng của khách hàng trên toàn hệ thống.</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface border border-outline-variant font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all">
                         <span class="material-symbols-outlined text-[20px]" data-icon="file_download">file_download</span>
-                        Export CSV
+                Xuất file CSV
                     </button>
                     <button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-sm hover:opacity-90 transition-all">
                         <span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
-                        Create Order
+                Tạo đơn hàng
                     </button>
                 </div>
             </div>
@@ -77,8 +77,8 @@
                             <span class="material-symbols-outlined text-primary bg-primary-fixed p-2 rounded-lg">receipt_long</span>
                             
                         </div>
-                        <p class="text-on-surface-variant font-label-md text-label-md">Total Orders</p> 
-                        <h3 class="text-headline-md font-headline-md mt-1">@Model.TotalOrders</h3>
+            <p class="text-on-surface-variant font-label-md text-label-md">Tổng đơn hàng</p>
+            <h3 class="text-headline-md font-headline-md mt-1">@Model.TotalOrders</h3>
                     </div>
 
                     <div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30">
@@ -86,7 +86,7 @@
                             <span class="material-symbols-outlined text-tertiary bg-tertiary-fixed p-2 rounded-lg">pending_actions</span>
                             
                         </div>
-                        <p class="text-on-surface-variant font-label-md text-label-md">Pending</p>
+            <p class="text-on-surface-variant font-label-md text-label-md">Đang chờ xử lý</p>
                         <h3 class="text-headline-md font-headline-md mt-1">@Model.PendingOrders</h3>
                     </div>
 
@@ -95,7 +95,7 @@
                             <span class="material-symbols-outlined text-secondary bg-secondary-fixed p-2 rounded-lg">payments</span>
                             
                         </div>
-                        <p class="text-on-surface-variant font-label-md text-label-md">Revenue</p>
+            <p class="text-on-surface-variant font-label-md text-label-md">Doanh thu</p>
                         <h3 class="text-headline-md font-headline-md mt-1">
                             @Model.Revenue.ToString("N0") đ
                         </h3>
@@ -106,7 +106,7 @@
                             <span class="material-symbols-outlined text-error bg-error-container p-2 rounded-lg">cancel</span>
                            
                         </div>
-                        <p class="text-on-surface-variant font-label-md text-label-md">Cancelled</p>
+            <p class="text-on-surface-variant font-label-md text-label-md">Đã hủy</p>
                         <h3 class="text-headline-md font-headline-md mt-1">@Model.CancelledOrders</h3>
                     </div>
                 </div>
@@ -115,12 +115,12 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-surface-container-low/50">
-                                <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Order ID</th>
-                                <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Customer Name</th>
-                                <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Total Amount</th>
-                                <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Payment Method</th>
-                                <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider text-right">Action</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Mã đơn hàng</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Tên khách hàng</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Tổng tiền</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Phương thức thanh toán</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider">Trạng thái</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant/30 uppercase tracking-wider text-right">Thao tác</th>
                             </tr>
                         </thead>
 

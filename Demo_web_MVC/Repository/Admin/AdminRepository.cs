@@ -49,7 +49,7 @@ namespace Demo_web_MVC.Repository.Admin
                 // Đơn hàng gần đây
                 var recentOrders = await _context.Orders
                     .OrderByDescending(o => o.CreatedAt)
-                    .Take(5)
+                    .Take(10)
                     .Select(o => new OderViewModel
                     {
                         Id = o.Id,
@@ -308,6 +308,35 @@ namespace Demo_web_MVC.Repository.Admin
                 ActiveUsers = activeUsers,
                 LockedUsers = lockedUsers,
                 Users = pagedUsers
+            };
+        }
+        public async Task<CategoryManagementViewModel> GetCategoryManagementAsync(int page, int pageSize)
+        {
+            var categoriesQuery = _context.Categories
+                .AsNoTracking();
+
+            var totalCategories = await categoriesQuery.CountAsync();
+
+            var categoryVmQuery = categoriesQuery
+                .OrderByDescending(c => c.CreatedAt)
+                .Select(c => new CategoryViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    ParentId = c.ParentId,
+                    CreatedAt = c.CreatedAt
+                });
+
+            var pagedCategories = await _pagingReponsitory.GetPagedDataAsync(
+                categoryVmQuery,
+                page,
+                pageSize
+            );
+
+            return new CategoryManagementViewModel
+            {
+                TotalCategories = totalCategories,
+                Categories = pagedCategories
             };
         }
     }

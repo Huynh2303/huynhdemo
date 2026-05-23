@@ -52,5 +52,13 @@ namespace Demo_web_MVC.Controllers
 
             return PartialView("UserManagement", model);
         }
+        public async Task<IActionResult> CategoryManagement(int page = 1)
+        {
+            int pageSize = 5;
+
+            var model = await _adminDashboardService.GetCategoryManagementAsync(page, pageSize);
+
+            return PartialView("CategoryManagement", model);
+        }
     }
 }

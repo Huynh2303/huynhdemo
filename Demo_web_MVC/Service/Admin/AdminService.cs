@@ -1,5 +1,6 @@
 ﻿using Demo_web_MVC.Models;
 using Demo_web_MVC.Models.ViewModel.Admin;
+using Demo_web_MVC.Models.ViewModel.Category;
 using Demo_web_MVC.Models.ViewModel.Oder;
 using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Repository.Admin;
@@ -121,6 +122,42 @@ namespace Demo_web_MVC.Service.Admin
                     )
                 };
             }
+
+            return model;
+        }
+        public async Task<CategoryManagementViewModel> GetCategoryManagementAsync(int page, int pageSize)
+        {
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            if (pageSize <= 0)
+            {
+                pageSize = 10;
+            }
+
+            var model = await _adminRepository.GetCategoryManagementAsync(page, pageSize);
+
+            if (model == null)
+            {
+                return new CategoryManagementViewModel
+                {
+                    Categories = new PaginatedList<CategoryViewModel>(
+                        new List<CategoryViewModel>(),
+                        0,
+                        page,
+                        pageSize
+                    )
+                };
+            }
+
+            model.Categories ??= new PaginatedList<CategoryViewModel>(
+                new List<CategoryViewModel>(),
+                0,
+                page,
+                pageSize
+            );
 
             return model;
         }

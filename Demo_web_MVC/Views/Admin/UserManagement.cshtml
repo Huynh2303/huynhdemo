@@ -4,9 +4,9 @@
 
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface">User Management</h2>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface">Quản lý người dùng</h2>
             <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-                Control access permissions and manage user accounts.
+                Quản lý tài khoản và phân quyền người dùng.
             </p>
         </div>
     </div>
@@ -17,7 +17,7 @@
                 <span class="material-symbols-outlined">group</span>
             </div>
             <div>
-                <p class="font-label-sm text-label-sm text-on-surface-variant">Total Users</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Tổng người dùng</p>
                 <p class="font-headline-md text-headline-md text-on-surface">@Model.TotalUsers</p>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <span class="material-symbols-outlined">verified_user</span>
             </div>
             <div>
-                <p class="font-label-sm text-label-sm text-on-surface-variant">Active Users</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Người dùng hoạt động</p>
                 <p class="font-headline-md text-headline-md text-on-surface">@Model.ActiveUsers</p>
             </div>
         </div>
@@ -37,30 +37,25 @@
                 <span class="material-symbols-outlined">lock</span>
             </div>
             <div>
-                <p class="font-label-sm text-label-sm text-on-surface-variant">Locked Accounts</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Tài khoản bị khóa</p>
                 <p class="font-headline-md text-headline-md text-on-surface">@Model.LockedUsers</p>
             </div>
         </div>
     </div>
 
     <section class="space-y-4">
-        <div class="flex items-center justify-between">
-            <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">manage_accounts</span>
-                User Management
-            </h3>
-        </div>
+        
 
         <div class="bg-white rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-surface-container-low">
-                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Name</th>
+                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Tên người dùng</th>
                             <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Email</th>
-                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Role</th>
-                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Status</th>
-                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase text-right">Action</th>
+                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Vai trò</th>
+                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Trạng thái</th>
+                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase text-right">Thao tác</th>
                         </tr>
                     </thead>
 
@@ -139,7 +134,7 @@
                                                asp-action="LockUser"
                                                asp-route-id="@user.Id"
                                                class="px-4 py-1.5 rounded-lg border border-outline font-label-sm text-label-sm hover:bg-surface-container-low transition-all text-on-surface no-underline">
-                                                Lock
+                                                Look
                                             </a>
                                         }
                                     </td>
