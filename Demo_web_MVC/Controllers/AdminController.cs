@@ -60,5 +60,12 @@ namespace Demo_web_MVC.Controllers
 
             return PartialView("CategoryManagement", model);
         }
+        public async Task<IActionResult> OrderDetailManagement(int orderId)
+        {
+            var model = await _adminDashboardService
+                .GetOrderDetailManagementAsync(orderId);
+
+            return PartialView("OrderDetailManagement", model);
+        }
     }
 }

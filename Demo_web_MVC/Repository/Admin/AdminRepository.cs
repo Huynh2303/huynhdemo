@@ -1,6 +1,7 @@
 ﻿using Demo_web_MVC.Data.AppDatabase;
 using Demo_web_MVC.Models;
 using Demo_web_MVC.Models.ViewModel;
+using Demo_web_MVC.Models.ViewModel.Address;
 using Demo_web_MVC.Models.ViewModel.Admin;
 using Demo_web_MVC.Models.ViewModel.Category;
 using Demo_web_MVC.Models.ViewModel.Dashboard;
@@ -338,6 +339,84 @@ namespace Demo_web_MVC.Repository.Admin
                 TotalCategories = totalCategories,
                 Categories = pagedCategories
             };
+        }
+        public async Task<OrderDetailManagementViewModel?> GetOrderDetailManagementAsync(int orderId)
+        {
+            var order = await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.Id == orderId)
+                .Select(o => new OrderDetailManagementViewModel
+                {
+                    Order = new OderViewModel
+                    {
+                        Id = o.Id,
+                        Name = o.User.FullName ?? o.User.Username,
+                        TotalAmount = o.TotalAmount,
+                        PaymentMethod = o.PaymentMethod,
+                        Status = o.Status,
+                        CreateAt = o.CreatedAt,
+                        user = o.User.FullName ?? o.User.Username,
+
+                        Items = o.OrderItems.Select(item => new OderItemViewModel
+                        {
+                            OrderId = item.OrderId,
+                            VariantId = item.VariantId,
+                            Name = item.Variant.Product.Name,
+                            Price = item.Price,
+                            Quantity = item.Quantity,
+
+                            Img = item.Variant.ProductVariantImages
+                                .OrderBy(img => img.SortOrder)
+                                .Select(img => img.Url)
+                                .FirstOrDefault()
+                                ?? item.Variant.Product.ProductImages
+                                    .OrderBy(img => img.SortOrder)
+                                    .Select(img => img.Url)
+                                    .FirstOrDefault()
+                                ?? "/uploads/images/no-image.jpg",
+
+                            Variant = item.Variant
+                        }).ToList()
+                    },
+
+                    User = o.User,
+                    Address = o.User.Addresses
+                        .Where(a => a.IsDefault)
+                        .Select(a => new AddressViewModel
+                        {
+                            Id = a.Id,
+                            AddressLine = a.AddressLine,
+                            City = a.City,
+                            Country = a.Country,
+                            IsDefault = a.IsDefault,
+                            RecipientName = a.RecipientName,
+                            PhoneNumber = a.PhoneNumber
+                        })
+                        .FirstOrDefault(),
+                    OrderDetails = o.OrderItems.Select(item => new OderItemViewModel
+                    {
+                        OrderId = item.OrderId,
+                        VariantId = item.VariantId,
+                        Name = item.Variant.Product.Name,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+
+                        Img = item.Variant.ProductVariantImages
+                            .OrderBy(img => img.SortOrder)
+                            .Select(img => img.Url)
+                            .FirstOrDefault()
+                            ?? item.Variant.Product.ProductImages
+                                .OrderBy(img => img.SortOrder)
+                                .Select(img => img.Url)
+                                .FirstOrDefault()
+                            ?? "/uploads/images/no-image.jpg",
+
+                        Variant = item.Variant
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            return order;
         }
     }
 }

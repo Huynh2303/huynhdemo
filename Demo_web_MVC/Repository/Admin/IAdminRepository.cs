@@ -10,5 +10,6 @@ namespace Demo_web_MVC.Repository.Admin
         Task<ProductManagementViewModel> GetProductManagementAsync(int page, int pageSize);
         Task<UserManagementViewModel> GetUserManagementAsync(int page, int pageSize);
         Task<CategoryManagementViewModel> GetCategoryManagementAsync(int page, int pageSize);
+        Task<OrderDetailManagementViewModel?> GetOrderDetailManagementAsync(int orderId);
     }
 }

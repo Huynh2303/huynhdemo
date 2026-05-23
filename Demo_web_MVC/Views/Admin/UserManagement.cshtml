@@ -55,6 +55,7 @@
                             <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Email</th>
                             <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Vai trò</th>
                             <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase">Trạng thái</th>
+                            <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase text-right">Quền</th>
                             <th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase text-right">Thao tác</th>
                         </tr>
                     </thead>
@@ -117,7 +118,15 @@
                                             </span>
                                         }
                                     </td>
-
+                                    <td class="px-6 py-4 text-right">
+                                        <button type="button"
+                                                title="Phân quyền Staff"
+                                                class="p-2 rounded-lg hover:bg-secondary-container/20 text-on-surface-variant hover:text-secondary transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">
+                                                admin_panel_settings
+                                            </span>
+                                        </button>
+                                    </td>
                                     <td class="px-6 py-4 text-right">
                                         @if (user.IsLocked)
                                         {

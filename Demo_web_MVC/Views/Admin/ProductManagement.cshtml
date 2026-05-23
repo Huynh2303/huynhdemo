@@ -200,11 +200,8 @@
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex justify-end gap-2">
 
-                                            <button type="button"
-                                                    class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors">
-                                                <span class="material-symbols-outlined">
-                                                    edit
-                                                </span>
+                                            <button class="p-2 rounded-lg hover:bg-primary-container hover:text-on-primary-container text-primary transition-all">
+                                                <span class="material-symbols-outlined">visibility</span>
                                             </button>
 
                                             <button type="button"
@@ -292,18 +289,3 @@
 
             </div>
         </div>
-       
-    @* <script>
-        // Light micro-interactions for the buttons
-        document.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('mousedown', () => {
-                btn.style.transform = 'scale(0.98)';
-            });
-            btn.addEventListener('mouseup', () => {
-                btn.style.transform = 'scale(1)';
-            });
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = 'scale(1)';
-            });
-        });
-    </script> *@

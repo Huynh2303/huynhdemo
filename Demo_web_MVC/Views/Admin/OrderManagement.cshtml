@@ -176,8 +176,13 @@
                                         </td>
 
                                         <td class="px-6 py-4 text-right">
-                                            <button class="p-2 rounded-lg hover:bg-primary-container hover:text-on-primary-container text-primary transition-all">
-                                                <span class="material-symbols-outlined">visibility</span>
+                                            <button type="button"
+                                                    data-order-id="@order.Id"
+                                                    class="order-detail-btn p-2 hover:bg-surface-container-low rounded-lg transition-colors text-on-surface-variant inline-flex">
+
+                                                <span class="material-symbols-outlined">
+                                                    visibility
+                                                </span>
                                             </button>
 
                                             <button class="p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-all ml-1">

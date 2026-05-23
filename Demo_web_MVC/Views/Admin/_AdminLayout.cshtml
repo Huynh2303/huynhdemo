@@ -108,6 +108,24 @@
     <main id="admin-content" class="ml-[280px] pt-16 min-h-screen p-8">
         @RenderBody()
     </main>
+    <!-- Modal -->
+    <div id="admin-modal"
+         class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-6">
+
+        <div class="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-y-auto relative">
+
+            <button id="close-admin-modal"
+                    class="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-container-low">
+
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+
+            <div id="admin-modal-content"></div>
+
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
@@ -225,8 +243,47 @@
                     loadAdminContent(`/Admin/UserManagement?page=${page}`);
                     return;
                 }
-            });
+                const viewAllOrdersButton = e.target.closest('#view-all-orders-btn');
 
+                if (viewAllOrdersButton) {
+                    loadAdminContent('/Admin/OrderManagement');
+                    return;
+                }
+                     const orderDetailButton = e.target.closest('.order-detail-btn');
+
+        if (orderDetailButton) {
+
+            const orderId = orderDetailButton.dataset.orderId;
+
+            fetch(`/Admin/OrderDetailManagement?orderId=${orderId}`)
+                .then(r => r.text())
+                .then(html => {
+
+                    document.getElementById('admin-modal-content').innerHTML = html;
+
+                    const modal = document.getElementById('admin-modal');
+
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Không tải được chi tiết đơn hàng.');
+                });
+
+            return;
+        }
+
+
+            });
+            document.getElementById('close-admin-modal').addEventListener('click', () => {
+            const modal = document.getElementById('admin-modal');
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+
+            document.getElementById('admin-modal-content').innerHTML = '';
+        });
                 const defaultMenu =
                 document.querySelector('.admin-menu[data-target="Dashboard"]');
 
@@ -235,6 +292,8 @@
                 }
 
         });
+
     </script>
+    
 </body>
 </html>

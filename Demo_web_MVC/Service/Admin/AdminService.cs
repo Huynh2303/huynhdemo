@@ -161,5 +161,23 @@ namespace Demo_web_MVC.Service.Admin
 
             return model;
         }
+        public async Task<OrderDetailManagementViewModel?> GetOrderDetailManagementAsync(int orderId)
+        {
+            if (orderId <= 0)
+            {
+                return null;
+            }
+
+            var model = await _adminRepository.GetOrderDetailManagementAsync(orderId);
+
+            if (model == null)
+            {
+                return null;
+            }
+
+            model.OrderDetails ??= new List<OderItemViewModel>();
+
+            return model;
+        }
     }
 }

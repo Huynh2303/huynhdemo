@@ -122,10 +122,12 @@
             Đơn hàng gần đây
         </h3>
 
-        <a asp-controller="Oder" asp-action="Index"
-           class="text-primary font-label-md text-label-md hover:underline no-underline">
+        
+        <button type="button"
+                id="view-all-orders-btn"
+                class="text-primary font-label-md text-label-md hover:underline no-underline">
             Xem tất cả đơn hàng
-        </a>
+        </button>
     </div>
 
     <div class="overflow-x-auto">
@@ -186,12 +188,14 @@
                             </td>
 
                             <td class="px-6 py-4 text-right">
-                                <a asp-controller="Oder"
-                                   asp-action="Details"
-                                   asp-route-id="@order.Id"
-                                   class="p-2 hover:bg-surface-container-low rounded-lg transition-colors text-on-surface-variant inline-flex no-underline">
-                                    <span class="material-symbols-outlined">visibility</span>
-                                </a>
+                                <button type="button"
+                                        data-order-id="@order.Id"
+                                        class="order-detail-btn p-2 hover:bg-surface-container-low rounded-lg transition-colors text-on-surface-variant inline-flex">
+
+                                    <span class="material-symbols-outlined">
+                                        visibility
+                                    </span>
+                                </button>
                             </td>
 
                         </tr>
