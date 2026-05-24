@@ -10,8 +10,14 @@
             </p>
         </div>
 
-        <button class="flex items-center gap-2 px-6 py-2 bg-primary rounded-full font-label-md text-label-md text-on-primary hover:opacity-90 transition-all shadow-md">
-            <span class="material-symbols-outlined text-[20px]">add</span>
+        <button type="button"
+                id="open-add-category-btn"
+                class="flex items-center gap-2 px-6 py-2 bg-primary rounded-full font-label-md text-label-md text-on-primary hover:opacity-90 transition-all shadow-md">
+
+            <span class="material-symbols-outlined text-[20px]">
+                add
+            </span>
+
             Thêm danh mục
         </button>
     </div>
@@ -71,15 +77,29 @@
 
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex items-center justify-end gap-2">
+
+                                            <!-- Nút sửa -->
                                             <button type="button"
-                                                    class="p-2 rounded-lg hover:bg-primary-container/10 text-on-surface-variant hover:text-primary transition-colors">
-                                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                                                    class="edit-category-btn p-2 rounded-lg hover:bg-primary-container/10 text-on-surface-variant hover:text-primary transition-colors"
+                                                    data-id="@category.Id"
+                                                    data-name="@category.Name"
+                                                    data-parent-id="@category.ParentId">
+
+                                                <span class="material-symbols-outlined text-[20px]">
+                                                    edit
+                                                </span>
                                             </button>
 
+                                            <!-- Nút xóa -->
                                             <button type="button"
-                                                    class="p-2 rounded-lg hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors">
-                                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                                                    class="delete-category-btn p-2 rounded-lg hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors"
+                                                    data-id="@category.Id">
+
+                                                <span class="material-symbols-outlined text-[20px]">
+                                                    delete
+                                                </span>
                                             </button>
+
                                         </div>
                                     </td>
                                 </tr>

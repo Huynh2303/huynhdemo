@@ -126,8 +126,372 @@
 
         </div>
     </div>
-    
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mainContent = document.getElementById('admin-content');
+            const modal = document.getElementById('admin-modal');
+            const modalContent = document.getElementById('admin-modal-content');
+
+            // =========================
+            // HÀM DÙNG CHUNG
+            // =========================
+
+            function loadAdminContent(url) {
+                fetch(url)
+                    .then(r => r.text())
+                    .then(html => mainContent.innerHTML = html)
+                    .catch(err => {
+                        console.error(err);
+                        mainContent.innerHTML =
+                            '<p class="text-red-500">Không tải được nội dung admin.</p>';
+                    });
+            }
+
+            function openAdminModal(url) {
+                fetch(url)
+                    .then(r => r.text())
+                    .then(html => {
+                        modalContent.innerHTML = html;
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Không tải được dữ liệu.');
+                    });
+            }
+
+            function closeAdminModal() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                modalContent.innerHTML = '';
+            }
+
+            function postAndReload(url, formData = null) {
+                fetch(url, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(r => r.text())
+                    .then(html => mainContent.innerHTML = html)
+                    .catch(err => {
+                        console.error(err);
+                        alert('Thao tác thất bại.');
+                    });
+            }
+
+            // =========================
+            // SIDEBAR MENU
+            // =========================
+
+            const adminRoutes = {
+                Dashboard: '/Admin/Dashboard',
+                Products: '/Admin/ProductManagement',
+                Orders: '/Admin/OrderManagement',
+                Users: '/Admin/UserManagement',
+                Categories: '/Admin/CategoryManagement'
+            };
+
+            function setActiveMenu(item) {
+                document.querySelectorAll('.admin-menu[data-target]').forEach(a => {
+                    a.classList.remove(
+                        'bg-secondary-fixed',
+                        'text-primary',
+                        'border-l-4',
+                        'border-primary',
+                        'rounded-r-lg'
+                    );
+
+                    a.classList.add(
+                        'text-on-surface-variant',
+                        'rounded-lg'
+                    );
+                });
+
+                item.classList.add(
+                    'bg-secondary-fixed',
+                    'text-primary',
+                    'border-l-4',
+                    'border-primary',
+                    'rounded-r-lg'
+                );
+
+                item.classList.remove(
+                    'text-on-surface-variant',
+                    'rounded-lg'
+                );
+            }
+
+            document.querySelectorAll('.admin-menu[data-target]').forEach(item => {
+                item.addEventListener('click', e => {
+                    e.preventDefault();
+
+                    const url = adminRoutes[item.dataset.target];
+
+                    if (!url) {
+                        console.warn('Menu admin chưa cấu hình:', item.dataset.target);
+                        return;
+                    }
+
+                    setActiveMenu(item);
+                    loadAdminContent(url);
+                });
+            });
+
+            // =========================
+            // CLICK TRONG PARTIAL ADMIN
+            // =========================
+
+            mainContent.addEventListener('click', e => {
+
+                // PHÂN TRANG
+                const paging = e.target.closest(
+                    '.category-page-btn, .order-page-btn, .product-page-btn, .user-page-btn'
+                );
+
+                if (paging) {
+                    const page = paging.dataset.page;
+
+                    if (paging.classList.contains('category-page-btn')) {
+                        loadAdminContent(`/Admin/CategoryManagement?page=${page}`);
+                    }
+
+                    if (paging.classList.contains('order-page-btn')) {
+                        loadAdminContent(`/Admin/OrderManagement?page=${page}`);
+                    }
+
+                    if (paging.classList.contains('product-page-btn')) {
+                        loadAdminContent(`/Admin/ProductManagement?page=${page}`);
+                    }
+
+                    if (paging.classList.contains('user-page-btn')) {
+                        loadAdminContent(`/Admin/UserManagement?page=${page}`);
+                    }
+
+                    return;
+                }
+
+                // DASHBOARD
+                if (e.target.closest('#view-all-orders-btn')) {
+                    loadAdminContent('/Admin/OrderManagement');
+                    return;
+                }
+
+                // PRODUCT
+                const productDetail = e.target.closest('.product-detail-btn');
+                if (productDetail) {
+                    openAdminModal(`/Admin/ProductManagerDetail?id=${productDetail.dataset.productId}`);
+                    return;
+                }
+
+                const deleteProduct = e.target.closest('.delete-product-btn');
+                if (deleteProduct) {
+                    if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+                        return;
+                    }
+
+                    postAndReload(`/Admin/DeleteProductByAdmin?productId=${deleteProduct.dataset.productId}`);
+                    return;
+                }
+
+                // ORDER
+                const orderDetail = e.target.closest('.order-detail-btn');
+                if (orderDetail) {
+                    openAdminModal(`/Admin/OrderDetailManagement?orderId=${orderDetail.dataset.orderId}`);
+                    return;
+                }
+
+                const confirmOrder = e.target.closest('.confirm-order-btn');
+                if (confirmOrder) {
+                    postAndReload(`/Admin/ConfirmOrder?orderId=${confirmOrder.dataset.orderId}`);
+                    return;
+                }
+
+                const cancelOrder = e.target.closest('.cancel-order-btn');
+                if (cancelOrder) {
+                    if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
+                        return;
+                    }
+
+                    postAndReload(`/Admin/CancelOrder?orderId=${cancelOrder.dataset.orderId}`);
+                    return;
+                }
+
+                const riskAnalysis = e.target.closest('.risk-analysis-btn');
+                if (riskAnalysis) {
+                    openAdminModal(`/Admin/OrderRiskAnalysis?orderId=${riskAnalysis.dataset.orderId}`);
+                    return;
+                }
+
+                const updateStatus = e.target.closest('.update-order-status-btn');
+                if (updateStatus) {
+                    openAdminModal(`/Admin/UpdateOrderStatusModal?orderId=${updateStatus.dataset.orderId}`);
+                    return;
+                }
+
+                // CATEGORY
+                const addCategory = e.target.closest('#open-add-category-btn');
+                if (addCategory) {
+                     openAdminModal('/Admin/AddCategory');
+                    return;
+                }
+
+                const editCategory = e.target.closest('.edit-category-btn');
+                if (editCategory) {
+                    openAdminModal(`/Admin/UpdateCategory?id=${editCategory.dataset.id}`);
+                    return;
+                }
+
+                const deleteCategory = e.target.closest('.delete-category-btn');
+                if (deleteCategory) {
+                    if (!confirm('Bạn có chắc muốn xóa danh mục này?')) {
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('categoryId', deleteCategory.dataset.id);
+
+                    postAndReload('/Admin/DeleteCategory', formData);
+                    return;
+                }
+                // USER STATUS
+                const updateUserStatus = e.target.closest('.update-user-status-btn');
+
+                if (updateUserStatus) {
+
+                    const formData = new FormData();
+
+                    formData.append('userId', updateUserStatus.dataset.userId);
+
+                    formData.append('isActive', updateUserStatus.dataset.isActive);
+
+                    postAndReload('/Admin/UpdateUserStatus', formData);
+
+                    return;
+                }
+            });
+
+            // =========================
+            // SUBMIT FORM TRONG MODAL
+            // =========================
+
+            modalContent.addEventListener('submit', e => {
+
+                // CATEGORY FORM
+                const categoryForm = e.target.closest('#category-form');
+                if (categoryForm) {
+                    e.preventDefault();
+
+                    const formData = new FormData(categoryForm);
+                    const id = formData.get('Id');
+
+                    const url = id
+                        ? '/Admin/UpdateCategory'
+                        : '/Admin/AddCategory';
+
+                    fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(r => r.text())
+                        .then(html => {
+                            closeAdminModal();
+                            mainContent.innerHTML = html;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Lưu danh mục thất bại.');
+                        });
+
+                    return;
+                }
+            });
+
+            // =========================
+            // CLICK TRONG MODAL
+            // =========================
+
+            modalContent.addEventListener('click', e => {
+
+                // CẬP NHẬT TRẠNG THÁI ORDER
+                const submitUpdateStatus = e.target.closest('#submit-update-order-status-btn');
+
+                if (submitUpdateStatus) {
+                    const orderId = submitUpdateStatus.dataset.orderId;
+                    const statusSelect = document.getElementById('update-order-status-select');
+
+                    if (!statusSelect) {
+                        alert('Không tìm thấy trạng thái cần cập nhật.');
+                        return;
+                    }
+
+                    fetch(`/Admin/UpdateOrderStatus?orderId=${orderId}&newStatus=${statusSelect.value}`, {
+                        method: 'POST'
+                    })
+                        .then(r => r.text())
+                        .then(html => {
+                            closeAdminModal();
+                            mainContent.innerHTML = html;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Cập nhật trạng thái thất bại.');
+                        });
+
+                    return;
+                }
+            });
+
+            // =========================
+            // DROPDOWN 3 CHẤM ORDER
+            // =========================
+
+            document.addEventListener('click', e => {
+
+                const toggle = e.target.closest('.order-action-toggle');
+
+                if (toggle) {
+                    const menu = toggle
+                        .closest('.relative')
+                        .querySelector('.order-action-menu');
+
+                    document.querySelectorAll('.order-action-menu').forEach(m => {
+                        if (m !== menu) {
+                            m.classList.add('hidden');
+                        }
+                    });
+
+                    menu.classList.toggle('hidden');
+                    return;
+                }
+
+                if (!e.target.closest('.order-action-menu')) {
+                    document.querySelectorAll('.order-action-menu').forEach(menu => {
+                        menu.classList.add('hidden');
+                    });
+                }
+            });
+
+            // =========================
+            // ĐÓNG MODAL
+            // =========================
+
+            document.getElementById('close-admin-modal')
+                .addEventListener('click', closeAdminModal);
+
+            // =========================
+            // LOAD DASHBOARD MẶC ĐỊNH
+            // =========================
+
+            const defaultMenu = document.querySelector('.admin-menu[data-target="Dashboard"]');
+
+            if (defaultMenu) {
+                defaultMenu.click();
+            }
+        });
+    </script>
+    @* <script>
         document.addEventListener('DOMContentLoaded', () => {
 
             const mainContent = document.getElementById('admin-content');
@@ -419,6 +783,6 @@
                 defaultMenu.click();
             }
         });
-    </script>
+    </script> *@
 </body>
 </html>

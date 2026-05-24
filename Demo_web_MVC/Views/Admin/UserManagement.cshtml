@@ -128,24 +128,28 @@
                                         </button>
                                     </td>
                                     <td class="px-6 py-4 text-right">
-                                        @if (user.IsLocked)
+
+                                        @if (user.IsActive)
                                         {
-                                            <a asp-controller="Admin"
-                                               asp-action="UnlockUser"
-                                               asp-route-id="@user.Id"
-                                               class="px-4 py-1.5 rounded-lg border border-primary font-label-sm text-label-sm bg-primary text-on-primary hover:opacity-90 transition-all no-underline">
-                                                Unlock
-                                            </a>
+                                            <button type="button"
+                                                    class="update-user-status-btn px-4 py-1.5 rounded-lg border border-outline font-label-sm text-label-sm hover:bg-surface-container-low transition-all text-on-surface"
+                                                    data-user-id="@user.Id"
+                                                    data-is-active="false">
+
+                                                Lock
+                                            </button>
                                         }
                                         else
                                         {
-                                            <a asp-controller="Admin"
-                                               asp-action="LockUser"
-                                               asp-route-id="@user.Id"
-                                               class="px-4 py-1.5 rounded-lg border border-outline font-label-sm text-label-sm hover:bg-surface-container-low transition-all text-on-surface no-underline">
-                                                Look
-                                            </a>
+                                            <button type="button"
+                                                    class="update-user-status-btn px-4 py-1.5 rounded-lg border border-primary font-label-sm text-label-sm bg-primary text-on-primary hover:opacity-90 transition-all"
+                                                    data-user-id="@user.Id"
+                                                    data-is-active="true">
+
+                                                Unlock
+                                            </button>
                                         }
+
                                     </td>
                                 </tr>
                             }

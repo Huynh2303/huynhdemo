@@ -257,5 +257,50 @@ namespace Demo_web_MVC.Service.Admin
 
             return await _adminRepository.GetOrderRiskAnalysisAsync(orderId);
         }
+        //
+        public async Task<bool> AddCategoryAsync(CategoryManagementViewModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Name))
+            {
+                return false;
+            }
+
+            return await _adminRepository.AddCategoryAsync(model);
+        }
+
+        public async Task<bool> UpdateCategoryAsync(CategoryManagementViewModel model)
+        {
+            if (model == null || model.Id == null || string.IsNullOrWhiteSpace(model.Name))
+            {
+                return false;
+            }
+
+            // Không cho chọn chính nó làm danh mục cha
+            if (model.ParentId == model.Id)
+            {
+                return false;
+            }
+
+            return await _adminRepository.UpdateCategoryAsync(model);
+        }
+
+        public async Task<bool> DeleteCategoryAsync(int categoryId)
+        {
+            if (categoryId <= 0)
+            {
+                return false;
+            }
+
+            return await _adminRepository.DeleteCategoryAsync(categoryId);
+        }
+        public async Task<CategoryManagementViewModel?> GetCategoryByIdAsync(int id)
+        {
+            return await _adminRepository.GetCategoryByIdAsync(id);
+        }
+        public async Task<bool> UpdateUserStatusAsync(int userId, bool isActive)
+        {
+            return await _adminRepository
+                .UpdateUserStatusAsync(userId, isActive);
+        }
     }
 }

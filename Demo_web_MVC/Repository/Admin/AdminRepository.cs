@@ -647,10 +647,127 @@ namespace Demo_web_MVC.Repository.Admin
                 .OrderByDescending(f => f.CreatedAt)
                 .FirstOrDefaultAsync();
         }
+        //
+        public async Task<bool> AddCategoryAsync(CategoryManagementViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                return false;
+            }
 
+            var category = new Models.Category
+            {
+                Name = model.Name.Trim(),
 
+                // Form gửi 0 nghĩa là không có danh mục cha
+                ParentId = model.ParentId == 0 ? null : model.ParentId,
 
+                CreatedAt = DateTime.Now
+            };
 
+            await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UpdateCategoryAsync(CategoryManagementViewModel model)
+        {
+            if (model.Id == null || string.IsNullOrWhiteSpace(model.Name))
+            {
+                return false;
+            }
+
+            if (model.ParentId == model.Id)
+            {
+                return false;
+            }
+
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(c => c.Id == model.Id);
+
+            if (category == null)
+            {
+                return false;
+            }
+
+            category.Name = model.Name.Trim();
+
+            // Form gửi 0 nghĩa là không có danh mục cha
+            category.ParentId = model.ParentId == 0 ? null : model.ParentId;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteCategoryAsync(int categoryId)
+        {
+            var category = await _context.Categories
+                .Include(c => c.Products)
+                .Include(c => c.InverseParent)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (category == null)
+            {
+                return false;
+            }
+
+            // Có sản phẩm hoặc danh mục con thì không xóa
+            if (category.Products.Any() || category.InverseParent.Any())
+            {
+                return false;
+            }
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<CategoryManagementViewModel?> GetCategoryByIdAsync(int id)
+        {
+            var category = await _context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null)
+            {
+                return null;
+            }
+
+            var parentCategories = await _context.Categories
+                .AsNoTracking()
+                .Select(c => new CategoryViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToListAsync();
+
+            return new CategoryManagementViewModel
+            {
+                Id = category.Id,
+                Name = category.Name,
+                ParentId = category.ParentId,
+                ParentCategories = parentCategories
+            };
+        }
+        public async Task<bool> UpdateUserStatusAsync(int userId, bool isActive)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.IsActive = isActive;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
 
     }
 }

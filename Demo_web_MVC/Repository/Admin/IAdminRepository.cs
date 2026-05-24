@@ -17,7 +17,7 @@ namespace Demo_web_MVC.Repository.Admin
 
 
 
-
+        //
         Task<bool> ConfirmOrderAsync(int orderId);
 
         Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus);
@@ -25,5 +25,13 @@ namespace Demo_web_MVC.Repository.Admin
         Task<bool> CancelOrderAsync(int orderId);
 
         Task<FraudAnalysis?> GetOrderRiskAnalysisAsync(int orderId);
+        //
+        Task<bool> AddCategoryAsync(CategoryManagementViewModel model);
+
+        Task<bool> UpdateCategoryAsync(CategoryManagementViewModel model);
+
+        Task<bool> DeleteCategoryAsync(int categoryId);
+        Task<CategoryManagementViewModel?> GetCategoryByIdAsync(int id);
+        Task<bool> UpdateUserStatusAsync(int userId, bool isActive);
     }
 }

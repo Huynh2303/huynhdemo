@@ -21,5 +21,13 @@ namespace Demo_web_MVC.Service.Admin
         Task<bool> CancelOrderAsync(int orderId);
 
         Task<FraudAnalysis?> GetOrderRiskAnalysisAsync(int orderId);
+        //
+        Task<bool> AddCategoryAsync(CategoryManagementViewModel model);
+
+        Task<bool> UpdateCategoryAsync(CategoryManagementViewModel model);
+
+        Task<bool> DeleteCategoryAsync(int categoryId);
+        Task<CategoryManagementViewModel?> GetCategoryByIdAsync(int id);
+        Task<bool> UpdateUserStatusAsync(int userId, bool isActive);
     }
 }

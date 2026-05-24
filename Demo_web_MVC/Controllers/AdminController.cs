@@ -1,4 +1,5 @@
 ﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Admin;
 using Demo_web_MVC.Service.Admin;
 using Microsoft.AspNetCore.Mvc;
 
@@ -144,6 +145,70 @@ namespace Demo_web_MVC.Controllers
             }
 
             return PartialView("OrderRiskAnalysis", model);
+        }
+        //
+        [HttpGet]
+        public async Task<IActionResult> AddCategory()
+        {
+            var model = await _adminDashboardService
+                .GetCategoryManagementAsync(1, 5);
+
+            return PartialView("_CategoryForm", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(CategoryManagementViewModel model)
+        {
+            await _adminDashboardService.AddCategoryAsync(model);
+
+            var newModel = await _adminDashboardService
+                .GetCategoryManagementAsync(1, 5);
+
+            return PartialView("CategoryManagement", newModel);
+        }
+        [HttpGet]
+        public async Task<IActionResult> UpdateCategory(int id)
+        {
+            var model = await _adminDashboardService
+                .GetCategoryByIdAsync(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("_CategoryForm", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(CategoryManagementViewModel model)
+        {
+            await _adminDashboardService.UpdateCategoryAsync(model);
+
+            var newModel = await _adminDashboardService
+                .GetCategoryManagementAsync(1, 5);
+
+            return PartialView("CategoryManagement", newModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory(int categoryId)
+        {
+            await _adminDashboardService.DeleteCategoryAsync(categoryId);
+
+            var newModel = await _adminDashboardService
+                .GetCategoryManagementAsync(1, 5);
+
+            return PartialView("CategoryManagement", newModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserStatus(int userId, bool isActive)
+        {
+            await _adminDashboardService
+                .UpdateUserStatusAsync(userId, isActive);
+
+            var model = await _adminDashboardService
+                .GetUserManagementAsync(1, 5);
+
+            return PartialView("UserManagement", model);
         }
     }
 }
