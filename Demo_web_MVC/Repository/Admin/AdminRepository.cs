@@ -418,5 +418,127 @@ namespace Demo_web_MVC.Repository.Admin
 
             return order;
         }
+        public async Task<ProductManagerDetailViewModel?> GetProductManagerDetailAsync(int productId)
+        {
+            var product = await _context.Products
+                .AsNoTracking()
+                .Where(p => p.Id == productId)
+                .Select(p => new ProductManagerDetailViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Brand = p.Brand,
+
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category != null ? p.Category.Name : null,
+
+                    CreatedAt = p.CreatedAt,
+                    IsDeleted = p.IsDeleted,
+
+                    ProductImages = p.ProductImages
+                        .Select(img => img.Url)
+                        .ToList(),
+
+                    Variants = p.ProductVariants
+                        .Select(v => new ProductVariantsViewModel
+                        {
+                            Id = v.Id,
+                            ProductId = v.ProductId,
+                            Size = v.Size,
+                            Color = v.Color,
+                            Price = v.Price,
+                            Stock = v.Stock,
+
+                            ImageUrlsVariants = v.ProductVariantImages
+                                .Select(img => img.Url)
+                                .ToList()
+                        })
+                        .ToList(),
+
+                    TotalVariants = p.ProductVariants.Count(),
+                    TotalStock = p.ProductVariants.Sum(v => v.Stock),
+
+                    MinPrice = p.ProductVariants.Any()
+                        ? p.ProductVariants.Min(v => v.Price)
+                        : 0,
+
+                    MaxPrice = p.ProductVariants.Any()
+                        ? p.ProductVariants.Max(v => v.Price)
+                        : 0
+                })
+                .FirstOrDefaultAsync();
+
+            return product;
+        }
+        public async Task<bool> DeleteProductByAdminAsync(int productId)
+        {
+            var product = await _context.Products
+                .IgnoreQueryFilters()
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductVariants)
+                    .ThenInclude(v => v.ProductVariantImages)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            var variantIds = product.ProductVariants
+                .Select(v => v.Id)
+                .ToList();
+
+            var hasOrder = await _context.OrderItems
+                .AnyAsync(oi => variantIds.Contains(oi.VariantId));
+
+            if (hasOrder)
+            {
+                // Đã từng có đơn hàng -> chỉ ẩn product
+                product.IsDeleted = true;
+
+                // Xóa khỏi giỏ hàng để khách không checkout tiếp sản phẩm đã ẩn
+                var cartItems = await _context.CartItems
+                    .Where(ci => variantIds.Contains(ci.VariantId))
+                    .ToListAsync();
+
+                _context.CartItems.RemoveRange(cartItems);
+            }
+            else
+            {
+                // Chưa có đơn hàng -> admin được xóa cứng
+
+                var cartItems = await _context.CartItems
+                    .Where(ci => variantIds.Contains(ci.VariantId))
+                    .ToListAsync();
+
+                _context.CartItems.RemoveRange(cartItems);
+
+                _context.ProductVariantImages.RemoveRange(
+                    product.ProductVariants.SelectMany(v => v.ProductVariantImages)
+                );
+
+                _context.ProductImages.RemoveRange(product.ProductImages);
+
+                _context.ProductVariants.RemoveRange(product.ProductVariants);
+
+                _context.Products.Remove(product);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+
+
     }
 }

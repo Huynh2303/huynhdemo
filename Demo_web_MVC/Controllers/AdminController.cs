@@ -67,5 +67,25 @@ namespace Demo_web_MVC.Controllers
 
             return PartialView("OrderDetailManagement", model);
         }
+        public async Task<IActionResult> ProductManagerDetail(int id)
+        {
+            if (id <= 0)
+            {
+                return NotFound();
+            }
+
+            var model = await _adminDashboardService.GetProductManagerDetailAsync(id);
+
+            return PartialView("ProductManagerDetail", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductByAdmin(int productId)
+        {
+            await _adminDashboardService.DeleteProductByAdminAsync(productId);
+
+            var model = await _adminDashboardService.GetProductManagementAsync(1, 10);
+
+            return PartialView("ProductManagement", model);
+        }
     }
 }

@@ -179,5 +179,46 @@ namespace Demo_web_MVC.Service.Admin
 
             return model;
         }
+        public async Task<ProductManagerDetailViewModel?> GetProductManagerDetailAsync(int productId)
+        {
+            if (productId <= 0)
+            {
+                return null;
+            }
+
+            var product = await _adminRepository.GetProductManagerDetailAsync(productId);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            product.Variants ??= new List<ProductVariantsViewModel>();
+            product.ProductImages ??= new List<string>();
+
+            product.TotalVariants = product.Variants.Count;
+            product.TotalStock = product.Variants.Sum(v => v.Stock);
+
+            product.MinPrice = product.Variants.Any()
+                ? product.Variants.Min(v => v.Price)
+                : 0;
+
+            product.MaxPrice = product.Variants.Any()
+                ? product.Variants.Max(v => v.Price)
+                : 0;
+
+            return product;
+        }
+        public async Task<bool> DeleteProductByAdminAsync(int productId)
+        {
+            if (productId <= 0)
+            {
+                return false;
+            }
+
+            var result = await _adminRepository.DeleteProductByAdminAsync(productId);
+
+            return result;
+        }
     }
 }

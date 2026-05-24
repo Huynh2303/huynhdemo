@@ -200,16 +200,18 @@
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex justify-end gap-2">
 
-                                            <button class="p-2 rounded-lg hover:bg-primary-container hover:text-on-primary-container text-primary transition-all">
+                                    <button type="button" data-product-id="@product.Id" class="product-detail-btn p-2 rounded-lg hover:bg-primary-container hover:text-on-primary-container text-primary transition-all">
                                                 <span class="material-symbols-outlined">visibility</span>
                                             </button>
 
-                                            <button type="button"
-                                                    class="p-2 text-error hover:bg-error/10 rounded-lg transition-colors">
-                                                <span class="material-symbols-outlined">
-                                                    delete
-                                                </span>
-                                            </button>
+                                    <button type="button"
+                                            class="delete-product-btn p-2 text-error hover:bg-error/10 rounded-lg transition-colors"
+                                            data-product-id="@product.Id">
+
+                                        <span class="material-symbols-outlined">
+                                            delete
+                                        </span>
+                                    </button>
 
                                         </div>
                                     </td>

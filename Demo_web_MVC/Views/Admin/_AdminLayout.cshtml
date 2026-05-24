@@ -249,32 +249,78 @@
                     loadAdminContent('/Admin/OrderManagement');
                     return;
                 }
-                     const orderDetailButton = e.target.closest('.order-detail-btn');
+                const orderDetailButton = e.target.closest('.order-detail-btn');
 
-        if (orderDetailButton) {
+                if (orderDetailButton) {
 
-            const orderId = orderDetailButton.dataset.orderId;
+                    const orderId = orderDetailButton.dataset.orderId;
 
-            fetch(`/Admin/OrderDetailManagement?orderId=${orderId}`)
-                .then(r => r.text())
-                .then(html => {
+                    fetch(`/Admin/OrderDetailManagement?orderId=${orderId}`)
+                        .then(r => r.text())
+                        .then(html => {
 
-                    document.getElementById('admin-modal-content').innerHTML = html;
+                            document.getElementById('admin-modal-content').innerHTML = html;
 
-                    const modal = document.getElementById('admin-modal');
+                            const modal = document.getElementById('admin-modal');
 
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Không tải được chi tiết đơn hàng.');
-                });
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Không tải được chi tiết đơn hàng.');
+                        });
 
-            return;
-        }
+                    return;
+                }
+                const productDetailButton = e.target.closest('.product-detail-btn');
 
+                    if (productDetailButton) {
 
+                        const productId = productDetailButton.dataset.productId;
+
+                        fetch(`/Admin/ProductManagerDetail?id=${productId}`)
+                            .then(r => r.text())
+                            .then(html => {
+
+                                document.getElementById('admin-modal-content').innerHTML = html;
+
+                                const modal = document.getElementById('admin-modal');
+
+                                modal.classList.remove('hidden');
+                                modal.classList.add('flex');
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert('Không tải được chi tiết sản phẩm.');
+                            });
+
+                        return;
+                    }
+               const deleteProductButton = e.target.closest('.delete-product-btn');
+
+                if (deleteProductButton) {
+
+                    const productId = deleteProductButton.dataset.productId;
+
+                    if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+                        return;
+                    }
+
+                    fetch(`/Admin/DeleteProductByAdmin?productId=${productId}`, {
+                        method: 'POST'
+                    })
+                    .then(r => r.text())
+                    .then(html => {
+                        mainContent.innerHTML = html;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Không xóa được sản phẩm.');
+                    });
+
+                    return;
+                }
             });
             document.getElementById('close-admin-modal').addEventListener('click', () => {
             const modal = document.getElementById('admin-modal');
