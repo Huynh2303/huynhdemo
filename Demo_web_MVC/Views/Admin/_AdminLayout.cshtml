@@ -370,6 +370,23 @@
 
                     return;
                 }
+               // CHANGE USER ROLE TO STAFF
+                const changeUserRole = e.target.closest('.change-user-role-btn');
+
+                if (changeUserRole) {
+
+                    if (!confirm('Bạn có chắc muốn cấp quyền Staff cho user này?')) {
+                        return;
+                    }
+
+                    const formData = new FormData();
+
+                    formData.append('userId', changeUserRole.dataset.userId);
+
+                    postAndReload('/Admin/ChangeUserToStaff', formData);
+
+                    return;
+                }
             });
 
             // =========================

@@ -768,6 +768,39 @@ namespace Demo_web_MVC.Repository.Admin
 
             return true;
         }
+        public async Task<bool> ChangeUserToStaffAsync(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserRoles)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
+            if (user == null)
+            {
+                return false;
+            }
+
+            var staffRole = await _context.Roles
+                .FirstOrDefaultAsync(r => r.Code == "STAFF");
+
+            if (staffRole == null)
+            {
+                return false;
+            }
+
+            // Xóa quyền cũ của user
+            _context.UserRoles.RemoveRange(user.UserRoles);
+
+            // Gán quyền STAFF
+            var userRole = new UserRole
+            {
+                UserId = user.Id,
+                RoleId = staffRole.Id
+            };
+
+            await _context.UserRoles.AddAsync(userRole);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

@@ -119,13 +119,20 @@
                                         }
                                     </td>
                                     <td class="px-6 py-4 text-right">
+                                        @if (user.RoleName == "USER"|| user.RoleName == "Customer"|| user.RoleName == "Người dùng")
+                                        {
+        
                                         <button type="button"
                                                 title="Phân quyền Staff"
-                                                class="p-2 rounded-lg hover:bg-secondary-container/20 text-on-surface-variant hover:text-secondary transition-colors">
+                                                class="change-user-role-btn p-2 rounded-lg hover:bg-secondary-container/20 text-on-surface-variant hover:text-secondary transition-colors"
+                                                data-user-id="@user.Id">
+
                                             <span class="material-symbols-outlined text-[20px]">
                                                 admin_panel_settings
                                             </span>
+
                                         </button>
+                                        }
                                     </td>
                                     <td class="px-6 py-4 text-right">
 

@@ -302,5 +302,14 @@ namespace Demo_web_MVC.Service.Admin
             return await _adminRepository
                 .UpdateUserStatusAsync(userId, isActive);
         }
+        public async Task<bool> ChangeUserToStaffAsync(int userId)
+        {
+            if (userId <= 0)
+            {
+                return false;
+            }
+
+            return await _adminRepository.ChangeUserToStaffAsync(userId);
+        }
     }
 }

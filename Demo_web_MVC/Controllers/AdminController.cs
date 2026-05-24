@@ -206,7 +206,23 @@ namespace Demo_web_MVC.Controllers
                 .UpdateUserStatusAsync(userId, isActive);
 
             var model = await _adminDashboardService
-                .GetUserManagementAsync(1, 5);
+                .GetUserManagementAsync(1, 10);
+
+            return PartialView("UserManagement", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserToStaff(int userId)
+        {
+            var result = await _adminDashboardService
+                .ChangeUserToStaffAsync(userId);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            var model = await _adminDashboardService
+                .GetUserManagementAsync(1, 10);
 
             return PartialView("UserManagement", model);
         }

@@ -33,5 +33,6 @@ namespace Demo_web_MVC.Repository.Admin
         Task<bool> DeleteCategoryAsync(int categoryId);
         Task<CategoryManagementViewModel?> GetCategoryByIdAsync(int id);
         Task<bool> UpdateUserStatusAsync(int userId, bool isActive);
+        Task<bool> ChangeUserToStaffAsync(int userId);
     }
 }
