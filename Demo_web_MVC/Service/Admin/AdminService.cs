@@ -220,5 +220,42 @@ namespace Demo_web_MVC.Service.Admin
 
             return result;
         }
+        //
+        public async Task<bool> ConfirmOrderAsync(int orderId)
+        {
+            if (orderId <= 0)
+            {
+                return false;
+            }
+
+            return await _adminRepository.ConfirmOrderAsync(orderId);
+        }
+        public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
+        {
+            if (orderId <= 0)
+            {
+                return false;
+            }
+
+            return await _adminRepository.UpdateOrderStatusAsync(orderId, newStatus);
+        }
+        public async Task<bool> CancelOrderAsync(int orderId)
+        {
+            if (orderId <= 0)
+            {
+                return false;
+            }
+
+            return await _adminRepository.CancelOrderAsync(orderId);
+        }
+        public async Task<FraudAnalysis?> GetOrderRiskAnalysisAsync(int orderId)
+        {
+            if (orderId <= 0)
+            {
+                return null;
+            }
+
+            return await _adminRepository.GetOrderRiskAnalysisAsync(orderId);
+        }
     }
 }

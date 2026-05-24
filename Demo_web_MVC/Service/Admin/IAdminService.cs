@@ -1,4 +1,5 @@
-﻿using Demo_web_MVC.Models.ViewModel.Admin;
+﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Admin;
 
 namespace Demo_web_MVC.Service.Admin
 {
@@ -12,5 +13,13 @@ namespace Demo_web_MVC.Service.Admin
         Task<OrderDetailManagementViewModel?> GetOrderDetailManagementAsync(int orderId);
         Task<ProductManagerDetailViewModel?> GetProductManagerDetailAsync(int productId);
         Task<bool> DeleteProductByAdminAsync(int productId);
+        //
+        Task<bool> ConfirmOrderAsync(int orderId);
+
+        Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus);
+
+        Task<bool> CancelOrderAsync(int orderId);
+
+        Task<FraudAnalysis?> GetOrderRiskAnalysisAsync(int orderId);
     }
 }

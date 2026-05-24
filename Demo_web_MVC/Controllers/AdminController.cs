@@ -1,4 +1,5 @@
-﻿using Demo_web_MVC.Service.Admin;
+﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Service.Admin;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo_web_MVC.Controllers
@@ -86,6 +87,63 @@ namespace Demo_web_MVC.Controllers
             var model = await _adminDashboardService.GetProductManagementAsync(1, 10);
 
             return PartialView("ProductManagement", model);
+        }
+        // 
+        [HttpPost]
+        public async Task<IActionResult> ConfirmOrder(int orderId)
+        {
+            await _adminDashboardService.ConfirmOrderAsync(orderId);
+
+            var model = await _adminDashboardService
+                .GetOrderManagementAsync(1, 10);
+
+            return PartialView("OrderManagement", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            await _adminDashboardService.CancelOrderAsync(orderId);
+
+            var model = await _adminDashboardService
+                .GetOrderManagementAsync(1, 10);
+
+            return PartialView("OrderManagement", model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> UpdateOrderStatusModal(int orderId)
+        {
+            var model = await _adminDashboardService
+                .GetOrderDetailManagementAsync(orderId);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("UpdateOrderStatus", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, OrderStatus newStatus)
+        {
+            await _adminDashboardService
+                .UpdateOrderStatusAsync(orderId, newStatus);
+
+            var model = await _adminDashboardService
+                .GetOrderManagementAsync(1, 10);
+
+            return PartialView("OrderManagement", model);
+        }
+        public async Task<IActionResult> OrderRiskAnalysis(int orderId)
+        {
+            var model = await _adminDashboardService
+                .GetOrderRiskAnalysisAsync(orderId);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("OrderRiskAnalysis", model);
         }
     }
 }

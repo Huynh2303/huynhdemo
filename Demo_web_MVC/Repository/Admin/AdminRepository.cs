@@ -529,12 +529,124 @@ namespace Demo_web_MVC.Repository.Admin
 
             return true;
         }
+        //
+        public async Task<bool> ConfirmOrderAsync(int orderId)
+        {
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId);
 
+            if (order == null)
+            {
+                return false;
+            }
 
+            if (order.Status != OrderStatus.Pending)
+            {
+                return false;
+            }
 
+            var oldStatus = order.Status;
 
+            order.Status = OrderStatus.Confirmed;
 
+            _context.OrderLogs.Add(new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = oldStatus.ToString(),
+                Status = order.Status.ToString(),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                ActionBy = "Admin",
+                ChangeType = "Confirm",
+                Reason = "Admin xác nhận đơn hàng"
+            });
 
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
+        {
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
+
+            if (order.Status == OrderStatus.Cancelled ||
+                order.Status == OrderStatus.Completed)
+            {
+                return false;
+            }
+
+            var oldStatus = order.Status;
+
+            order.Status = newStatus;
+
+            _context.OrderLogs.Add(new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = oldStatus.ToString(),
+                Status = newStatus.ToString(),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                ActionBy = "Admin",
+                ChangeType = "UpdateStatus",
+                Reason = "Admin cập nhật trạng thái đơn hàng"
+            });
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> CancelOrderAsync(int orderId)
+        {
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
+
+            if (order.Status == OrderStatus.Completed ||
+                order.Status == OrderStatus.Cancelled)
+            {
+                return false;
+            }
+
+            var oldStatus = order.Status;
+
+            order.Status = OrderStatus.Cancelled;
+
+            _context.OrderLogs.Add(new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = oldStatus.ToString(),
+                Status = order.Status.ToString(),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                ActionBy = "Admin",
+                ChangeType = "Cancel",
+                Reason = "Admin hủy đơn hàng"
+            });
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<FraudAnalysis?> GetOrderRiskAnalysisAsync(int orderId)
+        {
+            return await _context.FraudAnalyses
+                .AsNoTracking()
+                .Where(f => f.OrderId == orderId)
+                .OrderByDescending(f => f.CreatedAt)
+                .FirstOrDefaultAsync();
+        }
 
 
 

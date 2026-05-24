@@ -185,9 +185,79 @@
                                                 </span>
                                             </button>
 
-                                            <button class="p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-all ml-1">
-                                                <span class="material-symbols-outlined">more_vert</span>
+                                <div class="relative inline-block">
+
+                                    <button type="button"
+                                            class="order-action-toggle p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-all ml-1">
+                                        <span class="material-symbols-outlined">
+                                            more_vert
+                                        </span>
+                                    </button>
+
+                                    <div class="order-action-menu hidden absolute right-0 top-12 w-56 bg-white border border-outline-variant rounded-xl shadow-xl overflow-hidden z-50">
+
+                                        @if (order.Status == OrderStatus.Pending)
+                                        {
+                                            <button type="button"
+                                                    class="confirm-order-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-green-50 transition-colors"
+                                                    data-order-id="@order.Id">
+
+                                                <span class="material-symbols-outlined text-green-600">
+                                                    check_circle
+                                                </span>
+
+                                                <span class="text-sm text-gray-700">
+                                                    Xác nhận đơn
+                                                </span>
                                             </button>
+                                        }
+
+                                        @if (order.Status != OrderStatus.Cancelled &&
+                                                                        order.Status != OrderStatus.Completed)
+                                        {
+                                            <button type="button"
+                                                    class="update-order-status-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition-colors"
+                                                    data-order-id="@order.Id">
+
+                                                <span class="material-symbols-outlined text-blue-600">
+                                                    local_shipping
+                                                </span>
+
+                                                <span class="text-sm text-gray-700">
+                                                    Cập nhật trạng thái
+                                                </span>
+                                            </button>
+
+                                            <button type="button"
+                                                    class="cancel-order-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors"
+                                                    data-order-id="@order.Id">
+
+                                                <span class="material-symbols-outlined text-red-600">
+                                                    cancel
+                                                </span>
+
+                                                <span class="text-sm text-gray-700">
+                                                    Hủy đơn
+                                                </span>
+                                            </button>
+                                        }
+
+                                        <button type="button"
+                                                class="risk-analysis-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-yellow-50 transition-colors"
+                                                data-order-id="@order.Id">
+
+                                            <span class="material-symbols-outlined text-yellow-600">
+                                                warning
+                                            </span>
+
+                                            <span class="text-sm text-gray-700">
+                                                Phân tích rủi ro
+                                            </span>
+                                        </button>
+
+                                    </div>
+
+                                </div>
                                         </td>
                                     </tr>
                                 }
