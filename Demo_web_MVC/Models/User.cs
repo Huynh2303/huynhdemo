@@ -26,6 +26,10 @@ public partial class User
     public int FailedLoginCount { get; set; }
 
     public DateTime? LockoutUntil { get; set; }
+    public bool IsVip { get; set; } = false;
+    public DateTime? DateOfBirth { get; set; }
+
+    public int? LastBirthdayEmailYear { get; set; }
 
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
@@ -38,4 +42,5 @@ public partial class User
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     public UserImage? UserImage { get; set; }
+    public virtual ICollection<Product> SellerProducts { get; set; } = new List<Product>();
 }

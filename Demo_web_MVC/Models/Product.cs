@@ -8,6 +8,7 @@ public partial class Product
     public int Id { get; set; }
 
     public int CategoryId { get; set; }
+    public int? SellerId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -22,4 +23,5 @@ public partial class Product
     public virtual ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
     public ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     public bool IsDeleted { get; set; } = false;
+    public virtual User? Seller { get; set; } 
 }

@@ -307,6 +307,12 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_products_category");
+                // Quan hệ seller - product
+                entity.HasOne(d => d.Seller)
+                    .WithMany(u => u.SellerProducts)
+                    .HasForeignKey(d => d.SellerId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("fk_products_seller");
                 entity.HasQueryFilter(e => !e.IsDeleted);
             });
 
@@ -389,6 +395,7 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_userimages_user");
             });
+            
 
         }
 
