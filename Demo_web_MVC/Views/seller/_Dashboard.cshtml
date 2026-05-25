@@ -109,15 +109,10 @@
                                     @riskText
                                 </span>
 
-                                @* @if (order.FraudAnalysis != null)
-                                {
-                                    <div class="text-[10px] text-gray-500 mt-1">
-                                        @order.FraudAnalysis.RiskScore.ToString("P0")
-                                    </div>
-                                } *@
+                               
                             </td>
                             <!-- Hiển thị Price (Giá) -->
-                            @* <td class="p-md text-right font-price-lg text-price-lg">@order.TotalAmount</td> *@
+                            
                             <td class="p-md text-right font-price-lg text-price-lg">
                                 @(order.TotalAmount >= 1000000
                                                             ? $"{order.TotalAmount / 1000000m:0.#}M"
@@ -154,7 +149,15 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="font-label-bold text-label-bold text-on-surface truncate">@item.Name</p>
-                        <p class="text-primary font-price-lg text-price-lg">@item?.Variants?.FirstOrDefault()?.Price</p>
+                        <p class="text-primary font-price-lg text-price-lg truncate max-w-[170px]">
+                            @{
+                                var price = item?.Variants?.FirstOrDefault()?.Price ?? 0;
+                            }
+
+                        @(price >= 1000000
+                                                ? $"{price / 1000000m:0.#}M".Replace(".", ",")
+                                                : $"{price:N0}đ")
+                    </p>
                         <p class="text-body-sm text-on-surface-variant">Kho: @item?.Variants?.FirstOrDefault()?.Stock</p>
                     </div>
                     <div class="flex flex-col gap-xs">
@@ -172,63 +175,10 @@
             }
 
 
-            <div class="flex items-center gap-md p-sm rounded-lg hover:bg-surface-container-low transition-all">
-                <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                    <img alt="Headphones" class="w-full h-full object-cover" data-alt="A set of professional studio headphones in matte black with chrome accents, resting on a minimalist desk surface. The background is a soft-focus modern studio environment with cool blue backlighting. The image is captured with professional product lighting, emphasizing the textures and the sleek, energetic brand identity of a high-tech electronics dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWvnR6douhdZO22wAgTql0HWLyk9SqMoKVpW_JKtDmaqFn03fwQmu9GbP8aunCHfjtePnw7lwuaAb0VYoZ72Rr59E5k-8VBzOy8QobS1CzYwhSUqKITjBDKa5d2e0Q2c_BM2L41Fty-ZOYKxH9t1_eWHtOYJVuuBc65yxQ-Ylm-fKd_ZnKN5MubdnVr3Tfx9CSU0wJrr2KLLFeD5eVW8aEDDBAt0harQRix9lq6WMLnjtTigBqcV9Qo67U_qw-o-oLcBTfRQfOXI6G" />
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="font-label-bold text-label-bold text-on-surface truncate">Tai nghe chống ồn Bass Boost</p>
-                    <p class="text-primary font-price-lg text-price-lg">1.250.000 đ</p>
-                    <p class="text-body-sm text-on-surface-variant">Kho: 12</p>
-                </div>
-                <div class="flex flex-col gap-xs">
-                    <button class="material-symbols-outlined text-outline hover:text-primary transition-colors text-[20px]" data-icon="edit">edit</button>
-                    <button class="material-symbols-outlined text-outline hover:text-error transition-colors text-[20px]" data-icon="delete">delete</button>
-                </div>
-            </div>
-            <div class="flex items-center gap-md p-sm rounded-lg hover:bg-surface-container-low transition-all">
-                <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                    <img alt="Camera" class="w-full h-full object-cover" data-alt="A vintage-style digital mirrorless camera with a leather wrap and silver body, positioned on a clean marble surface. Soft sunlight streams in from the side, creating long shadows and high-contrast highlights. The overall vibe is clean, minimal, and premium, utilizing a color palette of white, silver, and deep blue accents to match the modern admin interface style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqvgD1vJ4nS4JatSzu6aysQ7nbRKNuGzFiUnOf9GjCY92onswxauWl9BYpwnhtTi8zmEmqxfx6-CMo74TIKlEDDIMpxmMKfTa-LxKYyYwCKbUTjJNkPLMirGoRpOWqn5X1Rmj1P216aFp9PRdPsW0blaPzCY26HlLD4cJbuL8rYWupCowXzbaLkPdV1QmlCp_MdOqrKVJejTk6daqD-9ChJyM0qYK7eFofzxBDx52nVxcxvEImk0IhHIjXbvcA8ZP2-94WaW8OYBar" />
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="font-label-bold text-label-bold text-on-surface truncate">Máy ảnh Mirrorless Retro</p>
-                    <p class="text-primary font-price-lg text-price-lg">18.900.000 đ</p>
-                    <p class="text-body-sm text-on-surface-variant">Kho: 5</p>
-                </div>
-                <div class="flex flex-col gap-xs">
-                    <button class="material-symbols-outlined text-outline hover:text-primary transition-colors text-[20px]" data-icon="edit">edit</button>
-                    <button class="material-symbols-outlined text-outline hover:text-error transition-colors text-[20px]" data-icon="delete">delete</button>
-                </div>
-            </div>
+            
         </div>
         <div class="p-md bg-surface-container-low text-center">
             <a asp-action="ProductsManager" asp-controller="Seller" class="text-primary font-label-bold text-label-bold hover:underline">Quản lý kho hàng</a>
         </div>
     </div>
 </div>
-<!-- Footer Area -->
-<footer class="mt-xl p-xl bg-surface-container rounded-xl grid grid-cols-1 md:grid-cols-4 gap-lg">
-    <div>
-        <h4 class="font-label-bold text-label-bold text-primary mb-md">Về Seller Pro</h4>
-        <p class="text-body-sm text-on-surface-variant">Hệ thống quản lý bán hàng thông minh hàng đầu cho các nhà bán lẻ hiện đại.</p>
-    </div>
-    <div>
-        <h4 class="font-label-bold text-label-bold text-primary mb-md">Hỗ trợ</h4>
-        <ul class="text-body-sm text-on-surface-variant space-y-sm">
-            <li><a class="hover:text-primary transition-colors" href="#">Trung tâm trợ giúp</a></li>
-            <li><a class="hover:text-primary transition-colors" href="#">Cộng đồng người bán</a></li>
-        </ul>
-    </div>
-    <div>
-        <h4 class="font-label-bold text-label-bold text-primary mb-md">Pháp lý</h4>
-        <ul class="text-body-sm text-on-surface-variant space-y-sm">
-            <li><a class="hover:text-primary transition-colors" href="#">Chính sách bảo mật</a></li>
-            <li><a class="hover:text-primary transition-colors" href="#">Điều khoản dịch vụ</a></li>
-        </ul>
-    </div>
-    <div>
-        <h4 class="font-label-bold text-label-bold text-primary mb-md">Liên hệ</h4>
-        <p class="text-body-sm text-on-surface-variant">hotline: 1900 1234</p>
-        <p class="text-body-sm text-on-surface-variant">Email: support@sellerpro.vn</p>
-    </div>
-</footer>

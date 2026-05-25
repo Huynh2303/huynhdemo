@@ -27,6 +27,17 @@ namespace Demo_web_MVC.Controllers
             _OderService = oderService;
             _cartService = cartService;
         }
+        private int? GetSellerIdFromClaims()
+        {
+            var sellerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(sellerId))
+            {
+                return null;
+            }
+
+            return int.Parse(sellerId);
+        }
         private int? GetUserIdFromClaims()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -81,33 +92,33 @@ namespace Demo_web_MVC.Controllers
             return View(productDetails);
         }
         
-        [HttpPost]
-        [Authorize(Roles = "ADMIN, STAFF")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (id <= 0)
-            {
-                return NotFound("không có id ");
-            }
-            try
-            {
+        //[HttpPost]
+        //[Authorize(Roles = "ADMIN, STAFF")]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    if (id <= 0)
+        //    {
+        //        return NotFound("không có id ");
+        //    }
+        //    try
+        //    {
 
-                var result = await _productService.delete(id);
-                if (!result)
-                {
-                    TempData["Error"] = "Không tìm thấy sản phẩm để xóa.";
-                    return RedirectToAction(nameof(Index));
-                }
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
+        //        var result = await _productService.delete(id);
+        //        if (!result)
+        //        {
+        //            TempData["Error"] = "Không tìm thấy sản phẩm để xóa.";
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch (Exception ex)
+        //    {
                 
-                ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
-                Console.WriteLine($"Error deleting product: {ex.Message}");
-                return RedirectToAction("Index");
-            }
-        }
+        //        ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
+        //        Console.WriteLine($"Error deleting product: {ex.Message}");
+        //        return RedirectToAction("Index");
+        //    }
+        //}
         
 
         

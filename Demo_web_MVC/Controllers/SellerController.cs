@@ -50,10 +50,26 @@ namespace Demo_web_MVC.Controllers
             var cartItems = await _cartService.GetCartItems(userId.Value);
             return cartItems.Count;
         }
+        private int? GetSellerIdFromClaims()
+        {
+            var sellerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(sellerId))
+            {
+                return null;
+            }
+
+            return int.Parse(sellerId);
+        }
         public async Task<IActionResult> Dashboard()
         {
-            
-            var dashboardData = await _service.GetOrdersAndProductsAsync();
+            var sellerId = GetSellerIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            var dashboardData = await _service.GetOrdersAndProductsAsync(sellerId.Value);
 
            
             var totalOrders = dashboardData.Orders.Count;
@@ -75,19 +91,23 @@ namespace Demo_web_MVC.Controllers
         }
         public async Task<IActionResult> ProductsManager()
         {
-          
-            var productsManagerViewModel = await _service.GetProductsManagerAsync();
-            
+            var sellerId = GetUserIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var productsManagerViewModel = await _service
+                .GetProductsManagerAsync(sellerId.Value);
+
             var totalProducts = productsManagerViewModel.Products.Count;
-            var cartCount = await GetCartCount();
-            ViewBag.CartCount = cartCount;
 
+            var lowStockProductsCount = productsManagerViewModel.Products
+                .Count(p => p.Variants != null && p.Variants.Any(v => v.Stock < 5));
 
-            
-            var lowStockProductsCount = productsManagerViewModel.Products.Count(p => p.Variants!.Any(v=>v.Stock<5));
-
+            ViewBag.CartCount = await GetCartCount();
             ViewBag.TotalProducts = totalProducts;
-            
             ViewBag.LowStockProducts = lowStockProductsCount;
 
             return View(productsManagerViewModel);
@@ -193,7 +213,14 @@ namespace Demo_web_MVC.Controllers
                         }
                     }
 
-                    var result = await _productService.creat(productVM);
+                    var sellerId = GetSellerIdFromClaims();
+
+                    if (sellerId == null)
+                    {
+                        return RedirectToAction("Login", "Auth");
+                    }
+
+                    var result = await _productService.creat(productVM, sellerId.Value);
 
                     if (result == null)
                     {
@@ -222,7 +249,15 @@ namespace Demo_web_MVC.Controllers
         }
         public async Task<IActionResult> DetailsOrder(int orderId)
         {
-            var orderDetails = await _service.GetDetailsOrderDashboardViewmodelAsync(orderId);
+            var sellerId = GetUserIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var orderDetails = await _service
+                .GetDetailsOrderDashboardViewmodelAsync(orderId, sellerId.Value);
 
             if (orderDetails == null || !orderDetails.Any())
             {
@@ -235,52 +270,102 @@ namespace Demo_web_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateOrderStatus(int orderId)
         {
-            var result = await _oderService.CreateAsync(orderId);
+            var sellerId = GetSellerIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var result = await _oderService
+                .CreateAsync(orderId, sellerId.Value);
 
             if (!result)
             {
                 TempData["Error"] = "Không thể cập nhật trạng thái đơn hàng.";
-                return RedirectToAction("DetailsOrder", "Seller", new { orderId = orderId });
+
+                return RedirectToAction(
+                    "DetailsOrder",
+                    "Seller",
+                    new { orderId = orderId });
             }
 
             TempData["Success"] = "Đơn hàng đã được chuyển sang trạng thái đang giao.";
-            return RedirectToAction("DetailsOrder", "Seller", new { orderId = orderId });
+
+            return RedirectToAction(
+                "DetailsOrder",
+                "Seller",
+                new { orderId = orderId });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
-            var result = await _oderService.DeleteOrderAsync(orderId);
+            var sellerId = GetSellerIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var result = await _oderService
+                .DeleteOrderAsync(orderId, sellerId.Value);
 
             if (!result)
             {
                 TempData["Error"] = "Không thể hủy đơn hàng.";
-                return RedirectToAction("DetailsOrder","Seller", new { orderId = orderId });
+
+                return RedirectToAction(
+                    "DetailsOrder",
+                    "Seller",
+                    new { orderId = orderId });
             }
 
             TempData["Success"] = "Đơn hàng đã được hủy thành công.";
-            return RedirectToAction("DetailsOrder", "Seller", new { orderId = orderId });
+
+            return RedirectToAction(
+                "DetailsOrder",
+                "Seller",
+                new { orderId = orderId });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var result = await _productService.delete(id);
+            var sellerId = GetSellerIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var result = await _productService
+                .delete(id, sellerId.Value);
 
             if (!result)
             {
                 TempData["Error"] = "Không thể xóa sản phẩm.";
+
                 return RedirectToAction("ProductsManager");
             }
 
             TempData["Success"] = "Đã xóa sản phẩm thành công.";
+
             return RedirectToAction("ProductsManager");
         }
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _productService.getbyid(id);
+            var sellerId = GetSellerIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var product = await _productService
+                .getbyidForSeller(id, sellerId.Value);
 
             if (product == null)
             {
@@ -379,7 +464,13 @@ namespace Demo_web_MVC.Controllers
                     }
                 }
 
-                await _productService.update(id, model);
+                var sellerId = GetSellerIdFromClaims();
+
+                if (sellerId == null)
+                {
+                    return RedirectToAction("Login", "Auth");
+                }
+                await _productService.update(id, model, sellerId.Value);
 
                 return RedirectToAction("ProductsManager");
             }
@@ -394,15 +485,24 @@ namespace Demo_web_MVC.Controllers
         }
         public async Task<IActionResult> Statistics()
         {
-            var statistics = await _service.GetStatisticsAsync();
-            var total = await _service.GetOrdersAndProductsAsync();
+            var sellerId = GetSellerIdFromClaims();
+
+            if (sellerId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var statistics = await _service.GetStatisticsAsync(sellerId.Value);
+
+            var total = await _service.GetOrdersAndProductsAsync(sellerId.Value);
+
             ViewBag.TotalOrdersAllTime = total.Orders.Count;
             ViewBag.TotalRevenueAllTime = total.Orders.Sum(o => o.TotalAmount);
             ViewBag.TotalProductsAllTime = total.Products.Count;
-            var cartCount = await GetCartCount();
-            ViewBag.CartCount = cartCount;
-            return View(statistics); 
+            ViewBag.CartCount = await GetCartCount();
+
+            return View(statistics);
         }
-       
+
     }
 }

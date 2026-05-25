@@ -5,9 +5,9 @@ namespace Demo_web_MVC.Repository.Dashboard
 {
     public interface IDashboardRepository
     {
-        Task<DashboardViewModel> GetOrdersAndProductsAsync();
-        Task<ProductsManagerViewModel> GetProductsManagerAsync();
-        Task<List<DetailsOrderDashboardViewmodel>> GetDetailsOrderDashboardViewmodelAsync(int orderId);
-        Task<StatisticsViewModel> GetDashboardStatisticsAsync();
+        Task<DashboardViewModel> GetOrdersAndProductsAsync(int sellerId);
+        Task<ProductsManagerViewModel> GetProductsManagerAsync(int sellerId);
+        Task<List<DetailsOrderDashboardViewmodel>> GetDetailsOrderDashboardViewmodelAsync(int orderId, int sellerId);
+        Task<StatisticsViewModel> GetDashboardStatisticsAsync(int sellerId);
     }
 }

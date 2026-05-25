@@ -399,68 +399,52 @@ namespace Demo_web_MVC.Repository.Oder
             return orders;
         }
         //người bán
-        public async Task<bool> DeleteOrderAsync(int orderId)
+        public async Task<bool> DeleteOrderAsync(int orderId, int sellerId)
         {
-            
             var order = await _context.Orders
-                                      .Where(o => o.Id == orderId)
-                                      .FirstOrDefaultAsync();
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Variant)
+                        .ThenInclude(v => v.Product)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
 
-            
             if (order == null)
             {
                 _logger.LogWarning("Không tìm thấy đơn hàng với orderId={OrderId}", orderId);
-                return false;  
-            }
-
-            
-            var status = OrderStatus.Cancelled.ToString();
-
-            
-            var update = await UpdateOrderStatusAsync(orderId, status);
-
-            if (update)  
-            {
-                _logger.LogInformation("Đơn hàng với orderId={OrderId} đã bị hủy thành công.", orderId);
-                return true;
-            }
-
-            _logger.LogWarning("Không thể cập nhật trạng thái đơn hàng orderId={OrderId} thành Cancelled", orderId);
-            return false;
-        }
-        public async Task<bool> CreateAsync(int orderId)
-        {
-           
-            var order = await _context.Orders
-                                      .Where(o => o.Id == orderId)
-                                      .FirstOrDefaultAsync();
-
-           
-            if (order == null)
-            {
-                _logger.LogError("Không tìm thấy đơn hàng với orderId={OrderId}", orderId);
                 return false;
             }
 
-            
-            if (order.Status != OrderStatus.Pending && order.Status != OrderStatus.Confirmed)
+            // Kiểm tra đơn này có sản phẩm của seller không
+            var isSellerOrder = order.OrderItems.Any(oi =>
+                oi.Variant.Product.SellerId == sellerId);
+
+            if (!isSellerOrder)
             {
-                _logger.LogWarning("Không thể nhận đơn. Đơn hàng không ở trạng thái hợp lệ (Pending/Confirmed). orderId={OrderId}, Status={Status}", orderId, order.Status);
+                _logger.LogWarning(
+                    "Seller {SellerId} không có quyền hủy orderId={OrderId}",
+                    sellerId,
+                    orderId);
+
                 return false;
             }
+
+            if (order.Status == OrderStatus.Cancelled)
+            {
+                _logger.LogWarning("Đơn hàng orderId={OrderId} đã bị hủy trước đó.", orderId);
+                return false;
+            }
+
             var previousStatus = order.Status;
 
-            
-            order.Status = OrderStatus.Shipping;
+            order.Status = OrderStatus.Cancelled;
 
             var orderLog = new OrderLog
             {
                 OrderId = order.Id,
                 PreviousStatus = previousStatus.ToString(),
                 Status = order.Status.ToString(),
-                ChangeType = "SHIPPING_ORDER",
-                ActionBy = "System",
-                Reason = "Order shipping",
+                ChangeType = "CANCEL_ORDER",
+                ActionBy = $"SellerId:{sellerId}",
+                Reason = "Seller hủy đơn hàng",
                 AdditionalInfo = null,
                 CreatedAt = DateTime.Now
             };
@@ -469,8 +453,76 @@ namespace Demo_web_MVC.Repository.Oder
 
             await _context.SaveChangesAsync();
 
-            
-            _logger.LogInformation("Đơn hàng với orderId={OrderId} đã được chuyển sang trạng thái 'Shipping'.", orderId);
+            _logger.LogInformation(
+                "Seller {SellerId} đã hủy đơn hàng orderId={OrderId}.",
+                sellerId,
+                orderId);
+
+            return true;
+        }
+        public async Task<bool> CreateAsync(int orderId, int sellerId)
+        {
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Variant)
+                        .ThenInclude(v => v.Product)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                _logger.LogError("Không tìm thấy đơn hàng với orderId={OrderId}", orderId);
+                return false;
+            }
+
+            // Kiểm tra đơn này có sản phẩm của seller không
+            var isSellerOrder = order.OrderItems.Any(oi =>
+                oi.Variant.Product.SellerId == sellerId);
+
+            if (!isSellerOrder)
+            {
+                _logger.LogWarning(
+                    "Seller {SellerId} không có quyền cập nhật orderId={OrderId}",
+                    sellerId,
+                    orderId);
+
+                return false;
+            }
+
+            if (order.Status != OrderStatus.Pending &&
+                order.Status != OrderStatus.Confirmed)
+            {
+                _logger.LogWarning(
+                    "Không thể nhận đơn. Đơn hàng không ở trạng thái hợp lệ. orderId={OrderId}, Status={Status}",
+                    orderId,
+                    order.Status);
+
+                return false;
+            }
+
+            var previousStatus = order.Status;
+
+            order.Status = OrderStatus.Shipping;
+
+            var orderLog = new OrderLog
+            {
+                OrderId = order.Id,
+                PreviousStatus = previousStatus.ToString(),
+                Status = order.Status.ToString(),
+                ChangeType = "SHIPPING_ORDER",
+                ActionBy = $"SellerId:{sellerId}",
+                Reason = "Seller nhận đơn và chuyển sang Shipping",
+                AdditionalInfo = null,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.OrderLogs.Add(orderLog);
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Seller {SellerId} đã chuyển orderId={OrderId} sang Shipping.",
+                sellerId,
+                orderId);
 
             return true;
         }

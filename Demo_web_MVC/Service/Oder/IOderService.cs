@@ -17,8 +17,8 @@ namespace Demo_web_MVC.Service.Oder
         Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId);
         
         Task<List<OderViewModel>> GetAllOrders(int userId, string status);
-        Task<bool> CreateAsync(int orderId);
+        Task<bool> CreateAsync(int orderId, int sellerId);
 
-        Task<bool> DeleteOrderAsync(int orderId);
+        Task<bool> DeleteOrderAsync(int orderId, int sellerId);
     }
 }

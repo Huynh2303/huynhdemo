@@ -193,7 +193,7 @@ namespace Demo_web_MVC.Service.Oder
            
             return orders;
         }
-        public async Task<bool> CreateAsync(int orderId)
+        public async Task<bool> CreateAsync(int orderId, int sellerId)
         {
             if (orderId <= 0)
             {
@@ -201,19 +201,34 @@ namespace Demo_web_MVC.Service.Oder
                 return false;
             }
 
-            var result = await _oderRepository.CreateAsync(orderId);
-
-            if (!result)
+            if (sellerId <= 0)
             {
-                _logger.LogWarning("Service: Không thể cập nhật đơn hàng sang Shipping. orderId={OrderId}", orderId);
+                _logger.LogWarning("SellerId không hợp lệ: {SellerId}", sellerId);
                 return false;
             }
 
-            _logger.LogInformation("Service: Cập nhật đơn hàng sang Shipping thành công. orderId={OrderId}", orderId);
+            var result = await _oderRepository
+                .CreateAsync(orderId, sellerId);
+
+            if (!result)
+            {
+                _logger.LogWarning(
+                    "Service: Seller {SellerId} không thể cập nhật đơn hàng sang Shipping. orderId={OrderId}",
+                    sellerId,
+                    orderId);
+
+                return false;
+            }
+
+            _logger.LogInformation(
+                "Service: Seller {SellerId} cập nhật đơn hàng sang Shipping thành công. orderId={OrderId}",
+                sellerId,
+                orderId);
+
             return true;
         }
 
-        public async Task<bool> DeleteOrderAsync(int orderId)
+        public async Task<bool> DeleteOrderAsync(int orderId, int sellerId)
         {
             if (orderId <= 0)
             {
@@ -221,15 +236,30 @@ namespace Demo_web_MVC.Service.Oder
                 return false;
             }
 
-            var result = await _oderRepository.DeleteOrderAsync(orderId);
-
-            if (!result)
+            if (sellerId <= 0)
             {
-                _logger.LogWarning("Service: Không thể hủy đơn hàng. orderId={OrderId}", orderId);
+                _logger.LogWarning("SellerId không hợp lệ: {SellerId}", sellerId);
                 return false;
             }
 
-            _logger.LogInformation("Service: Hủy đơn hàng thành công. orderId={OrderId}", orderId);
+            var result = await _oderRepository
+                .DeleteOrderAsync(orderId, sellerId);
+
+            if (!result)
+            {
+                _logger.LogWarning(
+                    "Service: Seller {SellerId} không thể hủy đơn hàng. orderId={OrderId}",
+                    sellerId,
+                    orderId);
+
+                return false;
+            }
+
+            _logger.LogInformation(
+                "Service: Seller {SellerId} hủy đơn hàng thành công. orderId={OrderId}",
+                sellerId,
+                orderId);
+
             return true;
         }
     }

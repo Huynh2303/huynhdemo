@@ -21,7 +21,7 @@ namespace Demo_web_MVC.Repository.Oder
         //Task<List<OrderItemViewModel>> GetOrderItemsAsync(int orderId);
         Task<CheckoutViewModel> CheckOutAsync (int userId,List<int> selectedCartItemIds);
         Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId);
-        Task<bool> DeleteOrderAsync(int orderId); // Xóa đơn hàng
-        Task<bool> CreateAsync(int orderId);
+        Task<bool> DeleteOrderAsync(int orderId, int sellerId); // Xóa đơn hàng
+        Task<bool> CreateAsync(int orderId, int sellerId);
     }
 }

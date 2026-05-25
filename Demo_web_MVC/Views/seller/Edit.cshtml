@@ -25,143 +25,7 @@
         : "/uploads/images/vidu.jpg";
 }
 
-<!DOCTYPE html>
-<html class="light" lang="vi">
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Chỉnh sửa sản phẩm | AdminPanel</title>
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "surface-dim": "#d6dae0",
-                        "on-primary": "#ffffff",
-                        "surface-bright": "#f5faff",
-                        "primary-container": "#00aeef",
-                        "surface-container-highest": "#dee3e8",
-                        "error": "#ba1a1a",
-                        "outline": "#6e7881",
-                        "inverse-surface": "#2c3135",
-                        "on-background": "#171c20",
-                        "background": "#f5faff",
-                        "surface-container": "#eaeef4",
-                        "primary": "#00658d",
-                        "on-surface": "#171c20",
-                        "secondary": "#5d5f5f",
-                        "surface": "#f5faff",
-                        "outline-variant": "#bdc8d1",
-                        "error-container": "#ffdad6",
-                        "surface-container-low": "#eff4fa",
-                        "surface-container-lowest": "#ffffff",
-                        "surface-container-high": "#e4e9ee",
-                        "on-surface-variant": "#3e4850",
-                        "on-primary-container": "#003e58"
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.25rem",
-                        lg: "0.5rem",
-                        xl: "0.75rem",
-                        full: "9999px"
-                    },
-                    spacing: {
-                        xs: "4px",
-                        sm: "8px",
-                        md: "16px",
-                        lg: "24px",
-                        xl: "48px"
-                    },
-                    fontFamily: {
-                        "label-bold": ["Be Vietnam Pro"],
-                        "headline-md": ["Be Vietnam Pro"],
-                        "display-lg": ["Be Vietnam Pro"],
-                        "body-base": ["Be Vietnam Pro"],
-                        "body-sm": ["Be Vietnam Pro"]
-                    },
-                    fontSize: {
-                        "label-bold": ["12px", { lineHeight: "1.2", letterSpacing: "0.02em", fontWeight: "700" }],
-                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
-                        "headline-md": ["20px", { lineHeight: "1.4", fontWeight: "600" }],
-                        "display-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
-                        "body-base": ["16px", { lineHeight: "1.5", fontWeight: "400" }]
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        .variant-row:hover .variant-actions {
-            opacity: 1;
-        }
-
-        .variant-actions {
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-    </style>
-</head>
-
-<body class="bg-background text-on-surface">
-
-    <div class="flex min-h-screen">
-        <!-- SideNavBar -->
-        <nav class="fixed left-0 top-0 h-screen flex flex-col pt-lg pb-md w-64 z-40 bg-surface-container-lowest border-r border-outline-variant">
-            <div class="px-lg mb-xl flex items-center gap-md">
-                <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-white">shopping_bag</span>
-                </div>
-
-                <div>
-                    <h2 class="font-headline-md text-headline-md text-primary-container">ShopCentral</h2>
-                    <p class="text-[10px] text-on-surface-variant font-medium tracking-wider uppercase">
-                        Management Hub
-                    </p>
-                </div>
-            </div>
-
-            <div class="flex-1 px-md space-y-xs">
-                <a asp-action="Dashboard" asp-controller="Seller" class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 rounded-lg group">
-                    <span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
-                    <span class="font-label-bold text-label-bold">Bảng điều khiển</span>
-                </a>
-
-                <a asp-action="ProductsManager" asp-controller="Seller" class="flex items-center gap-md px-md py-sm bg-primary-container/10 text-primary border-r-4 border-primary rounded-lg translate-x-1 transition-transform">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                    <span class="font-label-bold text-label-bold">Sản phẩm</span>
-                </a>
-                <a asp-action="Statistics" asp-controller="Seller" class="flex items-center gap-md p-md rounded-xl text-on-surface-variant dark:text-outline font-body-base hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200">
-                    <span class="material-symbols-outlined">query_stats</span>
-                    <span class="font-body-base">Thống kê</span>
-                </a>
-            </div>
-
-            <div class="px-md pt-md border-t border-outline-variant">
-                <a asp-action="Logout" asp-controller="User" class="flex items-center gap-md px-md py-sm text-error hover:bg-error-container/10 transition-all duration-200 rounded-lg">
-                    <span class="material-symbols-outlined">logout</span>
-                    <span class="font-label-bold text-label-bold">Đăng xuất</span>
-                </a>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="ml-64 w-full p-lg">
+<div class="space-y-lg">
             <form asp-action="Edit"
                   asp-controller="Seller"
                   asp-route-id="@Model.Id"
@@ -542,7 +406,7 @@
                     </div>
                 </div>
             </form>
-        </main>
+        
     </div>
 
     @section Scripts {
@@ -682,5 +546,5 @@
             removeButton.closest(".variant-row").remove();
         });
     </script>
-</body>
-</html>
+@* </body>
+</html> *@

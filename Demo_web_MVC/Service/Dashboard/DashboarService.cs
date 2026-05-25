@@ -14,11 +14,11 @@ namespace Demo_web_MVC.Service.Dashboard
             _dashboardRepository = dashboardRepository;
             _logger = logger;
         }
-        public async Task<DashboardViewModel> GetOrdersAndProductsAsync()
+        public async Task<DashboardViewModel> GetOrdersAndProductsAsync(int sellerId)
         {
             try
             {
-                var result = await _dashboardRepository.GetOrdersAndProductsAsync();
+                var result = await _dashboardRepository.GetOrdersAndProductsAsync( sellerId);
                 
                 return result;
             }
@@ -28,18 +28,18 @@ namespace Demo_web_MVC.Service.Dashboard
                 return null; // Hoặc trả về một đối tượng mặc định
             }
         }
-        public async Task<ProductsManagerViewModel> GetProductsManagerAsync()
+        public async Task<ProductsManagerViewModel> GetProductsManagerAsync(int sellerId)
         {
-            return await _dashboardRepository.GetProductsManagerAsync();
+            return await _dashboardRepository.GetProductsManagerAsync( sellerId);
         }
-        public async Task<List<DetailsOrderDashboardViewmodel>> GetDetailsOrderDashboardViewmodelAsync(int orderId)
+        public async Task<List<DetailsOrderDashboardViewmodel>> GetDetailsOrderDashboardViewmodelAsync(int orderId, int sellerId)
         {
-            return await _dashboardRepository.GetDetailsOrderDashboardViewmodelAsync(orderId);
+            return await _dashboardRepository.GetDetailsOrderDashboardViewmodelAsync(orderId,  sellerId);
         }
-        public async Task<StatisticsViewModel> GetStatisticsAsync()
+        public async Task<StatisticsViewModel> GetStatisticsAsync(int sellerId)
         {
             
-            var statistics = await _dashboardRepository.GetDashboardStatisticsAsync();
+            var statistics = await _dashboardRepository.GetDashboardStatisticsAsync( sellerId);
             return statistics;
         }
     }

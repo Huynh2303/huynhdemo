@@ -12,153 +12,7 @@
     string orderCode = order != null ? $"DH-{order.OrderId}" : "DH-UNKNOWN";
 }
 
-<!DOCTYPE html>
-<html class="light" lang="vi">
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-
-    <title>AdminPanel - Chi tiết đơn hàng</title>
-
-    <style>
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-    </style>
-
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "surface-container-highest": "#dee3e8",
-                        "secondary-fixed": "#e2e2e2",
-                        "secondary-container": "#dfe0e0",
-                        "on-surface": "#171c20",
-                        "surface-tint": "#00658d",
-                        "on-primary-container": "#003e58",
-                        "secondary-fixed-dim": "#c6c6c7",
-                        "inverse-surface": "#2c3135",
-                        "outline": "#6e7881",
-                        "on-tertiary": "#ffffff",
-                        "tertiary-container": "#ea8c21",
-                        "on-primary": "#ffffff",
-                        "secondary": "#5d5f5f",
-                        "on-background": "#171c20",
-                        "surface-container-low": "#eff4fa",
-                        "surface-container-high": "#e4e9ee",
-                        "surface-dim": "#d6dae0",
-                        "surface-bright": "#f5faff",
-                        "on-surface-variant": "#3e4850",
-                        "surface-container": "#eaeef4",
-                        "primary-container": "#00aeef",
-                        "surface": "#f5faff",
-                        "outline-variant": "#bdc8d1",
-                        "primary": "#00658d",
-                        "error-container": "#ffdad6",
-                        "surface-container-lowest": "#ffffff",
-                        "background": "#f5faff",
-                        "error": "#ba1a1a"
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.25rem",
-                        lg: "0.5rem",
-                        xl: "0.75rem",
-                        full: "9999px"
-                    },
-                    spacing: {
-                        xl: "48px",
-                        sm: "8px",
-                        gutter: "16px",
-                        md: "16px",
-                        lg: "24px",
-                        xs: "4px"
-                    },
-                    fontFamily: {
-                        "price-lg": ["Be Vietnam Pro"],
-                        "label-bold": ["Be Vietnam Pro"],
-                        "body-sm": ["Be Vietnam Pro"],
-                        "display-lg": ["Be Vietnam Pro"],
-                        "body-base": ["Be Vietnam Pro"],
-                        "headline-md": ["Be Vietnam Pro"]
-                    },
-                    fontSize: {
-                        "price-lg": ["24px", { "lineHeight": "1", "fontWeight": "700" }],
-                        "label-bold": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "700" }],
-                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
-                        "display-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
-                        "body-base": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
-                        "headline-md": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }]
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-
-<body class="bg-background text-on-background min-h-screen">
-
-    <aside class="fixed left-0 top-0 h-screen flex flex-col pt-lg pb-md w-64 z-40 bg-surface-container-lowest border-r border-outline-variant shadow-none">
-
-        <div class="mb-xl px-sm">
-            <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Seller Pro</h1>
-            <p class="font-body-sm text-body-sm text-on-surface-variant">Vibrant blue dashboard</p>
-        </div>
-        <nav class="flex-1 space-y-1">
-            <a asp-action="Dashboard" asp-controller="Seller" class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200" >
-                <span class="material-symbols-outlined">dashboard</span>
-                <span class="font-label-bold text-label-bold">Dashboard</span>
-            </a>
-
-            <a asp-action="ProductsManager" asp-controller="Seller" class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200" >
-                <span class="material-symbols-outlined">shopping_bag</span>
-                <span class="font-label-bold text-label-bold">Products</span>
-            </a>
-
-            @* <a class="flex items-center gap-md px-md py-sm bg-primary-container/10 text-primary border-r-4 border-primary translate-x-1 transition-transform" href="#">
-                <span class="material-symbols-outlined">inventory</span>
-                <span class="font-label-bold text-label-bold">Orders</span>
-            </a>
-
-            <a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200" href="#">
-                <span class="material-symbols-outlined">group</span>
-                <span class="font-label-bold text-label-bold">Customers</span>
-            </a>
-
-            <a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-200" href="#">
-                <span class="material-symbols-outlined">analytics</span>
-                <span class="font-label-bold text-label-bold">Statistics</span>
-            </a> *@
-        </nav>
-
-        <div class="px-md mt-auto">
-            <a asp-action="CreateProduct"
-               asp-controller="Seller"
-               class="w-full py-sm bg-primary-container text-white font-label-bold text-label-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-sm">
-                <span class="material-symbols-outlined text-[18px]">add</span>
-                Add Product
-            </a>
-
-            <div class="mt-lg pt-md border-t border-outline-variant">
-                <a asp-action="Logout" asp-controller="User" class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all" >
-                    <span class="material-symbols-outlined">logout</span>
-                    <span class="font-label-bold text-label-bold">Logout</span>
-                </a>
-            </div>
-        </div>
-    </aside>
-
-    <main class="ml-64 min-h-screen">
+<div class="space-y-lg">
         
 
         <div class="p-lg max-w-7xl mx-auto space-y-lg">
@@ -580,11 +434,9 @@
             }
 
         </div>
-    </main>
+ </div>
 
     <div class="hidden fixed bottom-10 right-10 bg-inverse-surface text-white px-lg py-md rounded-xl shadow-2xl flex items-center gap-md z-[100]" id="toast-success">
         <span class="material-symbols-outlined text-green-400" style="font-variation-settings: 'FILL' ;">check_circle</span>
         <p class="font-label-bold">Cập nhật trạng thái thành công!</p>
     </div>
-</body>
-</html>

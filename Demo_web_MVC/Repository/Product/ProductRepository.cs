@@ -170,46 +170,67 @@ namespace Demo_web_MVC.Repository.Product
             }).FirstOrDefaultAsync();
             return product!;
         }
-        public async Task<ProductViewModel> AddAsnyc(ProductViewModel product)
+        public async Task<ProductViewModel> AddAsnyc(
+    ProductViewModel product,
+    int sellerId)
+        {
+            var newProduct = new Models.Product
             {
-                var newProduct = new Models.Product
+                CategoryId = product.CategoryId,
+                SellerId = sellerId,
+
+                Name = product.Name,
+                Description = product.Description,
+                Brand = product.Brand,
+                CreatedAt = DateTime.Now,
+
+                ProductImages = product.imageUrl?.Select(url => new ProductImage
                 {
-                    CategoryId = product.CategoryId,
-                    Name = product.Name,    
-                    Description = product.Description,
-                    Brand = product.Brand,
-                    CreatedAt = DateTime.Now,
-                    ProductImages = product.imageUrl?.Select(url => new ProductImage
-                    {
-                        Url = $"/uploads/products/{url.Trim()}"  // Thêm tiền tố vào mỗi URL
-                    }).ToList() ?? new List<ProductImage>(),
-                    ProductVariants = product.Variants?.Select(v => new ProductVariant
-                    {
-                        Size = v.Size,
-                        Color = v.Color,
-                        Price = v.Price,
-                        Stock = v.Stock,
-                        ProductVariantImages = v.ImageUrlsVariants?.Select(url => new ProductVariantImage { Url = url }).ToList() ?? new List<ProductVariantImage>()
-                    }).ToList() ?? new List<ProductVariant>()
-                };
-            
-                _context.Products.Add(newProduct);
-                await _context.SaveChangesAsync();
-                product.Id = newProduct.Id;
-                return product;
-            }
-        public async Task<ProductViewModel> UpdateAsync(int id, ProductViewModel model)
+                    Url = $"/uploads/products/{url.Trim()}"
+                }).ToList() ?? new List<ProductImage>(),
+
+                ProductVariants = product.Variants?.Select(v => new ProductVariant
+                {
+                    Size = v.Size,
+                    Color = v.Color,
+                    Price = v.Price,
+                    Stock = v.Stock,
+
+                    ProductVariantImages = v.ImageUrlsVariants?
+                        .Select(url => new ProductVariantImage
+                        {
+                            Url = url
+                        })
+                        .ToList() ?? new List<ProductVariantImage>()
+                }).ToList() ?? new List<ProductVariant>()
+            };
+
+            _context.Products.Add(newProduct);
+
+            await _context.SaveChangesAsync();
+
+            product.Id = newProduct.Id;
+
+            return product;
+        }
+        public async Task<ProductViewModel> UpdateAsync(
+    int id,
+    ProductViewModel model,
+    int sellerId)
         {
             var product = await _context.Products
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductVariants)
                     .ThenInclude(v => v.ProductVariantImages)
                 .AsSplitQuery()
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p =>
+                    p.Id == id &&
+                    p.SellerId == sellerId &&
+                    !p.IsDeleted);
 
             if (product == null)
             {
-                throw new Exception("Product not found");
+                throw new Exception("Product not found or seller does not have permission");
             }
 
             var categoryExists = await _context.Categories
@@ -227,7 +248,6 @@ namespace Demo_web_MVC.Repository.Product
             product.Brand = model.Brand;
 
             // 2. Thêm ảnh mới cho sản phẩm nếu có
-            // model.imageUrl là danh sách đường dẫn/tên ảnh đã được upload từ Controller
             if (model.imageUrl != null && model.imageUrl.Any())
             {
                 foreach (var url in model.imageUrl)
@@ -248,19 +268,16 @@ namespace Demo_web_MVC.Repository.Product
             // 3. Update hoặc thêm mới variant
             foreach (var variantVm in inputVariants)
             {
-                // Nếu Id > 0 thì đây là variant cũ
                 var existingVariant = product.ProductVariants
                     .FirstOrDefault(v => v.Id == variantVm.Id && variantVm.Id > 0);
 
                 if (existingVariant != null)
                 {
-                    // Update variant cũ
                     existingVariant.Size = variantVm.Size;
                     existingVariant.Color = variantVm.Color;
                     existingVariant.Price = variantVm.Price;
                     existingVariant.Stock = variantVm.Stock;
 
-                    // Thêm ảnh mới cho variant cũ nếu có
                     if (variantVm.ImageUrlsVariants != null && variantVm.ImageUrlsVariants.Any())
                     {
                         foreach (var url in variantVm.ImageUrlsVariants)
@@ -278,7 +295,6 @@ namespace Demo_web_MVC.Repository.Product
                 }
                 else
                 {
-                    // Thêm variant mới
                     var newVariant = new ProductVariant
                     {
                         ProductId = product.Id,
@@ -289,7 +305,6 @@ namespace Demo_web_MVC.Repository.Product
                         ProductVariantImages = new List<ProductVariantImage>()
                     };
 
-                    // Thêm ảnh cho variant mới nếu có
                     if (variantVm.ImageUrlsVariants != null && variantVm.ImageUrlsVariants.Any())
                     {
                         foreach (var url in variantVm.ImageUrlsVariants)
@@ -318,30 +333,44 @@ namespace Demo_web_MVC.Repository.Product
                 Name = product.Name,
                 Description = product.Description,
                 Brand = product.Brand,
-                imageUrl = product.ProductImages.Select(img => img.Url).ToList(),
 
-                Variants = product.ProductVariants.Select(v => new ProductVariantsViewModel
-                {
-                    Id = v.Id,
-                    ProductId = v.ProductId,
-                    Size = v.Size,
-                    Color = v.Color,
-                    Price = v.Price,
-                    Stock = v.Stock,
-                    ImageUrlsVariants = v.ProductVariantImages.Select(img => img.Url).ToList()
-                }).ToList()
+                imageUrl = product.ProductImages
+                    .Select(img => img.Url)
+                    .ToList(),
+
+                Variants = product.ProductVariants
+                    .Select(v => new ProductVariantsViewModel
+                    {
+                        Id = v.Id,
+                        ProductId = v.ProductId,
+                        Size = v.Size,
+                        Color = v.Color,
+                        Price = v.Price,
+                        Stock = v.Stock,
+
+                        ImageUrlsVariants = v.ProductVariantImages
+                            .Select(img => img.Url)
+                            .ToList()
+                    })
+                    .ToList()
             };
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id, int sellerId)
         {
             try
             {
                 var product = await _context.Products
-                    .FirstOrDefaultAsync(p => p.Id == id);
+                    .FirstOrDefaultAsync(p =>
+                        p.Id == id &&
+                        p.SellerId == sellerId);
 
                 if (product == null)
                 {
-                    _logger.LogWarning("Không tìm thấy sản phẩm với id {ProductId}", id);
+                    _logger.LogWarning(
+                        "Không tìm thấy sản phẩm id {ProductId} của seller {SellerId}",
+                        id,
+                        sellerId);
+
                     return false;
                 }
 
@@ -349,13 +378,21 @@ namespace Demo_web_MVC.Repository.Product
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Đã xóa mềm sản phẩm id {ProductId}", id);
+                _logger.LogInformation(
+                    "Seller {SellerId} đã xóa mềm sản phẩm id {ProductId}",
+                    sellerId,
+                    id);
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi xóa mềm sản phẩm với id {ProductId}", id);
+                _logger.LogError(
+                    ex,
+                    "Lỗi khi seller {SellerId} xóa mềm sản phẩm id {ProductId}",
+                    sellerId,
+                    id);
+
                 return false;
             }
         }
@@ -365,6 +402,54 @@ namespace Demo_web_MVC.Repository.Product
                 .Where(v => v.Id == variantId)
                 .Select(v => (int?)v.ProductId)
                 .FirstOrDefaultAsync();
+        }
+        public async Task<ProductViewModel?> GetByIdForSellerAsync(
+    int id,
+    int sellerId)
+        {
+            var product = await _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductVariants)
+                    .ThenInclude(v => v.ProductVariantImages)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(p =>
+                    p.Id == id &&
+                    p.SellerId == sellerId &&
+                    !p.IsDeleted);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            return new ProductViewModel
+            {
+                Id = product.Id,
+                CategoryId = product.CategoryId,
+                Name = product.Name,
+                Description = product.Description,
+                Brand = product.Brand,
+
+                imageUrl = product.ProductImages
+                    .Select(img => img.Url)
+                    .ToList(),
+
+                Variants = product.ProductVariants
+                    .Select(v => new ProductVariantsViewModel
+                    {
+                        Id = v.Id,
+                        ProductId = v.ProductId,
+                        Size = v.Size,
+                        Color = v.Color,
+                        Price = v.Price,
+                        Stock = v.Stock,
+
+                        ImageUrlsVariants = v.ProductVariantImages
+                            .Select(img => img.Url)
+                            .ToList()
+                    })
+                    .ToList()
+            };
         }
     }
 }

@@ -8,11 +8,12 @@ namespace Demo_web_MVC.Repository
         Task<List<Models.ViewModel.Product.ProductViewModel>> GetAllAsync();
                               
         Task<Models.ViewModel.Product.ProductViewModel> GetByIdAsync(int id);
-        Task<ProductViewModel> AddAsnyc (ProductViewModel product);
-        Task<ProductViewModel> UpdateAsync(int id,ProductViewModel product);
-        Task<bool> DeleteAsync(int id);
+        Task<ProductViewModel> AddAsnyc (ProductViewModel product, int sellerId);
+        Task<ProductViewModel> UpdateAsync(int id,ProductViewModel product, int sellerId);
+        Task<bool> DeleteAsync(int id, int sellerId);
         Task<ProductViewModel> DetailsAsnyc(int id);
         Task<int?> GetProductIdByVariantIdAsync(int variantId);
+        Task<ProductViewModel?> GetByIdForSellerAsync(int id, int sellerId);
 
     }
 }
