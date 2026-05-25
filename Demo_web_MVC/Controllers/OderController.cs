@@ -126,10 +126,7 @@ namespace Demo_web_MVC.Controllers
                 return RedirectToAction("Details", "Oder", new { orderId });
             }
         }
-        public IActionResult CancelOrder()
-        {
-            return View();
-        }
+        
         [HttpPost]
         public async Task<IActionResult> CancelOrder(int orderId)
         {

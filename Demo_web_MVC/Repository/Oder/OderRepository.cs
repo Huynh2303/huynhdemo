@@ -37,12 +37,13 @@ namespace Demo_web_MVC.Repository.Oder
                 throw new InvalidOperationException("No active cart found for the user.");
             }
 
+            
             var selectedItems = cart.CartItems
                 .Where(ci => selectedCartItemIds.Contains(ci.Id)
                              && ci.Variant != null
-                             && ci.Variant.Product != null)
+                             && ci.Variant.Product != null
+                             && ci.Variant.Product.SellerId != null)
                 .ToList();
-
             if (!selectedItems.Any())
             {
                 throw new InvalidOperationException("No selected items to checkout.");
@@ -52,10 +53,10 @@ namespace Demo_web_MVC.Repository.Oder
                 ? method
                 : PaymentMethod.COD;
 
+            
             var itemsBySeller = selectedItems
-                .GroupBy(ci => ci.Variant.Product.SellerId)
+                .GroupBy(ci => ci.Variant.Product.SellerId!.Value)
                 .ToList();
-
             var firstOrderId = 0;
 
             foreach (var sellerGroup in itemsBySeller)
@@ -130,7 +131,7 @@ namespace Demo_web_MVC.Repository.Oder
                 UserId = order.UserId,
                 TotalAmount = order.TotalAmount,
                 Status = order.Status,
-                CreatedAt = DateTime.Now,
+                CreatedAt = order.CreatedAt,
                 PaymentMethod = order.PaymentMethod,
             };
             return result;
@@ -435,7 +436,7 @@ namespace Demo_web_MVC.Repository.Oder
             }
 
             // Kiểm tra đơn này có sản phẩm của seller không
-            var isSellerOrder = order.OrderItems.Any(oi =>
+            var isSellerOrder = order.OrderItems.All(oi =>
                 oi.Variant.Product.SellerId == sellerId);
 
             if (!isSellerOrder)
@@ -496,7 +497,7 @@ namespace Demo_web_MVC.Repository.Oder
             }
 
             // Kiểm tra đơn này có sản phẩm của seller không
-            var isSellerOrder = order.OrderItems.Any(oi =>
+            var isSellerOrder = order.OrderItems.All(oi =>
                 oi.Variant.Product.SellerId == sellerId);
 
             if (!isSellerOrder)

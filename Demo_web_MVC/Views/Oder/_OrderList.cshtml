@@ -53,12 +53,15 @@
                 }
                 else
                 {
-                    <form asp-action="CancelOrder" asp-controller="Oder" asp-route-orderId="@order.Id" method="post">
-                        <input type="hidden" name="orderId" value="@order.Id" /> <!-- Lưu trữ thông tin orderId trong một trường ẩn -->
-                        <button class="px-lg py-sm border border-outline text-secondary rounded-lg font-label-bold text-label-bold hover:bg-surface-variant transition-all active:scale-95" type="submit">
-                            Hủy đơn
-                        </button>
-                    </form>
+                    @if (order.Status == OrderStatus.Pending)
+                    {
+                        <form asp-action="CancelOrder" asp-controller="Oder" asp-route-orderId="@order.Id" method="post">
+                            <input type="hidden" name="orderId" value="@order.Id" /> <!-- Lưu trữ thông tin orderId trong một trường ẩn -->
+                            <button class="px-lg py-sm border border-outline text-secondary rounded-lg font-label-bold text-label-bold hover:bg-surface-variant transition-all active:scale-95" type="submit">
+                                Hủy đơn
+                            </button>
+                        </form>
+                    }
                 }
                 <a asp-action="Details" asp-controller="Oder" asp-route-orderId="@order.Id" class="px-lg py-sm bg-primary-container text-on-primary-container rounded-lg font-label-bold text-label-bold hover:opacity-90 transition-all active:scale-95 shadow-sm">Xem chi tiết</a>
             </div>
