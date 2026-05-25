@@ -88,16 +88,17 @@ namespace Demo_web_MVC.Data.AppDatabase
                 entity.HasKey(e => e.Id).HasName("PK__Addresse__3214EC0758FDAC5E");
 
                 entity.HasIndex(e => e.UserId, "idx_addresses_userid");
-
                 entity.Property(e => e.AddressLine)
                     .HasMaxLength(255)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
+
                 entity.Property(e => e.City)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
+
                 entity.Property(e => e.Country)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
                 entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("(getdate())")
                     .HasColumnType("datetime");
@@ -118,7 +119,7 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .HasColumnType("datetime");
                 entity.Property(e => e.Status)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
+                    .IsUnicode(true)
                     .HasDefaultValue("active");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Carts)
@@ -159,7 +160,7 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .HasColumnType("datetime");
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                     .HasForeignKey(d => d.ParentId)
@@ -181,14 +182,14 @@ namespace Demo_web_MVC.Data.AppDatabase
 
                 entity.Property(e => e.ModelName)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.RiskScore)
-                    .HasColumnType("decimal(5, 2)");
+                    .HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.RiskLevel)
                     .HasMaxLength(20)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.RiskReasons)
                     .HasColumnType("nvarchar(max)");
@@ -215,7 +216,7 @@ namespace Demo_web_MVC.Data.AppDatabase
                 entity.Property(e => e.Status)
                     .HasConversion<int>()          // 🔥 QUAN TRỌNG
                     .HasDefaultValue(OrderStatus.Pending);
-                entity.Property(e => e.TotalAmount).HasColumnType("decimal(12, 2)");
+                entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
@@ -231,7 +232,7 @@ namespace Demo_web_MVC.Data.AppDatabase
 
                 entity.HasIndex(e => e.VariantId, "idx_orderitems_variantid");
 
-                entity.Property(e => e.Price).HasColumnType("decimal(12, 2)");
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
                 entity.Property(e => e.Quantity).HasDefaultValue(1);
 
                 entity.HasOne(d => d.Order).WithMany(p => p.OrderItems)
@@ -255,7 +256,7 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .HasColumnType("datetime");
                 entity.Property(e => e.Status)
                     .HasMaxLength(20)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.HasOne(d => d.Order).WithMany(p => p.OrderLogs)
                     .HasForeignKey(d => d.OrderId)
@@ -268,16 +269,16 @@ namespace Demo_web_MVC.Data.AppDatabase
 
             //    entity.HasIndex(e => e.OrderId, "idx_payments_orderid");
 
-            //    entity.Property(e => e.Amount).HasColumnType("decimal(12, 2)");
+            //    entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             //    entity.Property(e => e.CreatedAt)
             //        .HasDefaultValueSql("(getdate())")
             //        .HasColumnType("datetime");
             //    entity.Property(e => e.PaymentMethod)
             //        .HasMaxLength(50)
-            //        .IsUnicode(false);
+            //        .IsUnicode(true);
             //    entity.Property(e => e.Status)
             //        .HasMaxLength(20)
-            //        .IsUnicode(false)
+            //        .IsUnicode(true)
             //        .HasDefaultValue("pending");
 
             //    entity.HasOne(d => d.Order).WithMany(p => p.Payments)
@@ -293,14 +294,14 @@ namespace Demo_web_MVC.Data.AppDatabase
 
                 entity.Property(e => e.Brand)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
                 entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("(getdate())")
                     .HasColumnType("datetime");
-                entity.Property(e => e.Description).IsUnicode(false);
+                entity.Property(e => e.Description).IsUnicode(true);
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
                 entity.Property(e => e.IsDeleted)
                     .HasDefaultValue(false);
                 entity.HasOne(d => d.Category).WithMany(p => p.Products)
@@ -324,11 +325,11 @@ namespace Demo_web_MVC.Data.AppDatabase
 
                 entity.Property(e => e.Color)
                     .HasMaxLength(50)
-                    .IsUnicode(false);
-                entity.Property(e => e.Price).HasColumnType("decimal(12, 2)");
+                    .IsUnicode(true);
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
                 entity.Property(e => e.Size)
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.HasOne(d => d.Product).WithMany(p => p.ProductVariants)
                     .HasForeignKey(d => d.ProductId)

@@ -11,41 +11,41 @@
 
         <!-- Filter Tabs -->
         <div class="bg-surface-container-lowest rounded-lg shadow-sm mb-lg overflow-x-auto">
-            <div class="flex min-w-max">
+        <div class="grid grid-cols-5 w-full">
                 
                 <a href="#"
                    data-url="@Url.Action("Index", "Oder", new { status = "All" })"
-                   class="order-tab flex-1 px-lg py-md text-label-bold font-label-bold transition-all">
+               class="order-tab w-full text-center px-lg py-md text-label-bold font-label-bold transition-all">
                     Tất cả
                 </a>
 
                 <a href="#"
                    data-url="@Url.Action("Index", "Oder", new { status = "Pending" })"
-                   class="order-tab flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
+               class="order-tab w-full text-center px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
                     Chờ xử lý
                 </a>
 
                 <a href="#"
                    data-url="@Url.Action("Index", "Oder", new { status = "Shipping" })"
-                   class="order-tab flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
+               class="order-tab w-full text-center px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
                     Đang giao
                 </a>
 
                 <a href="#"
                    data-url="@Url.Action("Index", "Oder", new { status = "Completed" })"
-                   class="order-tab flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
+               class="order-tab w-full text-center px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
                     Đã giao
                 </a>
 
                 <a href="#"
                    data-url="@Url.Action("Index", "Oder", new { status = "Cancelled" })"
-                   class="order-tab flex-1 px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
+               class="order-tab w-full text-center px-lg py-md text-label-bold font-label-bold text-on-surface-variant hover:text-primary transition-all">
                     Đã hủy
                 </a>
             </div>
         </div>
         <!-- Order List -->
-        <div id="order-list-container" class="space-y-md">
+    <div id="order-list-container" class="w-full space-y-md">
 
 
 
