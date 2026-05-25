@@ -28,75 +28,90 @@ namespace Demo_web_MVC.Repository.Oder
             var cart = await _context.Carts
                 .Where(c => c.UserId == userId && c.Status == "active")
                 .Include(c => c.CartItems)
-                .ThenInclude(ci => ci.Variant)
+                    .ThenInclude(ci => ci.Variant)
+                        .ThenInclude(v => v.Product)
                 .FirstOrDefaultAsync();
 
             if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
             {
-                _logger.LogWarning("No active cart found for user {UserId}", userId);
                 throw new InvalidOperationException("No active cart found for the user.");
             }
 
-            var selectedItems = cart.CartItems.Where(ci => selectedCartItemIds.Contains(ci.Id)).ToList();
+            var selectedItems = cart.CartItems
+                .Where(ci => selectedCartItemIds.Contains(ci.Id)
+                             && ci.Variant != null
+                             && ci.Variant.Product != null)
+                .ToList();
 
-            if (selectedItems.Count == 0)
+            if (!selectedItems.Any())
             {
-                _logger.LogError("k co san pham nào");
                 throw new InvalidOperationException("No selected items to checkout.");
             }
 
-            // Tiến hành tính tổng số tiền và tạo đơn hàng
-            var totalAmount = selectedItems
-                .Where(ci => ci.Variant != null && ci.Variant.Price > 0)
-                .Sum(ci => ci.Quantity * ci.Variant.Price);
+            var payment = Enum.TryParse(paymentMethod, out PaymentMethod method)
+                ? method
+                : PaymentMethod.COD;
 
-            var order = new Order
+            var itemsBySeller = selectedItems
+                .GroupBy(ci => ci.Variant.Product.SellerId)
+                .ToList();
+
+            var firstOrderId = 0;
+
+            foreach (var sellerGroup in itemsBySeller)
             {
-                UserId = userId,
-                TotalAmount = totalAmount,
-                Status = 0, // Trạng thái đơn hàng (0 = Chờ xác nhận)
-                PaymentMethod = Enum.TryParse(paymentMethod, out PaymentMethod method) ? method : PaymentMethod.COD,
-                CreatedAt = DateTime.Now
-            };
+                var totalAmount = sellerGroup.Sum(ci => ci.Quantity * ci.Variant.Price);
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            // Lưu các mục trong đơn hàng
-            foreach (var item in selectedItems)
-            {
-                if (item.Variant == null)
+                var order = new Order
                 {
-                    _logger.LogWarning("Item with VariantId {VariantId} has no variant data, skipping.", item.VariantId);
-                    continue;
-                }
-
-                var orderItem = new OrderItem
-                {
-                    OrderId = order.Id,
-                    VariantId = item.VariantId,
-                    Quantity = item.Quantity,
-                    Price = item.Variant.Price
+                    UserId = userId,
+                    TotalAmount = totalAmount,
+                    Status = OrderStatus.Pending,
+                    PaymentMethod = payment,
+                    CreatedAt = DateTime.Now
                 };
 
-                _context.OrderItems.Add(orderItem);
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                if (firstOrderId == 0)
+                {
+                    firstOrderId = order.Id;
+                }
+
+                foreach (var item in sellerGroup)
+                {
+                    var orderItem = new OrderItem
+                    {
+                        OrderId = order.Id,
+                        VariantId = item.VariantId,
+                        Quantity = item.Quantity,
+                        Price = item.Variant.Price
+                    };
+
+                    _context.OrderItems.Add(orderItem);
+                }
+
+                var orderLog = new OrderLog
+                {
+                    OrderId = order.Id,
+                    PreviousStatus = null,
+                    Status = "Pending",
+                    ChangeType = "CREATE_ORDER",
+                    ActionBy = userId.ToString(),
+                    Reason = "User created order from cart",
+                    AdditionalInfo = $"PaymentMethod: {order.PaymentMethod}, TotalAmount: {order.TotalAmount}",
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+
+                _context.OrderLogs.Add(orderLog);
             }
-            var orderLog = new OrderLog
-            {
-                OrderId = order.Id,
-                PreviousStatus = null,
-                Status = "Pending",
-                ChangeType = "CREATE_ORDER",
-                ActionBy = userId.ToString(),
-                Reason = "User created order from cart",
-                AdditionalInfo = $"PaymentMethod: {order.PaymentMethod}, TotalAmount: {order.TotalAmount}",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-            _context.OrderLogs.Add(orderLog);
+
+            _context.CartItems.RemoveRange(selectedItems);
             await _context.SaveChangesAsync();
-            
-            return order.Id;
+
+            return firstOrderId;
         }
         public async Task<Order> GetOrderByIdAsync(  int orderId)
         {
@@ -120,27 +135,35 @@ namespace Demo_web_MVC.Repository.Oder
             };
             return result;
         }
-        public async Task<OderViewModel?> GetOrderDetailAsync( int userId,int orderId)
+        public async Task<OderViewModel?> GetOrderDetailAsync(int userId, int orderId)
         {
-            var result = await _context.Orders.AsNoTracking()
-               .Where(o => o.Id == orderId && o.UserId == userId)
-               .Select(o => new OderViewModel
-               {
-                   Id = o.Id,
-                   TotalAmount = o.TotalAmount,
-                   Status = o.Status,
+            var result = await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.Id == orderId && o.UserId == userId)
+                .Select(o => new OderViewModel
+                {
+                    Id = o.Id,
+                    TotalAmount = o.TotalAmount,
+                    Status = o.Status,
+                    CreateAt = o.CreatedAt,
 
-                   Items = o.OrderItems.Select(item => new OderItemViewModel
-                   {
-                       Name = item.Variant.Product.Name,
-                       Price = item.Price,
-                       Quantity = item.Quantity,
-                       Variant =item.Variant,
-                       Img = item.Variant.ProductVariantImages
-                           .OrderBy(img => img.SortOrder)
-                           .Select(img => img.Url)
-                           .FirstOrDefault()
-                   }).ToList(),
+                    Items = o.OrderItems.Select(item => new OderItemViewModel
+                    {
+                        Name = item.Variant.Product.Name,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                        Variant = item.Variant,
+
+                        Img = item.Variant.ProductVariantImages
+                            .OrderBy(img => img.SortOrder)
+                            .Select(img => img.Url)
+                            .FirstOrDefault()
+                            ?? item.Variant.Product.ProductImages
+                                .Select(img => img.Url)
+                                .FirstOrDefault()
+                            ?? "/uploads/images/no-image.jpg"
+                    }).ToList(),
+
                     AddressViewModels = o.User.Addresses.Select(address => new AddressViewModel
                     {
                         RecipientName = address.RecipientName,
@@ -149,10 +172,8 @@ namespace Demo_web_MVC.Repository.Oder
                         City = address.City,
                         Country = address.Country
                     }).ToList()
-
-               })
-       
-               .FirstOrDefaultAsync();
+                })
+                .FirstOrDefaultAsync();
 
             if (result == null)
             {

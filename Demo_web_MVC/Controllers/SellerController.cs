@@ -74,9 +74,12 @@ namespace Demo_web_MVC.Controllers
            
             var totalOrders = dashboardData.Orders.Count;
             var totalRevenue = dashboardData.Orders.Sum(o => o.TotalAmount);
-            var today = DateTime.Today; 
-            var ordersToday = dashboardData.Orders.Where(o => o.CreateAt == today).ToList();
-            
+            var today = DateTime.Today;
+            var ordersToday = dashboardData.Orders
+             .Where(o => o.CreateAt.HasValue
+                      && o.CreateAt.Value.Date == today)
+             .ToList();
+
             var totalOrdersToday = ordersToday.Count;
             var product = dashboardData.Products.Count;
             

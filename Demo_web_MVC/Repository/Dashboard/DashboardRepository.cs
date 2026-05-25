@@ -162,7 +162,9 @@ namespace Demo_web_MVC.Repository.Dashboard
                     OrderId = o.Id,
                     Email = o.User.Email,
                     OrderStatus = o.Status.ToString(),
-                    TotalAmount = o.TotalAmount,
+                    TotalAmount = o.OrderItems
+                        .Where(oi => oi.Variant.Product.SellerId == sellerId)
+                        .Sum(oi => oi.Price * oi.Quantity),
                     CreatedAt = o.CreatedAt,
 
                     AddressView = o.User.Addresses

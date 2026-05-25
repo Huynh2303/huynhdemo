@@ -59,6 +59,7 @@ namespace Demo_web_MVC.Controllers
                 TempData["SuccessMessage"] = "Đặt hàng thành công.";
 
                 return RedirectToAction("Details", "Oder", new { orderId = orderId });
+
                 
             }
             catch (ArgumentException ex)
