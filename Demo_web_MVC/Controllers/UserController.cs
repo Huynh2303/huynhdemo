@@ -189,6 +189,7 @@ namespace Demo_web_MVC.Controllers
 
         public IActionResult Login()
         {
+
             return View();
         }
         [HttpPost]
@@ -314,6 +315,11 @@ namespace Demo_web_MVC.Controllers
                 }
 
                 _logger.LogInformation($"Đăng nhập thành công cho người dùng: {input}");
+
+                if (user.DateOfBirth == null)
+                {
+                    return RedirectToAction("UpdateBirthday", "User");
+                }
                 return RedirectToAction("Index", "Product");
             }
             catch (Exception ex)
@@ -472,6 +478,56 @@ namespace Demo_web_MVC.Controllers
             _logger.LogInformation($"Password changed successfully for UserId: {userId}");
             return RedirectToAction("Index", "Home");
         }
+        [HttpGet]
+        public IActionResult UpdateBirthday()
+        {
+            return View();
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateBirthday(UpdateBirthdayViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
+            var userId = GetUserIdFromClaims();
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            var user = await _context.Users.FindAsync(userId.Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Nếu đã có ngày sinh thì không cho đổi lại
+            if (user.DateOfBirth != null)
+            {
+                return RedirectToAction("Index", "Product");
+            }
+
+            // Lưu ngày sinh vào DB
+            user.DateOfBirth = model.DateOfBirth;
+            user.UpdatedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Product");
+        }
+        private int? GetUserIdFromClaims()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return null;
+            }
+            return userId;
+        }
     }
 }
