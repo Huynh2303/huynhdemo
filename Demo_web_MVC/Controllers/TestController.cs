@@ -1,6 +1,7 @@
 ﻿using Demo_web_MVC.Models;
 using Demo_web_MVC.Repository.OrderRisk;
 using Demo_web_MVC.Service;
+using Demo_web_MVC.Service.Birth;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo_web_MVC.Controllers
@@ -11,11 +12,15 @@ namespace Demo_web_MVC.Controllers
 
         private readonly OrderRiskModelTrainer _orderRiskModelTrainer;
         private readonly OrderRiskPredictor _orderRiskPredictor;
-        public TestController(IOrderRiskRepository orderRepository, OrderRiskModelTrainer orderRiskModelTrainer, OrderRiskPredictor orderRiskPredictor)
+        private readonly IBirthService _birthService;
+        private readonly ILogger<TestController > _logger;
+        public TestController(ILogger<TestController> logger ,IBirthService birthService,IOrderRiskRepository orderRepository, OrderRiskModelTrainer orderRiskModelTrainer, OrderRiskPredictor orderRiskPredictor)
         {
             _orderRepository = orderRepository;
             _orderRiskModelTrainer = orderRiskModelTrainer;
             _orderRiskPredictor = orderRiskPredictor;
+            _birthService = birthService;
+            _logger = logger;
         }
        
         public async Task<IActionResult> TestRiskInput(int orderId)
@@ -392,6 +397,14 @@ namespace Demo_web_MVC.Controllers
             });
 
             return Json(results);
+        }
+        public async Task<IActionResult> TestBirthdayEmail()
+        {
+            _logger.LogWarning("Bắt đầu");
+            
+            await _birthService.SendBirthdayEmailsAsync();
+            
+            return Content("Đã chạy gửi mail sinh nhật");
         }
     }
 }
