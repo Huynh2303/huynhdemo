@@ -3,10 +3,10 @@
 <section class="mt-xl pt-xl border-t border-slate-200">
     <div class="flex justify-between items-end mb-lg">
         <div>
-            <h2 class="font-headline-md text-headline-md">Related Products</h2>
-            <p class="text-body-sm text-secondary">Complete your audio setup</p>
+            <h2 class="font-headline-md text-headline-md">Sản phẩm liên quan</h2>
+            <p class="text-body-sm text-secondary">Hoàn thiện bộ sản phẩm của bạn</p>
         </div>
-        <a class="text-primary-container font-label-bold" href="@Url.Action("Index","Product")">View All</a>
+        <a class="text-primary-container font-label-bold" href="@Url.Action("Index", "Product")">Xem tất cả</a>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
         @foreach (var product in Model)
@@ -28,7 +28,7 @@
                     <h3 class="font-label-bold text-body-sm text-on-background line-clamp-1 mb-2">@product.Name</h3>
                     <div class="flex justify-between items-center">
                         <span class="font-price-lg text-body-base text-on-background">
-                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} ₫", price)
+                        @string.Format("{0:N0}đ", price)
                         </span>
                         @* <button class="material-symbols-outlined text-primary-container hover:bg-slate-50 p-1 rounded-full transition-colors">add_shopping_cart</button> *@
                     </div>

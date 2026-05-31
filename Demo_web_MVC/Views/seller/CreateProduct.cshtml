@@ -1,455 +1,542 @@
-﻿@model Demo_web_MVC.Models.ViewModel.Product.ProductViewModel
+﻿
+@model Demo_web_MVC.Models.ViewModel.Product.ProductViewModel
 
 @{
     ViewData["Title"] = "Thêm sản phẩm";
 }
 
-
 <div class="space-y-lg">
-            <form asp-action="CreateProduct" asp-controller="Seller" enctype="multipart/form-data" method="post">
+    <form asp-action="CreateProduct" asp-controller="Seller" enctype="multipart/form-data" method="post">
 
-                <div class="flex justify-between items-end mb-lg">
-                    <div>
-                        <nav class="flex gap-xs text-[12px] text-on-surface-variant mb-xs">
-                            <span>Sản phẩm</span>
-                            <span>/</span>
-                            <span class="text-primary font-semibold">Thêm mới</span>
-                        </nav>
+        <div class="flex justify-between items-end mb-lg">
+            <div>
+                <nav class="flex gap-xs text-[12px] text-on-surface-variant mb-xs">
+                    <span>Sản phẩm</span>
+                    <span>/</span>
+                    <span class="text-primary font-semibold">Thêm mới</span>
+                </nav>
 
-                        <h1 class="font-display-lg text-display-lg text-on-surface">
-                            Thêm sản phẩm
-                        </h1>
+                <h1 class="font-display-lg text-display-lg text-on-surface">
+                    Thêm sản phẩm
+                </h1>
+            </div>
+
+            <div class="flex gap-md">
+                <a asp-action="ProductsManager"
+                   asp-controller="Seller"
+                   class="px-lg py-sm border border-primary text-primary rounded-lg font-label-bold text-label-bold hover:bg-primary-container/5 transition-colors">
+                    Hủy bỏ
+                </a>
+
+                <button class="px-lg py-sm bg-primary-container text-white rounded-lg font-label-bold text-label-bold shadow-md hover:shadow-lg hover:bg-primary transition-all flex items-center gap-sm"
+                        type="submit">
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    Lưu sản phẩm
+                </button>
+            </div>
+        </div>
+
+        <div asp-validation-summary="All" class="text-error text-sm mb-md"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+
+            <div class="lg:col-span-2 space-y-lg">
+
+                <!-- Thông tin chung -->
+                <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+                    <h2 class="font-headline-md text-headline-md mb-lg flex items-center gap-sm text-primary">
+                        <span class="material-symbols-outlined">info</span>
+                        Thông tin chung
+                    </h2>
+
+                    <div class="space-y-md">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                            <div class="space-y-xs">
+                                <label asp-for="Name" class="font-label-bold text-label-bold text-on-surface-variant">
+                                    Tên sản phẩm *
+                                </label>
+
+                                <input asp-for="Name"
+                                       class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none"
+                                       placeholder="Ví dụ: Áo thun Cotton Premium" />
+
+                                <span asp-validation-for="Name" class="text-error text-[12px]"></span>
+                            </div>
+
+                            <div class="space-y-xs">
+                                <label asp-for="Brand" class="font-label-bold text-label-bold text-on-surface-variant">
+                                    Thương hiệu
+                                </label>
+
+                                <input asp-for="Brand"
+                                       class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none"
+                                       placeholder="Ví dụ: Nike, Adidas..." />
+
+                                <span asp-validation-for="Brand" class="text-error text-[12px]"></span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-xs">
+                            <label asp-for="CategoryId" class="font-label-bold text-label-bold text-on-surface-variant">
+                                Danh mục
+                            </label>
+
+                            <select asp-for="CategoryId"
+                                    class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none">
+                                <option value="">-- Chọn danh mục --</option>
+
+                                @if (Model.Categories != null)
+                                {
+                                    foreach (var category in Model.Categories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                }
+                            </select>
+
+                            <span asp-validation-for="CategoryId" class="text-error text-[12px]"></span>
+                        </div>
+
+                        <div class="space-y-xs">
+                            <label asp-for="Description" class="font-label-bold text-label-bold text-on-surface-variant">
+                                Mô tả sản phẩm
+                            </label>
+
+                            <textarea asp-for="Description"
+                                      class="w-full p-md text-body-base outline-none resize-none border border-outline-variant rounded-lg"
+                                      placeholder="Nhập mô tả chi tiết cho sản phẩm..."
+                                      rows="6"></textarea>
+
+                            <span asp-validation-for="Description" class="text-error text-[12px]"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ảnh sản phẩm chính -->
+                <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+                    <div class="flex justify-between items-center mb-lg">
+                        <h2 class="font-headline-md text-headline-md flex items-center gap-sm text-primary">
+                            <span class="material-symbols-outlined">image</span>
+                            Hình ảnh sản phẩm
+                        </h2>
+
+                        <span class="text-body-sm text-on-surface-variant">
+                            Có thể chọn nhiều ảnh JPG, PNG.
+                        </span>
                     </div>
 
-                    <div class="flex gap-md">
-                        <a asp-action="ProductsManager"
-                           asp-controller="Seller"
-                           class="px-lg py-sm border border-primary text-primary rounded-lg font-label-bold text-label-bold hover:bg-primary-container/5 transition-colors">
-                            Hủy bỏ
-                        </a>
+                    <div id="product-image-grid" class="grid grid-cols-2 md:grid-cols-4 gap-md">
+                        <label id="product-upload-box"
+                               class="cursor-pointer aspect-square bg-surface-container-low border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center gap-xs hover:bg-surface-container-high hover:border-primary-container transition-all group">
 
-                        <button class="px-lg py-sm bg-primary-container text-white rounded-lg font-label-bold text-label-bold shadow-md hover:shadow-lg hover:bg-primary transition-all flex items-center gap-sm"
-                                type="submit">
-                            <span class="material-symbols-outlined text-[18px]">save</span>
-                            Lưu sản phẩm
+                            <input name="imageUrl"
+                                   id="image-upload"
+                                   type="file"
+                                   multiple
+                                   accept="image/*"
+                                   class="hidden"
+                                   onchange="previewProductImage(this)" />
+
+                            <span class="material-symbols-outlined text-[32px] text-on-surface-variant group-hover:text-primary">
+                                cloud_upload
+                            </span>
+
+                            <span class="font-label-bold text-label-bold text-on-surface-variant">
+                                Tải ảnh lên
+                            </span>
+                        </label>
+                    </div>
+
+                    <span asp-validation-for="imageUrl" class="text-error text-[12px]"></span>
+                </section>
+
+                <!-- Biến thể dạng card -->
+                <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+                    <div class="flex justify-between items-center mb-lg">
+                        <h2 class="font-headline-md text-headline-md flex items-center gap-sm text-primary">
+                            <span class="material-symbols-outlined">layers</span>
+                            Biến thể & Giá bán
+                        </h2>
+
+                        <button class="flex items-center gap-sm text-primary font-label-bold text-label-bold hover:underline"
+                                type="button"
+                                id="addVariantButton">
+                            <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                            Thêm biến thể
                         </button>
                     </div>
-                </div>
 
-                <div asp-validation-summary="All" class="text-error text-sm mb-md"></div>
+                    <div id="variants-body" class="space-y-md">
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
-                    <!-- Left Column -->
-                    <div class="lg:col-span-2 space-y-lg">
+                        <div class="variant-card rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-md shadow-sm">
+                            <div class="flex justify-between items-center mb-md">
+                                <h3 class="variant-title font-label-bold text-label-bold text-primary">
+                                    Biến thể #1
+                                </h3>
 
-                        <!-- Product Information -->
-                        <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-                            <h2 class="font-headline-md text-headline-md mb-lg flex items-center gap-sm text-primary">
-                                <span class="material-symbols-outlined">info</span>
-                                Thông tin chung
-                            </h2>
-
-                            <div class="space-y-md">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                                    <div class="space-y-xs">
-                                        <label asp-for="Name" class="font-label-bold text-label-bold text-on-surface-variant">
-                                            Tên sản phẩm *
-                                        </label>
-
-                                        <input asp-for="Name"
-                                               class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none"
-                                               placeholder="Ví dụ: Áo thun Cotton Premium" />
-
-                                        <span asp-validation-for="Name" class="text-error text-[12px]"></span>
-                                    </div>
-
-                                    <div class="space-y-xs">
-                                        <label asp-for="Brand" class="font-label-bold text-label-bold text-on-surface-variant">
-                                            Thương hiệu
-                                        </label>
-
-                                        <input asp-for="Brand"
-                                               class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none"
-                                               placeholder="Ví dụ: Nike, Adidas..." />
-
-                                        <span asp-validation-for="Brand" class="text-error text-[12px]"></span>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-xs">
-                                    <label asp-for="CategoryId" class="font-label-bold text-label-bold text-on-surface-variant">
-                                        Danh mục
-                                    </label>
-
-                                    <select asp-for="CategoryId"
-                                            class="w-full px-md py-sm rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all text-body-base outline-none">
-                                        <option value="">-- Chọn danh mục --</option>
-
-                                        @if (Model.Categories != null)
-                                        {
-                                            foreach (var category in Model.Categories)
-                                            {
-                                                <option value="@category.Id">@category.Name</option>
-                                            }
-                                        }
-                                    </select>
-
-                                    <span asp-validation-for="CategoryId" class="text-error text-[12px]"></span>
-                                </div>
-
-                                <div class="space-y-xs">
-                                    <label asp-for="Description" class="font-label-bold text-label-bold text-on-surface-variant">
-                                        Mô tả sản phẩm
-                                    </label>
-
-                                    <div class="border border-outline-variant rounded-lg overflow-hidden">
-                                        <div class="bg-surface-container-low border-b border-outline-variant p-xs flex gap-xs">
-                                            <button class="p-xs hover:bg-surface-container-high rounded text-on-surface-variant" type="button">
-                                                <span class="material-symbols-outlined text-[20px]">format_bold</span>
-                                            </button>
-
-                                            <button class="p-xs hover:bg-surface-container-high rounded text-on-surface-variant" type="button">
-                                                <span class="material-symbols-outlined text-[20px]">format_italic</span>
-                                            </button>
-
-                                            <button class="p-xs hover:bg-surface-container-high rounded text-on-surface-variant" type="button">
-                                                <span class="material-symbols-outlined text-[20px]">format_list_bulleted</span>
-                                            </button>
-                                        </div>
-
-                                        <textarea asp-for="Description"
-                                                  class="w-full p-md text-body-base outline-none resize-none"
-                                                  placeholder="Nhập mô tả chi tiết cho sản phẩm..."
-                                                  rows="6"></textarea>
-                                    </div>
-
-                                    <span asp-validation-for="Description" class="text-error text-[12px]"></span>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Product Images -->
-                        <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-                            <div class="flex justify-between items-center mb-lg">
-                                <h2 class="font-headline-md text-headline-md flex items-center gap-sm text-primary">
-                                    <span class="material-symbols-outlined">image</span>
-                                    Hình ảnh sản phẩm
-                                </h2>
-
-                                <span class="text-body-sm text-on-surface-variant">
-                                    Có thể chọn nhiều ảnh JPG, PNG.
-                                </span>
-                            </div>
-
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-md" id="product-preview-wrapper">
-                                <div class="group relative aspect-square bg-surface-container rounded-lg border border-outline-variant overflow-hidden">
-                                    <img id="preview-image"
-                                         alt="Product Preview"
-                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                         src="/uploads/images/vidu.jpg" />
-
-                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-xs">
-                                        <div class="flex justify-end">
-                                            <button class="w-8 h-8 bg-error text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                                                    type="button">
-                                                <span class="material-symbols-outlined text-[18px]">delete</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <label class="cursor-pointer aspect-square bg-surface-container-low border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center gap-xs hover:bg-surface-container-high hover:border-primary-container transition-all group">
-                                    <input name="imageUrl"
-                                           class="hidden"
-                                           multiple
-                                           type="file"
-                                           id="image-upload"
-                                           onchange="previewProductImage(event)" />
-
-                                    <span class="material-symbols-outlined text-[32px] text-on-surface-variant group-hover:text-primary-container">
-                                        cloud_upload
-                                    </span>
-
-                                    <span class="font-label-bold text-label-bold text-on-surface-variant group-hover:text-primary-container">
-                                        Tải ảnh lên
-                                    </span>
-                                </label>
-                            </div>
-
-                            <span asp-validation-for="imageUrl" class="text-error text-[12px]"></span>
-                        </section>
-
-                        <!-- Variants -->
-                        <section class="bg-surface-container-lowest rounded-lg p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-                            <div class="flex justify-between items-center mb-lg">
-                                <h2 class="font-headline-md text-headline-md flex items-center gap-sm text-primary">
-                                    <span class="material-symbols-outlined">layers</span>
-                                    Biến thể &amp; Giá bán
-                                </h2>
-
-                                <button class="flex items-center gap-sm text-primary font-label-bold text-label-bold hover:underline"
-                                        type="button"
-                                        id="addVariantButton">
-                                    <span class="material-symbols-outlined text-[18px]">add_circle</span>
-                                    Thêm biến thể
+                                <button type="button"
+                                        class="remove-variant text-on-surface-variant hover:text-error flex items-center gap-xs">
+                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    Xóa
                                 </button>
                             </div>
 
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left">
-                                    <thead>
-                                        <tr class="border-b border-outline-variant text-on-surface-variant">
-                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Ảnh</th>
-                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Biến thể</th>
-                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Giá bán (₫)</th>
-                                            <th class="pb-sm font-label-bold text-label-bold uppercase">Kho hàng</th>
-                                            <th class="pb-sm text-right font-label-bold text-label-bold uppercase">Hành động</th>
-                                        </tr>
-                                    </thead>
+                            <div class="space-y-sm mb-md">
+                                <label class="font-label-bold text-label-bold text-on-surface-variant">
+                                    Ảnh biến thể
+                                </label>
 
-                                    <tbody id="variants-body" class="divide-y divide-outline-variant/50">
-                                        <tr class="variant-row group">
-                                            <td class="py-md">
-                                                <label class="cursor-pointer block">
-                                                    <input name="Variants[0].ImageFiles"
-                                                           type="file"
-                                                           class="hidden variant-image-input"
-                                                           multiple
-                                                           onchange="previewVariantImage(this)" />
+                                <div class="variant-image-grid grid grid-cols-2 md:grid-cols-4 gap-sm">
+                                    <label class="variant-upload-box cursor-pointer aspect-square rounded-lg border-2 border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:border-primary-container transition-all">
+                                        <input name="Variants[0].ImageFiles"
+                                               type="file"
+                                               class="hidden variant-image-input"
+                                               multiple
+                                               accept="image/*"
+                                               onchange="previewVariantImage(this)" />
 
-                                                    <div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center border border-outline-variant relative overflow-hidden group-hover:border-primary-container">
-                                                        <img class="variant-preview hidden w-full h-full object-cover" src="" alt="Variant Preview" />
-                                                        <span class="material-symbols-outlined text-outline text-[22px] variant-icon">
-                                                            add_a_photo
-                                                        </span>
-                                                    </div>
-                                                </label>
-                                            </td>
-
-                                            <td class="py-md">
-                                                <div class="space-y-xs">
-                                                    <input name="Variants[0].Size"
-                                                           class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
-                                                           placeholder="Size" />
-
-                                                    <input name="Variants[0].Color"
-                                                           class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
-                                                           placeholder="Màu sắc" />
-                                                </div>
-                                            </td>
-
-                                            <td class="py-md">
-                                                <input name="Variants[0].Price"
-                                                       class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none font-label-bold"
-                                                       type="number"
-                                                       step="1000"
-                                                       placeholder="Giá" />
-                                            </td>
-
-                                            <td class="py-md">
-                                                <input name="Variants[0].Stock"
-                                                       class="w-24 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none"
-                                                       type="number"
-                                                       placeholder="Kho" />
-                                            </td>
-
-                                            <td class="py-md text-right">
-                                                <div class="variant-actions flex justify-end gap-sm">
-                                                    <button class="p-xs text-on-surface-variant hover:text-primary transition-colors"
-                                                            title="Thêm ảnh biến thể"
-                                                            type="button"
-                                                            onclick="openVariantFile(this)">
-                                                        <span class="material-symbols-outlined text-[20px]">imagesmode</span>
-                                                    </button>
-
-                                                    <button class="p-xs text-on-surface-variant hover:text-error transition-colors remove-variant"
-                                                            title="Xóa"
-                                                            type="button">
-                                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                        <span class="material-symbols-outlined text-[28px]">add_a_photo</span>
+                                        <span class="text-[12px]">Tải ảnh lên</span>
+                                    </label>
+                                </div>
                             </div>
-                        </section>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
+                                <div class="space-y-xs">
+                                    <label class="font-label-bold text-label-bold text-on-surface-variant">Size</label>
+                                    <input name="Variants[0].Size"
+                                           class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                           placeholder="S, M, L..." />
+                                </div>
+
+                                <div class="space-y-xs">
+                                    <label class="font-label-bold text-label-bold text-on-surface-variant">Màu sắc</label>
+                                    <input name="Variants[0].Color"
+                                           class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                           placeholder="Đen, Trắng..." />
+                                </div>
+
+                                <div class="space-y-xs">
+                                    <label class="font-label-bold text-label-bold text-on-surface-variant">Giá bán</label>
+                                    <input name="Variants[0].Price"
+                                           class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none font-label-bold"
+                                           type="number"
+                                           step="1000"
+                                           placeholder="Giá" />
+                                </div>
+
+                                <div class="space-y-xs">
+                                    <label class="font-label-bold text-label-bold text-on-surface-variant">Kho hàng</label>
+                                    <input name="Variants[0].Stock"
+                                           class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none"
+                                           type="number"
+                                           placeholder="Kho" />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+                </section>
+            </div>
 
-                    <!-- Right Column -->
-                    <div class="space-y-lg">
-                        <section class="bg-primary/5 rounded-lg p-lg border border-primary/20">
-                            <h3 class="font-label-bold text-label-bold text-primary flex items-center gap-sm mb-xs">
-                                <span class="material-symbols-outlined text-[18px]">lightbulb</span>
-                                Mẹo quản lý
-                            </h3>
+            <div class="space-y-lg">
+                <section class="bg-primary/5 rounded-lg p-lg border border-primary/20">
+                    <h3 class="font-label-bold text-label-bold text-primary flex items-center gap-sm mb-xs">
+                        <span class="material-symbols-outlined text-[18px]">lightbulb</span>
+                        Mẹo quản lý
+                    </h3>
 
-                            <p class="text-body-sm text-on-primary-container leading-relaxed">
-                                Bước 1: Ở ô Tên sản phẩm, nhập tên sản phẩm cần bán, ví dụ: Áo thun nam Cotton.<br />
-                                Bước 2: Ở ô Thương hiệu, nhập tên thương hiệu của sản phẩm, ví dụ: Nike, Adidas hoặc Local Brand.<br />
-                                Bước 3: Ở ô Danh mục, chọn nhóm sản phẩm phù hợp, ví dụ: Áo, Quần, Giày hoặc Phụ kiện.<br />
-                                Bước 4: Ở ô Mô tả sản phẩm, nhập thông tin chi tiết như chất liệu, kiểu dáng, công dụng và điểm nổi bật của sản phẩm.<br />
-                                Bước 5: Ở phần Hình ảnh sản phẩm, bấm Tải ảnh lên và chọn một hoặc nhiều ảnh đại diện cho sản phẩm.<br />
-                                Bước 6: Ở phần Biến thể, nhập Size của sản phẩm, ví dụ: S, M, L, XL.<br />
-                                Bước 7: Nhập Màu sắc của biến thể, ví dụ: Đen, Trắng, Xanh hoặc Đỏ.<br />
-                                Bước 8: Nhập Giá bán cho từng biến thể, ví dụ: 150000.<br />
-                                Bước 9: Nhập Số lượng tồn kho cho từng biến thể, ví dụ: 20.<br />
-                                Bước 10: Tải ảnh riêng cho biến thể nếu sản phẩm có nhiều màu hoặc nhiều mẫu khác nhau.<br />
-                                Bước 11: Nếu có nhiều biến thể, bấm Thêm biến thể để nhập thêm size, màu, giá và số lượng khác.<br />
-                                Bước 12: Sau khi nhập xong toàn bộ thông tin, bấm Lưu sản phẩm để thêm sản phẩm vào hệ thống.
-                            </p>
-                        </section>
-                    </div>
-                </div>
-            </form>
-        
-    </div>
+                    <p class="text-body-sm text-on-primary-container leading-relaxed">
+                        Bước 1: Nhập thông tin chung của sản phẩm.<br />
+                        Bước 2: Tải nhiều ảnh đại diện cho sản phẩm.<br />
+                        Bước 3: Tạo từng biến thể theo size, màu, giá và kho.<br />
+                        Bước 4: Với mỗi biến thể, có thể chọn nhiều ảnh riêng.<br />
+                        Bước 5: Sau khi nhập xong, bấm Lưu sản phẩm.
+                    </p>
+                </section>
+            </div>
+        </div>
 
-    <!-- Mobile Footer -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 p-md bg-surface-container-lowest border-t border-outline-variant flex gap-md z-50">
-        <button class="flex-1 py-sm border border-primary text-primary rounded-lg font-label-bold text-label-bold" type="button">
-            Hủy
-        </button>
+        <div class="md:hidden fixed bottom-0 left-0 right-0 p-md bg-surface-container-lowest border-t border-outline-variant flex gap-md z-50">
+            <a asp-action="ProductsManager"
+               asp-controller="Seller"
+               class="flex-1 py-sm border border-primary text-primary rounded-lg font-label-bold text-label-bold text-center">
+                Hủy
+            </a>
 
-        <button class="flex-1 py-sm bg-primary-container text-white rounded-lg font-label-bold text-label-bold" type="submit">
-            Lưu lại
-        </button>
-    </div>
+            <button class="flex-1 py-sm bg-primary-container text-white rounded-lg font-label-bold text-label-bold"
+                    type="submit">
+                Lưu lại
+            </button>
+        </div>
+    </form>
+</div>
 
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
         let variantIndex = 1;
+        let selectedProductImages = [];
 
-        function previewProductImage(event) {
-            const file = event.target.files[0];
+        // ================= ẢNH SẢN PHẨM CHÍNH =================
+        function previewProductImage(input) {
 
-            if (!file) return;
+            if (!input.files || input.files.length === 0) return;
 
-            const reader = new FileReader();
+            Array.from(input.files).forEach(file => {
+                selectedProductImages.push(file);
+            });
 
-            reader.onload = function (e) {
-                document.getElementById("preview-image").src = e.target.result;
-            };
-
-            reader.readAsDataURL(file);
+            rebuildProductInputFiles();
+            renderProductImages();
         }
 
+        function renderProductImages() {
+
+            const grid = document.getElementById("product-image-grid");
+            const uploadBox = document.getElementById("product-upload-box");
+
+            grid.querySelectorAll(".product-preview-item")
+                .forEach(item => item.remove());
+
+            selectedProductImages.forEach((file, index) => {
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    const item = document.createElement("div");
+
+                    item.className =
+                        "product-preview-item relative aspect-square rounded-lg overflow-hidden border border-outline-variant bg-surface";
+
+                    item.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-full object-cover" />
+
+                        <button type="button"
+                                onclick="removeProductImage(${index})"
+                                class="absolute top-1 right-1 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center text-sm">
+                            ×
+                        </button>
+                    `;
+
+                    grid.insertBefore(item, uploadBox);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeProductImage(index) {
+
+            selectedProductImages.splice(index, 1);
+
+            rebuildProductInputFiles();
+            renderProductImages();
+        }
+
+        function rebuildProductInputFiles() {
+
+            const input = document.getElementById("image-upload");
+            const dataTransfer = new DataTransfer();
+
+            selectedProductImages.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+
+            input.files = dataTransfer.files;
+        }
+
+        // ================= ẢNH BIẾN THỂ =================
         function previewVariantImage(input) {
-            const file = input.files[0];
 
-            if (!file) return;
+            if (!input.selectedFiles) {
+                input.selectedFiles = [];
+            }
 
-            const row = input.closest(".variant-row");
-            const preview = row.querySelector(".variant-preview");
-            const icon = row.querySelector(".variant-icon");
+            Array.from(input.files).forEach(file => {
+                input.selectedFiles.push(file);
+            });
 
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.classList.remove("hidden");
-                icon.classList.add("hidden");
-            };
-
-            reader.readAsDataURL(file);
+            rebuildVariantInputFiles(input);
+            renderVariantImages(input);
         }
 
-        function openVariantFile(button) {
-            const row = button.closest(".variant-row");
-            const input = row.querySelector(".variant-image-input");
+        function renderVariantImages(input) {
 
-            input.click();
+            const card = input.closest(".variant-card");
+            const grid = card.querySelector(".variant-image-grid");
+            const uploadBox = card.querySelector(".variant-upload-box");
+
+            grid.querySelectorAll(".variant-preview-item")
+                .forEach(item => item.remove());
+
+            input.selectedFiles.forEach((file, index) => {
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    const item = document.createElement("div");
+
+                    item.className =
+                        "variant-preview-item relative aspect-square rounded-lg overflow-hidden border border-outline-variant bg-surface";
+
+                    item.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-full object-cover" />
+
+                        <button type="button"
+                                onclick="removeVariantImage(this, ${index})"
+                                class="absolute top-1 right-1 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center text-sm">
+                            ×
+                        </button>
+                    `;
+
+                    grid.insertBefore(item, uploadBox);
+                };
+
+                reader.readAsDataURL(file);
+            });
         }
 
+        function removeVariantImage(button, index) {
+
+            const card = button.closest(".variant-card");
+            const input = card.querySelector(".variant-image-input");
+
+            input.selectedFiles.splice(index, 1);
+
+            rebuildVariantInputFiles(input);
+            renderVariantImages(input);
+        }
+
+        function rebuildVariantInputFiles(input) {
+
+            const dataTransfer = new DataTransfer();
+
+            input.selectedFiles.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+
+            input.files = dataTransfer.files;
+        }
+
+        // ================= THÊM BIẾN THỂ =================
         document.getElementById("addVariantButton").addEventListener("click", function () {
-            const tbody = document.getElementById("variants-body");
+
+            const variantsBody = document.getElementById("variants-body");
 
             const html = `
-                <tr class="variant-row group">
-                    <td class="py-md">
-                        <label class="cursor-pointer block">
-                            <input name="Variants[${variantIndex}].ImageFiles"
-                                   type="file"
-                                   class="hidden variant-image-input"
-                                   multiple
-                                   onchange="previewVariantImage(this)" />
+                <div class="variant-card rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-md shadow-sm">
+                    <div class="flex justify-between items-center mb-md">
+                        <h3 class="variant-title font-label-bold text-label-bold text-primary">
+                            Biến thể #${variantIndex + 1}
+                        </h3>
 
-                            <div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center border border-outline-variant relative overflow-hidden group-hover:border-primary-container">
-                                <img class="variant-preview hidden w-full h-full object-cover" src="" alt="Variant Preview" />
-                                <span class="material-symbols-outlined text-outline text-[22px] variant-icon">
-                                    add_a_photo
-                                </span>
-                            </div>
+                        <button type="button"
+                                class="remove-variant text-on-surface-variant hover:text-error flex items-center gap-xs">
+                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                            Xóa
+                        </button>
+                    </div>
+
+                    <div class="space-y-sm mb-md">
+                        <label class="font-label-bold text-label-bold text-on-surface-variant">
+                            Ảnh biến thể
                         </label>
-                    </td>
 
-                    <td class="py-md">
+                        <div class="variant-image-grid grid grid-cols-2 md:grid-cols-4 gap-sm">
+                            <label class="variant-upload-box cursor-pointer aspect-square rounded-lg border-2 border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:border-primary-container transition-all">
+                                <input name="Variants[${variantIndex}].ImageFiles"
+                                       type="file"
+                                       class="hidden variant-image-input"
+                                       multiple
+                                       accept="image/*"
+                                       onchange="previewVariantImage(this)" />
+
+                                <span class="material-symbols-outlined text-[28px]">add_a_photo</span>
+                                <span class="text-[12px]">Tải ảnh lên</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
                         <div class="space-y-xs">
+                            <label class="font-label-bold text-label-bold text-on-surface-variant">Size</label>
                             <input name="Variants[${variantIndex}].Size"
-                                   class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
-                                   placeholder="Size" />
+                                   class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                   placeholder="S, M, L..." />
+                        </div>
 
+                        <div class="space-y-xs">
+                            <label class="font-label-bold text-label-bold text-on-surface-variant">Màu sắc</label>
                             <input name="Variants[${variantIndex}].Color"
-                                   class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
-                                   placeholder="Màu sắc" />
+                                   class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none text-body-sm"
+                                   placeholder="Đen, Trắng..." />
                         </div>
-                    </td>
 
-                    <td class="py-md">
-                        <input name="Variants[${variantIndex}].Price"
-                               class="w-32 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none font-label-bold"
-                               type="number"
-                               step="1000"
-                               placeholder="Giá" />
-                    </td>
-
-                    <td class="py-md">
-                        <input name="Variants[${variantIndex}].Stock"
-                               class="w-24 px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none"
-                               type="number"
-                               placeholder="Kho" />
-                    </td>
-
-                    <td class="py-md text-right">
-                        <div class="variant-actions flex justify-end gap-sm">
-                            <button class="p-xs text-on-surface-variant hover:text-primary transition-colors"
-                                    title="Thêm ảnh biến thể"
-                                    type="button"
-                                    onclick="openVariantFile(this)">
-                                <span class="material-symbols-outlined text-[20px]">imagesmode</span>
-                            </button>
-
-                            <button class="p-xs text-on-surface-variant hover:text-error transition-colors remove-variant"
-                                    title="Xóa"
-                                    type="button">
-                                <span class="material-symbols-outlined text-[20px]">delete</span>
-                            </button>
+                        <div class="space-y-xs">
+                            <label class="font-label-bold text-label-bold text-on-surface-variant">Giá bán</label>
+                            <input name="Variants[${variantIndex}].Price"
+                                   class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none font-label-bold"
+                                   type="number"
+                                   step="1000"
+                                   placeholder="Giá" />
                         </div>
-                    </td>
-                </tr>
+
+                        <div class="space-y-xs">
+                            <label class="font-label-bold text-label-bold text-on-surface-variant">Kho hàng</label>
+                            <input name="Variants[${variantIndex}].Stock"
+                                   class="w-full px-sm py-xs border border-outline-variant rounded bg-transparent focus:ring-1 focus:ring-primary-container outline-none"
+                                   type="number"
+                                   placeholder="Kho" />
+                        </div>
+                    </div>
+                </div>
             `;
 
-            tbody.insertAdjacentHTML("beforeend", html);
+            variantsBody.insertAdjacentHTML("beforeend", html);
             variantIndex++;
         });
 
+        // ================= XÓA BIẾN THỂ =================
         document.addEventListener("click", function (e) {
+
             const removeButton = e.target.closest(".remove-variant");
 
             if (!removeButton) return;
 
-            const rows = document.querySelectorAll(".variant-row");
+            const cards = document.querySelectorAll(".variant-card");
 
-            if (rows.length <= 1) {
+            if (cards.length <= 1) {
                 alert("Phải có ít nhất 1 biến thể sản phẩm.");
                 return;
             }
 
-            removeButton.closest(".variant-row").remove();
+            removeButton.closest(".variant-card").remove();
+            reIndexVariants();
         });
+
+        function reIndexVariants() {
+
+            const cards = document.querySelectorAll(".variant-card");
+
+            cards.forEach((card, index) => {
+
+                card.querySelector(".variant-title").innerText = `Biến thể #${index + 1}`;
+
+                card.querySelector(".variant-image-input").name = `Variants[${index}].ImageFiles`;
+                card.querySelector("input[name$='.Size']").name = `Variants[${index}].Size`;
+                card.querySelector("input[name$='.Color']").name = `Variants[${index}].Color`;
+                card.querySelector("input[name$='.Price']").name = `Variants[${index}].Price`;
+                card.querySelector("input[name$='.Stock']").name = `Variants[${index}].Stock`;
+            });
+
+            variantIndex = cards.length;
+        }
     </script>
+}
+
