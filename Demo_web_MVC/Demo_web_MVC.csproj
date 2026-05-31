@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="MailKit" Version="4.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.3.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.23" />
@@ -29,6 +30,7 @@
   <ItemGroup>
     <Folder Include="MLData\" />
     <Folder Include="MLModels\" />
+    <Folder Include="wwwroot\uploads\test\" />
     <Folder Include="wwwroot\uploads\products\" />
   </ItemGroup>
 
