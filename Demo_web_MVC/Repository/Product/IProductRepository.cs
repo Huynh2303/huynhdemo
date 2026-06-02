@@ -15,7 +15,7 @@ namespace Demo_web_MVC.Repository
         Task<ProductViewModel> DetailsAsnyc(int id);
         Task<int?> GetProductIdByVariantIdAsync(int variantId);
         Task<ProductViewModel?> GetByIdForSellerAsync(int id, int sellerId);
-        Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null);
+        Task<PaginatedList<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId,int page,int pageSize);
         Task<List<ProductViewModel>> GetRelatedProductsAsync();
     }
 }

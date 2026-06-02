@@ -68,7 +68,7 @@ namespace Demo_web_MVC.Controllers
 
             if (categoryId.HasValue)
             {
-                var products = await _productService.GetProductsByCategoryAsync(categoryId);
+                var products = await _productService.GetProductsByCategoryAsync(categoryId,page,pageSize);
 
                 return View(products);
             }

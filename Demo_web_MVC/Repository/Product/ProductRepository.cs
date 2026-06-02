@@ -93,7 +93,10 @@ namespace Demo_web_MVC.Repository.Product
                 pageSize
             );
         }
-        public async Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null)
+        public async Task<PaginatedList<ProductViewModel>> GetProductsByCategoryAsync(
+    int? categoryId,
+    int page,
+    int pageSize)
         {
             var query = _context.Products
                 .AsNoTracking()
@@ -105,8 +108,8 @@ namespace Demo_web_MVC.Repository.Product
                 query = query.Where(p => p.CategoryId == categoryId.Value);
             }
 
-            var products = await query
-                .OrderByDescending(x => x.CreatedAt)
+            var productQuery = query
+                .OrderByDescending(p => p.CreatedAt)
                 .Select(p => new ProductViewModel
                 {
                     Id = p.Id,
@@ -117,6 +120,7 @@ namespace Demo_web_MVC.Repository.Product
                     CreatedAt = p.CreatedAt,
 
                     imageUrl = p.ProductImages
+                        .OrderBy(pi => pi.SortOrder)
                         .Select(pi => pi.Url)
                         .ToList(),
 
@@ -124,13 +128,16 @@ namespace Demo_web_MVC.Repository.Product
                         .Select(v => new ProductVariantsViewModel
                         {
                             Price = v.Price,
-                            Stock = v.Stock,
+                            Stock = v.Stock
                         })
                         .ToList()
-                })
-                .ToListAsync();
+                });
 
-            return products;
+            return await _pagingReponsitory.GetPagedDataAsync(
+                productQuery,
+                page,
+                pageSize
+            );
         }
         public async Task<ProductViewModel?> GetByIdAsync(int id)
         {

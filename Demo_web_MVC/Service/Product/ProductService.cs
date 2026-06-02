@@ -85,16 +85,15 @@ namespace Demo_web_MVC.Service.Product
             return await _productRepository
                 .GetByIdForSellerAsync(id, sellerId);
         }
-        public async Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null)
+        public async Task<PaginatedList<ProductViewModel>> GetProductsByCategoryAsync(
+            int? categoryId,
+            int page,
+            int pageSize)
         {
-            if (categoryId <= 0)
-            {
-                return new List<ProductViewModel>();
-            }
-
-            var products = await _productRepository.GetProductsByCategoryAsync(categoryId);
-
-            return products;
+            return await _productRepository.GetProductsByCategoryAsync(
+                categoryId,
+                page,
+                pageSize);
         }
         public async Task<List<ProductViewModel>> GetRelatedProductsAsync()
         {

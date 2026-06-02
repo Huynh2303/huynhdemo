@@ -14,7 +14,7 @@ namespace Demo_web_MVC.Service
         Task<ProductViewModel> getbyid(int id);
         Task<int?> GetProductIdByVariantIdAsync(int variantId);
         Task<ProductViewModel?> getbyidForSeller(int id, int sellerId);
-        Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null);
+        Task<PaginatedList<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId, int page, int pageSize);
         Task<List<ProductViewModel>> GetRelatedProductsAsync();
     }                   
 }
