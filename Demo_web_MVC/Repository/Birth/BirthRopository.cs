@@ -37,5 +37,32 @@ namespace Demo_web_MVC.Repository.Birth
             user.LastBirthdayEmailYear = DateTime.Now.Year;
             await _context.SaveChangesAsync();
         }
+        public async Task UpdateVipUsersAsync()
+        {
+            var users = await _context.Users
+                .Select(u => new
+                {
+                    User = u,
+
+                    TotalProducts = u.Orders
+                        .Where(o => o.Status == OrderStatus.Completed)
+                        .SelectMany(o => o.OrderItems)
+                        .Sum(i => (int?)i.Quantity) ?? 0,
+
+                    TotalSpent = u.Orders
+                        .Where(o => o.Status == OrderStatus.Completed)
+                        .Sum(o => (decimal?)o.TotalAmount) ?? 0
+                })
+                .ToListAsync();
+
+            foreach (var item in users)
+            {
+                item.User.IsVip =
+                    item.TotalProducts >= 5 ||
+                    item.TotalSpent >= 50000000;
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

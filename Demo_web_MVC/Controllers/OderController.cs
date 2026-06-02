@@ -50,7 +50,7 @@ namespace Demo_web_MVC.Controllers
 
                 if (userId == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "User");
                 }
 
                 var orderId = await _service
@@ -87,7 +87,7 @@ namespace Demo_web_MVC.Controllers
 
             if (userId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "User");
             }
 
             var orders = await _service.GetOrdersByUserAsyncService(userId.Value);
@@ -163,20 +163,20 @@ namespace Demo_web_MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Checkout(List<int> selectedCartItemIds)
         {
-            var userId = GetUserIdFromClaims(); // Lấy userId từ Claims hoặc Session
+            var userId = GetUserIdFromClaims(); 
             if (userId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "User");
             }
             if (selectedCartItemIds == null || !selectedCartItemIds.Any())
             {
-                TempData["Error"] = "Vui lòng chọn ít nhất một sản phẩm để thanh toán."; // Thông báo lỗi
-                return RedirectToAction("Index", "Cart");  // Quay lại trang giỏ hàng
+                TempData["Error"] = "Vui lòng chọn ít nhất một sản phẩm để thanh toán."; 
+                return RedirectToAction("Index", "Cart"); 
             }
-            // Gọi Service để lấy dữ liệu Checkout (Sản phẩm trong giỏ hàng, Địa chỉ giao hàng, Tổng tiền)
+            
             var model = await _service.CheckoutAsync(userId.Value, selectedCartItemIds);
 
-            // Trả về view Checkout với model chứa giỏ hàng và thông tin cần thiết
+            
             return View(model);
         }
         [HttpGet]

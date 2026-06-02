@@ -55,5 +55,9 @@ namespace Demo_web_MVC.Service.Birth
 
             _logger.LogInformation("Kết thúc job gửi email sinh nhật");
         }
+        public async Task UpdateVipUsersAsync()
+        {
+            await _birthRopository.UpdateVipUsersAsync();
+        }
     }
 }

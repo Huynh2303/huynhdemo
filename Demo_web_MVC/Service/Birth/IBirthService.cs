@@ -3,5 +3,6 @@
     public interface IBirthService
     {
         Task SendBirthdayEmailsAsync();
+        Task UpdateVipUsersAsync();
     }
 }

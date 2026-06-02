@@ -20,5 +20,6 @@ namespace Demo_web_MVC.Service.Oder
         Task<bool> CreateAsync(int orderId, int sellerId);
 
         Task<bool> DeleteOrderAsync(int orderId, int sellerId);
+
     }
 }

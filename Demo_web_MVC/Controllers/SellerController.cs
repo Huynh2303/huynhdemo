@@ -67,7 +67,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "User");
             }
             var dashboardData = await _service.GetOrdersAndProductsAsync(sellerId.Value);
 
@@ -98,7 +98,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "User");
             }
 
             var productsManagerViewModel = await _service
@@ -220,7 +220,7 @@ namespace Demo_web_MVC.Controllers
 
                     if (sellerId == null)
                     {
-                        return RedirectToAction("Login", "Auth");
+                        return RedirectToAction("Login", "User");
                     }
 
                     var result = await _productService.creat(productVM, sellerId.Value);
@@ -256,7 +256,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "User");
             }
 
             var orderDetails = await _service
@@ -277,7 +277,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "User");
             }
 
             var result = await _oderService
@@ -309,7 +309,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "User");
             }
 
             var result = await _oderService
@@ -340,7 +340,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "User");
             }
 
             var result = await _productService
@@ -364,7 +364,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "User");
             }
 
             var product = await _productService
@@ -471,7 +471,7 @@ namespace Demo_web_MVC.Controllers
 
                 if (sellerId == null)
                 {
-                    return RedirectToAction("Login", "Auth");
+                    return RedirectToAction("Login", "User");
                 }
                 await _productService.update(id, model, sellerId.Value);
 
@@ -492,7 +492,7 @@ namespace Demo_web_MVC.Controllers
 
             if (sellerId == null)
             {
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "User");
             }
 
             var statistics = await _service.GetStatisticsAsync(sellerId.Value);

@@ -6,5 +6,6 @@ namespace Demo_web_MVC.Repository.Birth
     {
          Task<List<User>> GetUsersHaveBirthdayToday();
         Task UpdateLastBirthdayEmailYear(int userId);
+        Task UpdateVipUsersAsync();
     }
 }

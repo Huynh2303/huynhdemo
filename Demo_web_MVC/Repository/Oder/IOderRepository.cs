@@ -23,5 +23,6 @@ namespace Demo_web_MVC.Repository.Oder
         Task RemoveCartItemsAsync(List<int> selectedCartItemIds, int userId);
         Task<bool> DeleteOrderAsync(int orderId, int sellerId); // Xóa đơn hàng
         Task<bool> CreateAsync(int orderId, int sellerId);
+
     }
 }

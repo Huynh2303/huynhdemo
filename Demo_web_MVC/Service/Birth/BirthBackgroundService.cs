@@ -1,7 +1,8 @@
-﻿
+﻿using Demo_web_MVC.Service.Birth;
+
 namespace Demo_web_MVC.Service.Birth
 {
-    public class BirthBackgroundService: BackgroundService
+    public class BirthBackgroundService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<BirthBackgroundService> _logger;
@@ -13,6 +14,7 @@ namespace Demo_web_MVC.Service.Birth
             _scopeFactory = scopeFactory;
             _logger = logger;
         }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("BirthBackgroundService đã khởi động.");
@@ -21,7 +23,7 @@ namespace Demo_web_MVC.Service.Birth
             {
                 try
                 {
-                    _logger.LogInformation("Background đang kiểm tra sinh nhật lúc {Time}",
+                    _logger.LogInformation("Background đang chạy lúc {Time}",
                         DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
 
                     using var scope = _scopeFactory.CreateScope();
@@ -29,17 +31,19 @@ namespace Demo_web_MVC.Service.Birth
                     var birthService = scope.ServiceProvider
                         .GetRequiredService<IBirthService>();
 
+                    // Gửi email sinh nhật
                     await birthService.SendBirthdayEmailsAsync();
 
-                    _logger.LogInformation("Đã kiểm tra và gửi email sinh nhật.");
+                    // Cập nhật khách hàng VIP
+                    await birthService.UpdateVipUsersAsync();
+
+                    _logger.LogInformation("Đã kiểm tra sinh nhật và cập nhật VIP.");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Lỗi khi gửi email sinh nhật tự động.");
+                    _logger.LogError(ex, "Lỗi trong BirthBackgroundService.");
                 }
-
-                // Test: chạy lại sau 30 giây
-                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
             }
         }
     }
