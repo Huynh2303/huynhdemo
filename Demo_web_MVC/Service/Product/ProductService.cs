@@ -1,4 +1,5 @@
-﻿using Demo_web_MVC.Models.ViewModel.Product;
+﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Product;
 using Demo_web_MVC.Repository;
 using Demo_web_MVC.Repository.Product;
 namespace Demo_web_MVC.Service.Product
@@ -67,9 +68,9 @@ namespace Demo_web_MVC.Service.Product
             return await _productRepository
                 .DeleteAsync(id, sellerId);
         }
-        public async Task<List<ProductViewModel>> getAll()
+        public async Task<PaginatedList<ProductViewModel>> getAll(int page, int pageSize)
         {
-            return await _productRepository.GetAllAsync();
+            return await _productRepository.GetAllAsync(page,pageSize);
         }
         public async Task<ProductViewModel> getbyid(int id)
         {
@@ -94,6 +95,10 @@ namespace Demo_web_MVC.Service.Product
             var products = await _productRepository.GetProductsByCategoryAsync(categoryId);
 
             return products;
+        }
+        public async Task<List<ProductViewModel>> GetRelatedProductsAsync()
+        {
+            return await _productRepository.GetRelatedProductsAsync();
         }
     }
 }

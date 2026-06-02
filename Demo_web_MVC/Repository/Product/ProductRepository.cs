@@ -3,6 +3,7 @@ using Demo_web_MVC.Models;
 using Demo_web_MVC.Models.ViewModel;
 using Demo_web_MVC.Models.ViewModel.Category;
 using Demo_web_MVC.Models.ViewModel.Product;
+using Demo_web_MVC.Repository.Paging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo_web_MVC.Repository.Product
@@ -10,31 +11,87 @@ namespace Demo_web_MVC.Repository.Product
     public class ProductRepository : IProductRepository
     {
         private readonly AppDatabase _context;
-        public readonly ILogger<ProductRepository> _logger;
-        public ProductRepository(AppDatabase context, ILogger<ProductRepository> logger)
+        private readonly ILogger<ProductRepository> _logger;
+        private readonly IPagingReponsitory _pagingReponsitory;
+        public ProductRepository(AppDatabase context, ILogger<ProductRepository> logger, IPagingReponsitory pagingReponsitory)
         {
             _context = context;
             _logger = logger;
+            _pagingReponsitory = pagingReponsitory;
         }
-
-        public async Task<List<ProductViewModel>> GetAllAsync()
+        public async Task<List<ProductViewModel>> GetRelatedProductsAsync()
         {
-            var products = await _context.Products.AsNoTracking().AsSplitQuery().OrderByDescending(x => x.CreatedAt).Select(p => new ProductViewModel
-            {
-                Id = p.Id,
-                CategoryId = p.CategoryId,
-                Name = p.Name,
-                Description = p.Description,
-                Brand = p.Brand,
-                CreatedAt = p.CreatedAt,
-                imageUrl = p.ProductImages.Select(pi => pi.Url).ToList() ?? new List<string>(),
-                Variants = p.ProductVariants.Select(v => new ProductVariantsViewModel
+            return await _context.Products
+       .AsNoTracking()
+       .AsSplitQuery()
+       .OrderByDescending(x => x.CreatedAt)
+       .Select(p => new ProductViewModel
+       {
+           Id = p.Id,
+           CategoryId = p.CategoryId,
+           Name = p.Name,
+           Description = p.Description,
+           Brand = p.Brand,
+           CreatedAt = p.CreatedAt,
+
+           imageUrl = p.ProductImages
+               .OrderBy(pi => pi.SortOrder)
+               .Select(pi => pi.Url)
+               .ToList(),
+
+           Variants = p.ProductVariants
+               .Select(v => new ProductVariantsViewModel
+               {
+                   Price = v.Price,
+                   Stock = v.Stock
+               })
+               .ToList()
+       })
+       .ToListAsync();
+        }
+        public async Task<PaginatedList<ProductViewModel>> GetAllAsync(int page, int pageSize)
+        {
+            var productQuery = _context.Products
+        .AsNoTracking()
+        .AsSplitQuery()
+        .OrderByDescending(p => p.CreatedAt)
+        .Select(p => new ProductViewModel
+        {
+            Id = p.Id,
+            CategoryId = p.CategoryId,
+            Name = p.Name,
+            Description = p.Description,
+            Brand = p.Brand,
+            CreatedAt = p.CreatedAt,
+
+            imageUrl = p.ProductImages
+                .OrderBy(pi => pi.SortOrder)
+                .Select(pi => pi.Url)
+                .ToList(),
+
+            Variants = p.ProductVariants
+                .Select(v => new ProductVariantsViewModel
                 {
+                    Id = v.Id,
+                    ProductId = v.ProductId,
+                    Size = v.Size,
+                    Color = v.Color,
                     Price = v.Price,
                     Stock = v.Stock,
-                }).ToList() 
-            }).ToListAsync();
-            return products;
+
+                    ImageUrlsVariants = v.ProductVariantImages
+                        .OrderBy(pvi => pvi.SortOrder)
+                        .Select(pvi => pvi.Url)
+                        .ToList()
+                })
+                .ToList()
+        });
+
+            return await _pagingReponsitory.GetPagedDataAsync(
+                productQuery,
+                page,
+                pageSize
+            );
         }
         public async Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null)
         {

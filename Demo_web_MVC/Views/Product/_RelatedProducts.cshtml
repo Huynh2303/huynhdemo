@@ -14,14 +14,17 @@
             var price = product.Variants != null && product.Variants.Any()
             ? product.Variants.Min(v => v.Price)
             : 0;
+            <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
             <div class="group bg-white rounded-xl overflow-hidden shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 hover:-translate-y-1 hover:shadow-[0px_8px_24px_rgba(0,0,0,0.1)] transition-all">
                 <div class="relative aspect-square overflow-hidden">
-                    <img alt="Earbuds" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="wireless earbuds in an open charging case on a vibrant blue background" src="@(product?.imageUrl != null && product.imageUrl.Any()
-                                                                                                                                                                                                                                             ? Url.Content(product.imageUrl.First())
+                    
+                        <img  alt="Earbuds" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="wireless earbuds in an open charging case on a vibrant blue background" src="@(product?.imageUrl != null && product.imageUrl.Any()
+                                                                                                                                                                                                                                    ? Url.Content(product.imageUrl.First())
                                                                                                                                                                                                                                              : Url.Content("~/uploads/images/no-image.jpg"))" />
-                    <button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 backdrop-blur shadow-sm flex items-center justify-center text-secondary hover:text-error transition-colors">
+                    
+                    <span class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 backdrop-blur shadow-sm flex items-center justify-center text-secondary hover:text-error transition-colors">
                         <span class="material-symbols-outlined text-sm">favorite</span>
-                    </button>
+                    </span>
                 </div>
                 <div class="p-4">
                     <span class="text-label-bold text-primary-container uppercase mb-1 block">@product!.Brand</span>
@@ -30,10 +33,10 @@
                         <span class="font-price-lg text-body-base text-on-background">
                         @string.Format("{0:N0}đ", price)
                         </span>
-                        @* <button class="material-symbols-outlined text-primary-container hover:bg-slate-50 p-1 rounded-full transition-colors">add_shopping_cart</button> *@
                     </div>
                 </div>
             </div>
+        </a>
         }
     </div>
 </section>

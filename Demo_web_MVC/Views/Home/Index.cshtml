@@ -77,19 +77,34 @@
             activeItem.classList.remove('text-gray-500');
         }
 
-        async function loadPartial(url) {
-            try {
-                const response = await fetch(url);
+            async function loadPartial(url) {
+        try {
+            const response = await fetch(url);
 
-                if (!response.ok) {
-                    throw new Error(response.status);
-                }
+            // Nếu bị redirect sang Login
+            if (response.redirected &&
+                response.url.toLowerCase().includes('/login')) {
 
-                mainContent.innerHTML = await response.text();
-            } catch {
-                mainContent.innerHTML = '<p class="text-red-500">Không tải được nội dung.</p>';
+                window.location.href = response.url;
+                return;
             }
+
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = '/User/Login';
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error(response.status);
+            }
+
+            mainContent.innerHTML = await response.text();
         }
+        catch {
+            mainContent.innerHTML =
+                '<p class="text-red-500">Không tải được nội dung.</p>';
+        }
+    }
 
         // Click menu trái
         document.querySelectorAll('.menu-item').forEach(item => {

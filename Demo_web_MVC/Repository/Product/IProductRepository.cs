@@ -1,11 +1,12 @@
-﻿using Demo_web_MVC.Models.ViewModel.Product;
+﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Product;
 using NuGet.DependencyResolver;
 
 namespace Demo_web_MVC.Repository
 {
     public interface IProductRepository
     {
-        Task<List<Models.ViewModel.Product.ProductViewModel>> GetAllAsync();
+        Task<PaginatedList<Models.ViewModel.Product.ProductViewModel>> GetAllAsync(int page, int pageSize);
                               
         Task<Models.ViewModel.Product.ProductViewModel> GetByIdAsync(int id);
         Task<ProductViewModel> AddAsnyc (ProductViewModel product, int sellerId);
@@ -15,5 +16,6 @@ namespace Demo_web_MVC.Repository
         Task<int?> GetProductIdByVariantIdAsync(int variantId);
         Task<ProductViewModel?> GetByIdForSellerAsync(int id, int sellerId);
         Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null);
+        Task<List<ProductViewModel>> GetRelatedProductsAsync();
     }
 }

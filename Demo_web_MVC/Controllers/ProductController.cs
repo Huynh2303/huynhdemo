@@ -60,16 +60,22 @@ namespace Demo_web_MVC.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int? categoryId)
+        public async Task<IActionResult> Index(int? categoryId, int page = 1)
         {
-            var cartCount = await GetCartCount();
-            ViewBag.CartCount = cartCount;
+            ViewBag.CartCount = await GetCartCount();
 
-            var products = categoryId.HasValue
-                ? await _productService.GetProductsByCategoryAsync(categoryId)
-                : await _productService.getAll();
+            const int pageSize = 24;
 
-            return View(products);
+            if (categoryId.HasValue)
+            {
+                var products = await _productService.GetProductsByCategoryAsync(categoryId);
+
+                return View(products);
+            }
+
+            var productsPaged = await _productService.getAll(page, pageSize);
+
+            return View(productsPaged);
         }
 
         [HttpGet]
@@ -77,23 +83,24 @@ namespace Demo_web_MVC.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound("không có id ");
-            }
+
             var productDetails = await _productService.details(id.Value);
+
             if (productDetails == null)
-            {
                 return NotFound("không tìm thấy sản phẩm");
-            }
-            var allProducts = await _productService.getAll();
+
+            var allProducts = await _productService.GetRelatedProductsAsync();
 
             productDetails.RelatedProducts = allProducts
-                .Where(p => p.Id != id.Value)
-                .OrderBy(x => Guid.NewGuid()) 
+                .Where(p => p.Id != productDetails.Id
+                         && p.CategoryId == productDetails.CategoryId)
+                .OrderBy(x => Guid.NewGuid())
                 .Take(4)
                 .ToList();
-            var cartCount = await GetCartCount();
-            ViewBag.CartCount = cartCount;
+
+            ViewBag.CartCount = await GetCartCount();
+
             return View(productDetails);
         }
     }

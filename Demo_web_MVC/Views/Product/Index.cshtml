@@ -1,4 +1,4 @@
-﻿@model List<Demo_web_MVC.Models.ViewModel.Product.ProductViewModel>
+﻿@model PaginatedList<Demo_web_MVC.Models.ViewModel.Product.ProductViewModel>
 @using Demo_web_MVC.Models.ViewModel.Product
 
 
@@ -96,11 +96,48 @@
             <!-- Product list  -->
         @if (Context.Request.Query.ContainsKey("categoryId"))
         {
-            <partial name="_productbycategory" model="Model" />
+            <partial name="_productbycategory" model="Model.Items" />
         }
         else
         {
-            <partial name="ProductList" model="Model" />
+            <partial name="ProductList" model="Model.Items" />
+        }
+        @if (Model != null && Model.TotalPages > 1)
+        {
+            <div class="flex justify-center items-center gap-2 mt-8">
+
+                @if (Model.HasPreviousPage)
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@(Model.PageIndex - 1)"
+                       asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                       class="px-4 py-2 rounded-lg border bg-white no-underline">
+                        Trước
+                    </a>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                       class="w-9 h-9 rounded-lg border flex items-center justify-center no-underline
+                              @(i == Model.PageIndex ? "bg-primary text-white" : "bg-white")">
+                        @i
+                    </a>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@(Model.PageIndex + 1)"
+                       asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                       class="px-4 py-2 rounded-lg border bg-white no-underline">
+                        Sau
+                    </a>
+                }
+
+            </div>
         }
         </section>
         <!-- Newsletter Section -->

@@ -1,4 +1,5 @@
-﻿using Demo_web_MVC.Models.ViewModel.Product;
+﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Product;
 
 namespace Demo_web_MVC.Service
 {
@@ -9,10 +10,11 @@ namespace Demo_web_MVC.Service
         Task < bool> delete (int id, int sellerId);
         
         Task < ProductViewModel> details (int id);        
-        Task< List<ProductViewModel>> getAll();
+        Task< PaginatedList<ProductViewModel>> getAll(int page, int pageSize);
         Task<ProductViewModel> getbyid(int id);
         Task<int?> GetProductIdByVariantIdAsync(int variantId);
         Task<ProductViewModel?> getbyidForSeller(int id, int sellerId);
         Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null);
+        Task<List<ProductViewModel>> GetRelatedProductsAsync();
     }                   
 }
