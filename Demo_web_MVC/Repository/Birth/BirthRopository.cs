@@ -22,7 +22,10 @@ namespace Demo_web_MVC.Repository.Birth
                     x.DateOfBirth != null &&
                     x.DateOfBirth.Value.Day == today.Day &&
                     x.DateOfBirth.Value.Month == today.Month &&
-                    x.LastBirthdayEmailYear != today.Year)
+                    (x.LastBirthdayEmailYear == null ||
+                     x.LastBirthdayEmailYear != today.Year) &&
+
+                    x.UserRoles.Any(ur => ur.Role.Name == "User"))
                 .ToListAsync();
         }
         public async Task UpdateLastBirthdayEmailYear(int userId)
