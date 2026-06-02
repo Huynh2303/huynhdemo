@@ -105,30 +105,32 @@ namespace Demo_web_MVC.Controllers
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Token xác nhận email cho người dùng {user.Username} đã được tạo.");
 
-                //// Gửi email xác nhận tài khoản
-                //_ = Task.Run(async () =>
-                //{
-                //    await _emailService.SendEmailAsync(
-                //        user.Email,
-                //        "Xác nhận tài khoản",
-                //        $"<a href='{Url.Action("Confirm", "User", new { token = token.Token }, Request.Scheme)}'>Xác nhận</a>"
-                //    );
-                //    _logger.LogInformation($"Email xác nhận tài khoản đã được gửi đến {user.Email}");
-                //});
-                var confirmUrl = Url.Action(
-                    "Confirm",
-                    "User",
-                    new { token = token.Token },
-                    Request.Scheme
-                );
+
+                //var confirmUrl = Url.Action(
+                //    "Confirm",
+                //    "User",
+                //    new { token = token.Token },
+                //    Request.Scheme
+                //);
+
+                //await _emailService.SendEmailAsync(
+                //    user.Email,
+                //    "Xác nhận tài khoản",
+                //    $@"
+                //        <p>Chào {user.FullName},</p>
+                //        <p>Vui lòng bấm vào link bên dưới để xác nhận tài khoản:</p>
+                //        <a href='{confirmUrl}'>Xác nhận tài khoản</a>
+                //    "
+                //);
+                var confirmUrl = $"https://demoecommerce.somee.com/User/Confirm?token={token.Token}";
 
                 await _emailService.SendEmailAsync(
                     user.Email,
-                    "Xác nhận tài khoản",
+                    "Xác thực tài khoản",
                     $@"
-                        <p>Chào {user.FullName},</p>
-                        <p>Vui lòng bấm vào link bên dưới để xác nhận tài khoản:</p>
-                        <a href='{confirmUrl}'>Xác nhận tài khoản</a>
+                    <p>Xin chào {user.FullName},</p>
+                    <p>Vui lòng nhấn vào liên kết bên dưới để xác thực tài khoản:</p>
+                    <a href='{confirmUrl}'>Xác thực tài khoản</a>
                     "
                 );
 

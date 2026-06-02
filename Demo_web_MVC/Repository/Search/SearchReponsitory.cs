@@ -22,61 +22,83 @@ namespace Demo_web_MVC.Repository.Search
         }
         public async Task<SearchViewModel> SearchAsync(string searchQuery, int? page = null, int pageSize = 10)
         {
-            // Kiểm tra nếu searchQuery là null hoặc trống
             if (string.IsNullOrWhiteSpace(searchQuery))
             {
                 return new SearchViewModel
                 {
-                    ErrorMessage = "Please enter a valid search query.",
+                    ErrorMessage = "Vui lòng nhập từ khóa tìm kiếm.",
                     SearchStatus = "Error"
                 };
             }
 
-            // Tạo query tìm kiếm sản phẩm từ cơ sở dữ liệu
+            searchQuery = searchQuery.Trim();
+
             var query = _context.Products
-                .Where(p => p.Name.Contains(searchQuery) || (p.Description ?? "").Contains(searchQuery))
+                .AsNoTracking()
+                .Where(p =>
+                    p.Name.Contains(searchQuery) ||
+                    (p.Description != null && p.Description.Contains(searchQuery)) ||
+                    (p.Category != null && p.Category.Name.Contains(searchQuery))
+                )
+                .OrderByDescending(p =>
+                    p.Category != null && p.Category.Name.Contains(searchQuery)
+                )
+                .ThenByDescending(p => p.Name.Contains(searchQuery))
+                .ThenBy(p => p.Name)
                 .Select(p => new ProductViewModel
                 {
                     Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category != null ? p.Category.Name : null,
+
                     Name = p.Name,
                     Description = p.Description,
-                    imageUrl = p.ProductImages.Select(pi => pi.Url).ToList() ?? new List<string>(),
+
+                    imageUrl = p.ProductImages
+                        .OrderBy(pi => pi.SortOrder)
+                        .Select(pi => pi.Url)
+                        .ToList(),
+
                     Variants = p.ProductVariants.Select(v => new ProductVariantsViewModel
                     {
                         Id = v.Id,
                         ProductId = v.ProductId,
                         Color = v.Color,
+                        Size = v.Size,
                         Price = v.Price,
                         Stock = v.Stock,
-                        ImageUrlsVariants = v.ProductVariantImages.Select(pvi => pvi.Url).ToList() ?? new List<string>()
+
+                        ImageUrlsVariants = v.ProductVariantImages
+                            .OrderBy(pvi => pvi.SortOrder)
+                            .Select(pvi => pvi.Url)
+                            .ToList()
                     }).ToList()
                 });
 
-            // Nếu không yêu cầu phân trang, lấy tất cả kết quả
             if (!page.HasValue)
             {
-                var products = await query.ToListAsync();  // Lấy toàn bộ kết quả tìm kiếm
+                var products = await query.ToListAsync();
 
                 return new SearchViewModel
                 {
                     SearchQuery = searchQuery,
                     ProductVMResults = products,
-                    TotalResults = products.Count, // Tổng số kết quả tìm kiếm
-                    SearchStatus = "Success", // Trạng thái tìm kiếm thành công
-                    ErrorMessage = products.Any() ? null : "No results found for the search query." // Nếu không có kết quả, thông báo lỗi
+                    TotalResults = products.Count,
+                    SearchStatus = "Success",
+                    ErrorMessage = products.Any() ? null : "Không tìm thấy sản phẩm phù hợp."
                 };
             }
 
-            // Nếu yêu cầu phân trang, gọi phương thức phân trang
-            var paginatedProducts = await _pagingReponsitory.GetPagedDataAsync(query, page.Value, pageSize);
+            var paginatedProducts = await _pagingReponsitory
+                .GetPagedDataAsync(query, page.Value, pageSize);
 
             return new SearchViewModel
             {
                 SearchQuery = searchQuery,
-                ProductVMResults = paginatedProducts.Items,  // Dữ liệu phân trang
-                TotalResults = paginatedProducts.TotalCount, // Tổng số kết quả
+                ProductVMResults = paginatedProducts.Items,
+                TotalResults = paginatedProducts.TotalCount,
                 SearchStatus = "Success",
-                ErrorMessage = paginatedProducts.Items.Any() ? null : "No results found for the search query."
+                ErrorMessage = paginatedProducts.Items.Any() ? null : "Không tìm thấy sản phẩm phù hợp."
             };
         }
 

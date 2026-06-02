@@ -13,8 +13,8 @@ namespace Demo_web_MVC.Models.ViewModel.Product
         public string? Description { get; set; }
 
         public string? Brand { get; set; }
+        public string? CategoryName { get; set; }
 
-        
         public DateTime CreatedAt { get; set; }
         public List<ProductVariantsViewModel>? Variants { get; set; }
         public List<string> imageUrl { get; set; } = new List<string>();

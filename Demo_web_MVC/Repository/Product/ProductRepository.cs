@@ -19,7 +19,7 @@ namespace Demo_web_MVC.Repository.Product
 
         public async Task<List<ProductViewModel>> GetAllAsync()
         {
-            var products = await _context.Products.AsNoTracking().AsSplitQuery().Select(p => new ProductViewModel
+            var products = await _context.Products.AsNoTracking().AsSplitQuery().OrderByDescending(x => x.CreatedAt).Select(p => new ProductViewModel
             {
                 Id = p.Id,
                 CategoryId = p.CategoryId,
@@ -34,6 +34,45 @@ namespace Demo_web_MVC.Repository.Product
                     Stock = v.Stock,
                 }).ToList() 
             }).ToListAsync();
+            return products;
+        }
+        public async Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null)
+        {
+            var query = _context.Products
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(p => !p.IsDeleted);
+
+            if (categoryId.HasValue && categoryId.Value > 0)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            var products = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(p => new ProductViewModel
+                {
+                    Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Brand = p.Brand,
+                    CreatedAt = p.CreatedAt,
+
+                    imageUrl = p.ProductImages
+                        .Select(pi => pi.Url)
+                        .ToList(),
+
+                    Variants = p.ProductVariants
+                        .Select(v => new ProductVariantsViewModel
+                        {
+                            Price = v.Price,
+                            Stock = v.Stock,
+                        })
+                        .ToList()
+                })
+                .ToListAsync();
+
             return products;
         }
         public async Task<ProductViewModel?> GetByIdAsync(int id)

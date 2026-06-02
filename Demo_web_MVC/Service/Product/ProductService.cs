@@ -84,5 +84,16 @@ namespace Demo_web_MVC.Service.Product
             return await _productRepository
                 .GetByIdForSellerAsync(id, sellerId);
         }
+        public async Task<List<ProductViewModel>> GetProductsByCategoryAsync(int? categoryId = null)
+        {
+            if (categoryId <= 0)
+            {
+                return new List<ProductViewModel>();
+            }
+
+            var products = await _productRepository.GetProductsByCategoryAsync(categoryId);
+
+            return products;
+        }
     }
 }

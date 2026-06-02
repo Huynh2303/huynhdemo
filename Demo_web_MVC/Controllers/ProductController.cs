@@ -60,13 +60,18 @@ namespace Demo_web_MVC.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? categoryId)
         {
             var cartCount = await GetCartCount();
             ViewBag.CartCount = cartCount;
-            return View(await _productService.getAll());
+
+            var products = categoryId.HasValue
+                ? await _productService.GetProductsByCategoryAsync(categoryId)
+                : await _productService.getAll();
+
+            return View(products);
         }
-       
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
@@ -91,36 +96,5 @@ namespace Demo_web_MVC.Controllers
             ViewBag.CartCount = cartCount;
             return View(productDetails);
         }
-        
-        //[HttpPost]
-        //[Authorize(Roles = "ADMIN, STAFF")]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (id <= 0)
-        //    {
-        //        return NotFound("không có id ");
-        //    }
-        //    try
-        //    {
-
-        //        var result = await _productService.delete(id);
-        //        if (!result)
-        //        {
-        //            TempData["Error"] = "Không tìm thấy sản phẩm để xóa.";
-        //            return RedirectToAction(nameof(Index));
-        //        }
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch (Exception ex)
-        //    {
-                
-        //        ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
-        //        Console.WriteLine($"Error deleting product: {ex.Message}");
-        //        return RedirectToAction("Index");
-        //    }
-        //}
-        
-
-        
     }
 }

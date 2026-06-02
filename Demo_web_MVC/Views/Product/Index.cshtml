@@ -1,34 +1,7 @@
 ﻿@model List<Demo_web_MVC.Models.ViewModel.Product.ProductViewModel>
 @using Demo_web_MVC.Models.ViewModel.Product
-<!DOCTYPE html>
 
-<html class="light" lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>ASP.NET Commerce - Modern E-commerce</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;400;500;600;700;900&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-    <script src="~/js/tailwind-config.js"></script>
-    <style>
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
 
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-    </style>
-</head>
-<body class="bg-background font-body-base text-on-background min-h-screen flex flex-col">
-    <!-- TopNavBar Component -->
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8">
        
@@ -40,7 +13,7 @@
                 <p class="text-white/80 text-body-base max-w-sm mb-6">Khám phá bộ sưu tập thiết bị công nghệ mới nhất với hiệu năng mạnh mẽ và phong cách hiện đại dành cho nhu cầu hằng ngày.</p>
                 <button class="bg-primary-container text-white w-fit px-8 py-3 rounded-lg font-headline-md hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-primary-container/30">Tham gia ngay</button>
             </div>
-            <img class="w-full h-full object-cover" data-alt="Modern bright retail storefront with minimalist clothing displays and soft ambient window lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzjcJDKSjPJjyNESYG-T_lgFxUbSsiWs2o2yW0BEu2IBBnr1SeORK91aO3LaJPyLdYOSYwenkQ1n0DBl6YUE5qJxeNAfA-PhFw_RKVAZyBDG2JqbnOstJlJaIyEsrCw3DrYA0hYvw2EHw0VujWO7Tgs8F4YZyqZPt09hf6G0qzimbpvYJo9CpB0TLiv8Px5kamU7Euumv6BHJ_Q0oXQWh4WPBhVhlTyZP-pWIIS90DV6DAhMV7SKLRL-rBnDnvdlHkh19wO2ivrGkM" />
+            <img class="w-full h-full object-cover" data-alt="Modern bright retail storefront with minimalist clothing displays and soft ambient window lighting" src="https://img.pikbest.com/templates/20240520/bright-blue-sale-banner-decorates-electronics-shop_10575158.jpg!w700wp" />
             <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                 <div class="w-2 h-2 rounded-full bg-white"></div>
                 <div class="w-2 h-2 rounded-full bg-white/40"></div>
@@ -50,16 +23,87 @@
                 <span class="material-symbols-outlined">chevron_right</span>
             </button>
         </section>
-        
+        <section class="mb-xl">
+            <div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+
+                <h2 class="text-title-lg font-bold mb-md">
+                    Danh mục nổi bật
+                </h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-lg">
+
+                    <a asp-action="Index" asp-route-categoryId="2"
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Laptop</div>
+                    </a>
+
+                    <a asp-action="Index" asp-route-categoryId="1"
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Điện thoại</div>
+                    </a>
+
+                    <a asp-action="Index" asp-route-categoryId="15"
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Đồng hồ</div>
+                    </a>
+
+                    <a asp-action="Index" asp-route-categoryId="18"
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1589003077984-894e133dabab?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Loa</div>
+                    </a>
+
+                    <a asp-action="Index" asp-route-categoryId="16"
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Máy ảnh</div>
+                    </a>
+
+                    <a asp-action="Index" asp-route-categoryId="3"
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Tai nghe</div>
+                    </a>
+
+                    <a asp-action="Index" asp-route-categoryId=""
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Tablet</div>
+                    </a>
+
+                    <a asp-action="Index" asp-route-categoryId="8"
+                       class="group overflow-hidden rounded-xl shadow hover:shadow-lg transition-all no-underline">
+                        <img src="https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=600"
+                             class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div class="p-md text-center font-semibold">Gaming</div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
         <!-- Main Product List -->
         <section class="mb-xl">
-            
             <!-- Product list  -->
+        @if (Context.Request.Query.ContainsKey("categoryId"))
+        {
+            <partial name="_productbycategory" model="Model" />
+        }
+        else
+        {
             <partial name="ProductList" model="Model" />
+        }
         </section>
         <!-- Newsletter Section -->
         
     </main>
     
-</body>
-</html>
