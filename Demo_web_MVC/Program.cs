@@ -6,6 +6,7 @@ using Demo_web_MVC.Repository.Admin;
 using Demo_web_MVC.Repository.Birth;
 using Demo_web_MVC.Repository.Carts;
 using Demo_web_MVC.Repository.Category;
+using Demo_web_MVC.Repository.Chat;
 using Demo_web_MVC.Repository.Dashboard;
 using Demo_web_MVC.Repository.Oder;
 using Demo_web_MVC.Repository.OrderRisk;
@@ -19,6 +20,7 @@ using Demo_web_MVC.Service.Admin;
 using Demo_web_MVC.Service.Birth;
 using Demo_web_MVC.Service.Cart;
 using Demo_web_MVC.Service.Category;
+using Demo_web_MVC.Service.Chat;
 using Demo_web_MVC.Service.Dashboard;
 
 using Demo_web_MVC.Service.Oder;
@@ -34,6 +36,8 @@ using Microsoft.Extensions.FileProviders;
 using NETCore.MailKit.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IChatRepository,ChatRepository>();
 builder.Services.AddHostedService<BirthBackgroundService>();
 builder.Services.AddScoped<IBirthRopository, BirthRopository>();
 builder.Services.AddScoped<IBirthService, BirthService>();
@@ -62,6 +66,7 @@ builder.Services.AddScoped<IEmailServices, Sendemail>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddSignalR();
 builder.Services.AddDbContext<AppDatabase>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -115,8 +120,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Product}/{action=Index}/{id?}");
-    //pattern: "{controller=Admin}/{action=Index}/{id?}");
+    //pattern: "{controller=Product}/{action=Index}/{id?}");
+    pattern: "{controller=Chat}/{action=Index}/{id?}");
 
-
+app.MapHub<ChatHub>("/chatHub");
 app.Run();

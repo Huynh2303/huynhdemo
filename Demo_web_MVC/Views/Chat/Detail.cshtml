@@ -1,0 +1,210 @@
+﻿@model Demo_web_MVC.Models.Conversation
+
+@{
+    ViewData["Title"] = "Chi tiết hội thoại";
+}
+
+<div class="max-w-6xl mx-auto p-lg">
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+        <!-- Header -->
+        <div class="px-lg py-md border-b border-slate-200 flex items-center justify-between">
+            <div>
+                @if (Model.Type == "SystemSupport")
+                {
+                    <h2 class="text-lg font-bold">Hỗ trợ hệ thống</h2>
+                }
+                else
+                {
+                    <h2 class="text-lg font-bold">Đơn hàng #@Model.OrderId</h2>
+                }
+            </div>
+
+            <a asp-action="Index"
+               class="text-sm text-sky-600 hover:underline">
+                Quay lại
+            </a>
+        </div>
+
+        <!-- Messages -->
+        <div id="messageBox"
+             class="h-[600px] overflow-y-auto p-lg bg-slate-50">
+
+            @if (!Model.Messages.Any())
+            {
+                <div id="emptyMessage"
+                     class="text-center text-slate-500">
+                    Chưa có tin nhắn nào
+                </div>
+            }
+
+            @foreach (var message in Model.Messages.OrderBy(x => x.CreatedAt))
+            {
+                <div class="mb-md">
+                    <div class="bg-white rounded-lg px-md py-sm shadow-sm border border-slate-200">
+
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-semibold text-sm">
+                                @(message.Sender?.FullName ?? "Người dùng")
+                            </span>
+
+                            <span class="text-xs text-slate-400">
+                                @message.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                            </span>
+                        </div>
+
+                        <div class="text-slate-700">
+                            @message.Content
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <!-- Form gửi -->
+        <div class="border-t border-slate-200 p-lg">
+
+            <form id="sendMessageForm"
+                  asp-action="SendMessage"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       id="conversationId"
+                       name="conversationId"
+                       value="@Model.Id" />
+
+                <div class="flex gap-sm">
+
+                    <input type="text"
+                           id="messageContent"
+                           name="content"
+                           autocomplete="off"
+                           class="flex-1 border border-slate-300 rounded-lg px-md py-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                           placeholder="Nhập tin nhắn..." />
+
+                    <button type="submit"
+                            id="sendButton"
+                            class="px-lg py-sm bg-sky-600 text-white rounded-lg hover:bg-sky-700">
+                        Gửi
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+
+<script>
+    const conversationId = document.getElementById("conversationId").value;
+    const messageBox = document.getElementById("messageBox");
+    const form = document.getElementById("sendMessageForm");
+    const input = document.getElementById("messageContent");
+    const sendButton = document.getElementById("sendButton");
+
+    // Kết nối SignalR
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.start()
+        .then(function () {
+            return connection.invoke("JoinConversation", parseInt(conversationId));
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+
+    // Nhận tin nhắn realtime
+    connection.on("ReceiveMessage", function (message) {
+        appendMessage(message.senderName, message.content, message.createdAt);
+    });
+
+    // Gửi tin nhắn bằng ajax, không reload trang
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const content = input.value.trim();
+
+        if (content === "") {
+            return;
+        }
+
+        sendButton.disabled = true;
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                input.value = "";
+            } else {
+                alert("Gửi tin nhắn thất bại.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Có lỗi khi gửi tin nhắn.");
+        }
+
+        sendButton.disabled = false;
+        input.focus();
+    });
+
+    function appendMessage(senderName, content, createdAt) {
+        const emptyMessage = document.getElementById("emptyMessage");
+
+        if (emptyMessage) {
+            emptyMessage.remove();
+        }
+
+        const html = `
+            <div class="mb-md">
+                <div class="bg-white rounded-lg px-md py-sm shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-semibold text-sm">
+                            ${escapeHtml(senderName ?? "Người dùng")}
+                        </span>
+
+                        <span class="text-xs text-slate-400">
+                            ${escapeHtml(createdAt)}
+                        </span>
+                    </div>
+
+                    <div class="text-slate-700">
+                        ${escapeHtml(content)}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        messageBox.insertAdjacentHTML("beforeend", html);
+        messageBox.scrollTop = messageBox.scrollHeight;
+    }
+
+    function escapeHtml(value) {
+        return value
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    // Tự kéo xuống tin nhắn cuối khi mở trang
+    messageBox.scrollTop = messageBox.scrollHeight;
+</script>

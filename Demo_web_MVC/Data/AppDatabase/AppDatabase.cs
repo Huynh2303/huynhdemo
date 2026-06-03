@@ -6,9 +6,8 @@ namespace Demo_web_MVC.Data.AppDatabase
     public class AppDatabase : DbContext
     {
 
-        public AppDatabase(DbContextOptions<AppDatabase> options) : base(options)
-        {
-        }
+        public AppDatabase(DbContextOptions<AppDatabase> options) : base(options) { }
+        
         public DbSet<Demo_web_MVC.Models.User> Users { get; set; }
         public DbSet<Demo_web_MVC.Models.Contact> Contacts { get; set; }
         public DbSet<Demo_web_MVC.Models.UserToken> userTokens { get; set; }
@@ -38,7 +37,10 @@ namespace Demo_web_MVC.Data.AppDatabase
         public virtual DbSet<ProductImage> ProductImages { get; set; }
         public virtual DbSet<ProductVariantImage > ProductVariantImages { get; set; }
         public virtual DbSet<UserImage> UserImages  { get; set; }
-
+        public virtual DbSet<Conversation> Conversations { get; set; }
+        public virtual DbSet<ConversationParticipant> ConversationParticipants { get; set; }
+        public virtual DbSet<ChatMessage> ChatMessages { get; set; }
+        public virtual DbSet<MessageAttachment> MessageAttachments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -396,7 +398,117 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_userimages_user");
             });
-            
+            // tạo chat
+            modelBuilder.Entity<Conversation>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(x => x.Status)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(x => x.LastMessage)
+                    .HasMaxLength(500)
+                    .IsUnicode(true);
+
+                entity.Property(x => x.CreatedAt)
+                    .HasColumnType("datetime");
+
+                entity.Property(x => x.LastMessageAt)
+                    .HasColumnType("datetime");
+
+                entity.HasOne(x => x.Order)
+                    .WithMany()
+                    .HasForeignKey(x => x.OrderId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.Seller)
+                    .WithMany()
+                    .HasForeignKey(x => x.SellerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<ConversationParticipant>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.RoleInConversation)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(x => x.LastReadAt)
+                    .HasColumnType("datetime");
+
+                entity.Property(x => x.JoinedAt)
+                    .HasColumnType("datetime");
+
+                entity.HasOne(x => x.Conversation)
+                    .WithMany(x => x.Participants)
+                    .HasForeignKey(x => x.ConversationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(x => new { x.ConversationId, x.UserId })
+                    .IsUnique();
+            });
+
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.MessageType)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(x => x.Content)
+                    .HasColumnType("nvarchar(max)");
+
+                entity.Property(x => x.CreatedAt)
+                    .HasColumnType("datetime");
+
+                entity.HasOne(x => x.Conversation)
+                    .WithMany(x => x.Messages)
+                    .HasForeignKey(x => x.ConversationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.Sender)
+                    .WithMany()
+                    .HasForeignKey(x => x.SenderId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<MessageAttachment>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.FileName)
+                    .HasMaxLength(255)
+                    .IsUnicode(true);
+
+                entity.Property(x => x.FileUrl)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(x => x.ContentType)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(x => x.CreatedAt)
+                    .HasColumnType("datetime");
+
+                entity.HasOne(x => x.Message)
+                    .WithMany(x => x.Attachments)
+                    .HasForeignKey(x => x.MessageId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
         }
 
