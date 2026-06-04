@@ -1,4 +1,5 @@
 ﻿using Demo_web_MVC.Service.Chat;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 
 namespace Demo_web_MVC.Controllers
 {
+    [Authorize]
     public class ChatController : Controller
     {
         private readonly IChatService _chatService;

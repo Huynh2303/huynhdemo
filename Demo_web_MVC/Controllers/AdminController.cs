@@ -1,10 +1,12 @@
 ﻿using Demo_web_MVC.Models;
 using Demo_web_MVC.Models.ViewModel.Admin;
 using Demo_web_MVC.Service.Admin;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo_web_MVC.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class AdminController : Controller
     {
         private readonly IAdminService _adminDashboardService;
