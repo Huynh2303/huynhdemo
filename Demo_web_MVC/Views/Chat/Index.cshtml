@@ -1,9 +1,4 @@
-﻿
-@model List<Demo_web_MVC.Models.Conversation>
-
-@{
-    ViewData["Title"] = "Tin nhắn";
-}
+﻿@model List<Demo_web_MVC.Models.Conversation>
 
 <div class="max-w-7xl mx-auto p-lg">
 
@@ -15,68 +10,26 @@
             </h2>
         </div>
 
-        @if (!Model.Any())
-        {
-            <div class="p-xl text-center text-slate-500">
-                Chưa có cuộc hội thoại nào.
-            </div>
-        }
-        else
-        {
-            <div class="divide-y divide-slate-200">
-
-                @foreach (var conversation in Model)
-                {
-                    <a asp-controller="Chat"
-                       asp-action="Detail"
-                       asp-route-id="@conversation.Id"
-                       class="block p-lg hover:bg-slate-50 transition">
-
-                        <div class="flex items-center justify-between">
-
-                            <div class="flex-1 min-w-0">
-
-                                <div class="font-semibold text-slate-900">
-                                    @if (conversation.Type == "SystemSupport")
-                                    {
-                                        <span>Hỗ trợ hệ thống</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Đơn hàng #@conversation.OrderId</span>
-                                    }
-                            </div>
-
-                            <div class="text-sm text-slate-500 truncate mt-1">
-                                @(string.IsNullOrEmpty(conversation.LastMessage)
-                                                            ? "Chưa có tin nhắn"
-                                                            : conversation.LastMessage)
-                        </div>
-
-                            </div>
-
-                            <div class="ml-lg text-xs text-slate-400 whitespace-nowrap">
-
-                        @if (conversation.LastMessageAt != null)
-                                {
-                                    @conversation.LastMessageAt.Value.ToString("dd/MM/yyyy HH:mm")
-                                }
-                                else
-                                {
-                                    @conversation.CreatedAt.ToString("dd/MM/yyyy HH:mm")
-                                }
-
-                            </div>
-
-                        </div>
-
-                    </a>
-                }
-
-            </div>
-        }
+        <div id="conversationContainer">
+            <partial name="_ConversationList" model="Model" />
+        </div>
 
     </div>
 
 </div>
 
+<script>
+    async function loadConversations() {
+
+        const response = await fetch('/Chat/ConversationList');
+
+        if (!response.ok)
+            return;
+
+        const html = await response.text();
+
+        document.getElementById("conversationContainer").innerHTML = html;
+    }
+
+    setInterval(loadConversations, 3000);
+</script>

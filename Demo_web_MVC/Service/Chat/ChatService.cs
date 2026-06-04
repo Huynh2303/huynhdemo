@@ -154,5 +154,15 @@ namespace Demo_web_MVC.Service.Chat
 
             return message;
         }
+        public async Task<List<Conversation>>GetOrderSellerConversationsAsync(int sellerId)
+        {
+            var conversations =
+                await _chatRepository.GetConversationsByUserAsync(sellerId);
+
+            return conversations
+                .Where(x => x.Type == "OrderSeller")
+                .OrderByDescending(x => x.LastMessageAt ?? x.CreatedAt)
+                .ToList();
+        }
     }
 }

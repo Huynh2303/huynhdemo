@@ -25,7 +25,16 @@ namespace Demo_web_MVC.Controllers
 
             return View(conversations);
         }
+        public async Task<IActionResult> ConversationList()
+        {
+            var userId = GetUserId();
+            var role = GetRole();
 
+            var conversations = await _chatService
+                .GetConversationsAsync(userId, role);
+
+            return PartialView("_ConversationList", conversations);
+        }
         public async Task<IActionResult> Detail(int id)
         {
             var userId = GetUserId();
@@ -98,6 +107,16 @@ namespace Demo_web_MVC.Controllers
         private string GetRole()
         {
             return User.FindFirstValue(ClaimTypes.Role) ?? "";
+        }
+        public async Task<IActionResult> CustomerChats()
+        {
+            var sellerId = GetUserId();
+
+            var conversations =
+                await _chatService
+                    .GetOrderSellerConversationsAsync(sellerId);
+
+            return View(conversations);
         }
 
     }

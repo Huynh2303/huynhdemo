@@ -1,0 +1,105 @@
+﻿@model List<Demo_web_MVC.Models.Conversation>
+
+@if (User.IsInRole("STAFF"))
+{
+    <a asp-controller="Chat"
+       asp-action="Support"
+       class="block p-lg hover:bg-slate-50 transition border-b border-slate-200">
+        <div class="font-semibold text-slate-900">
+            Hỗ trợ hệ thống
+        </div>
+        <div class="text-sm text-slate-500">
+            Liên hệ quản trị viên
+        </div>
+    </a>
+
+    <a asp-controller="Chat"
+       asp-action="CustomerChats"
+       class="block p-lg hover:bg-slate-50 transition border-b border-slate-200">
+        <div class="font-semibold text-slate-900">
+            Khách hàng
+        </div>
+        <div class="text-sm text-slate-500">
+            Xem hội thoại với khách mua hàng
+        </div>
+    </a>
+
+    return;
+}
+
+@if (!User.IsInRole("ADMIN"))
+{
+    <a asp-controller="Chat"
+       asp-action="Support"
+       class="block p-lg hover:bg-slate-50 transition border-b border-slate-200">
+        <div class="font-semibold text-slate-900">
+            Hỗ trợ hệ thống
+        </div>
+        <div class="text-sm text-slate-500">
+            Liên hệ quản trị viên
+        </div>
+    </a>
+}
+
+@if (!Model.Any())
+{
+    <div class="p-xl text-center text-slate-500">
+        Chưa có cuộc hội thoại nào.
+    </div>
+}
+else
+{
+    <div class="divide-y divide-slate-200">
+
+        @foreach (var conversation in Model)
+        {
+            <a asp-controller="Chat"
+               asp-action="Detail"
+               asp-route-id="@conversation.Id"
+               class="block p-lg hover:bg-slate-50 transition">
+
+                <div class="flex items-center justify-between">
+
+                    <div class="flex-1 min-w-0">
+
+                        <div class="font-semibold text-slate-900">
+                            @if (conversation.Type == "SystemSupport")
+                            {
+                                var participant = conversation.Participants.FirstOrDefault();
+
+                                <span>
+                                    Hỗ trợ - @(participant?.User?.FullName ?? "Người dùng")
+                                </span>
+                            }
+                            else
+                            {
+                                <span>Đơn hàng #@conversation.OrderId</span>
+                            }
+                    </div>
+
+                    <div class="text-sm text-slate-500 truncate mt-1">
+                        @(string.IsNullOrEmpty(conversation.LastMessage)
+                                            ? "Chưa có tin nhắn"
+                                            : conversation.LastMessage)
+                </div>
+
+                    </div>
+
+                    <div class="ml-lg text-xs text-slate-400 whitespace-nowrap">
+                @if (conversation.LastMessageAt != null)
+                        {
+                            @conversation.LastMessageAt.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            @conversation.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                        }
+                    </div>
+
+                </div>
+
+            </a>
+        }
+
+    </div>
+}

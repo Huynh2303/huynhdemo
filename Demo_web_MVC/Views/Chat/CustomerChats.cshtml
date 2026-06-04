@@ -1,0 +1,73 @@
+﻿@model List<Demo_web_MVC.Models.Conversation>
+
+@{
+    ViewData["Title"] = "Khách hàng";
+}
+
+<div class="max-w-7xl mx-auto p-lg">
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+        <div class="px-lg py-md border-b border-slate-200 flex justify-between">
+
+            <h2 class="text-xl font-bold">
+                Hội thoại khách hàng
+            </h2>
+
+            <a asp-controller="Chat"
+               asp-action="Index"
+               class="text-sky-600 hover:underline">
+                Quay lại
+            </a>
+
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="p-xl text-center text-slate-500">
+                Chưa có cuộc hội thoại nào.
+            </div>
+        }
+        else
+        {
+            <div class="divide-y divide-slate-200">
+
+                @foreach (var conversation in Model)
+                {
+                    <a asp-controller="Chat"
+                       asp-action="Detail"
+                       asp-route-id="@conversation.Id"
+                       class="block p-lg hover:bg-slate-50 transition">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <div class="font-semibold text-slate-900">
+                                    Đơn hàng #@conversation.OrderId
+                                </div>
+
+                                <div class="text-sm text-slate-500 mt-1">
+                                    @(string.IsNullOrEmpty(conversation.LastMessage)
+                                                                ? "Chưa có tin nhắn"
+                                                                : conversation.LastMessage)
+                                                                                       </div>
+
+                            </div>
+
+                            <div class="text-xs text-slate-400">
+                                @((conversation.LastMessageAt ?? conversation.CreatedAt)
+                                                        .ToString("dd/MM/yyyy HH:mm"))
+                    </div>
+
+                        </div>
+
+                    </a>
+                        }
+
+            </div>
+        }
+
+    </div>
+
+</div>
