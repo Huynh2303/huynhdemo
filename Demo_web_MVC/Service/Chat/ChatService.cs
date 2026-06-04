@@ -47,10 +47,13 @@ namespace Demo_web_MVC.Service.Chat
         }
 
         public async Task<Conversation> GetOrCreateOrderSellerConversationAsync(
-            int orderId,
-            int userId,
-            int sellerId)
+    int orderId,
+    int userId,
+    int sellerId)
         {
+            if (userId == sellerId)
+                throw new Exception("Không thể tự chat với chính mình.");
+
             var conversation = await _chatRepository.GetOrderSellerConversationAsync(
                 orderId,
                 userId,

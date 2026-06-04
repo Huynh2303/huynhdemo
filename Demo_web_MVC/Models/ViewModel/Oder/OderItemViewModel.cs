@@ -17,6 +17,7 @@ namespace Demo_web_MVC.Models.ViewModel.Oder
         public string? Name { get; set; }
 
        public string? Img { get; set; }
+        public int? SellerId { get; set; }
         public ProductVariant Variant { get; set; } = new ProductVariant();
     }
 }

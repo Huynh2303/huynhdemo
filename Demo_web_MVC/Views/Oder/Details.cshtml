@@ -168,6 +168,19 @@
                         </span>
                     </div>
                 </div>
+                @foreach (var item in Model.Items!)
+                {
+                    @if (item.SellerId != null)
+                    {
+                        <a asp-controller="Chat"
+                           asp-action="OrderSeller"
+                           asp-route-orderId="@Model.Id"
+                           asp-route-sellerId="@item.SellerId"
+                           class="inline-flex mt-3 px-lg py-sm bg-sky-600 text-white rounded-lg hover:bg-sky-700 no-underline">
+                            Chat với shop
+                        </a>
+                    }
+                }
             </div>
         </div>
 

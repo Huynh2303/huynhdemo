@@ -1,5 +1,9 @@
 ﻿@model List<Demo_web_MVC.Models.Conversation>
 
+@{
+    ViewData["Title"] = "Tin nhắn";
+}
+
 <div class="max-w-7xl mx-auto p-lg">
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -10,7 +14,7 @@
             </h2>
         </div>
 
-        <div id="conversationContainer">
+        <div id="conversationContainer" class="p-lg space-y-3 bg-slate-50">
             <partial name="_ConversationList" model="Model" />
         </div>
 
@@ -20,7 +24,6 @@
 
 <script>
     async function loadConversations() {
-
         const response = await fetch('/Chat/ConversationList');
 
         if (!response.ok)

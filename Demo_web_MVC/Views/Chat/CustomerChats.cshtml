@@ -8,7 +8,7 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
 
-        <div class="px-lg py-md border-b border-slate-200 flex justify-between">
+        <div class="px-lg py-md border-b border-slate-200 flex items-center justify-between">
 
             <h2 class="text-xl font-bold">
                 Hội thoại khách hàng
@@ -16,57 +16,65 @@
 
             <a asp-controller="Chat"
                asp-action="Index"
-               class="text-sky-600 hover:underline">
+               class="text-sm text-sky-600 hover:underline">
                 Quay lại
             </a>
 
         </div>
 
-        @if (!Model.Any())
-        {
-            <div class="p-xl text-center text-slate-500">
-                Chưa có cuộc hội thoại nào.
-            </div>
-        }
-        else
-        {
-            <div class="divide-y divide-slate-200">
+        <div class="p-lg bg-slate-50 space-y-3">
 
+            @if (!Model.Any())
+            {
+                <div class="bg-white rounded-xl p-xl text-center text-slate-500 shadow-sm border border-slate-100">
+                    Chưa có cuộc hội thoại nào.
+                </div>
+            }
+            else
+            {
                 @foreach (var conversation in Model)
                 {
                     <a asp-controller="Chat"
                        asp-action="Detail"
                        asp-route-id="@conversation.Id"
-                       class="block p-lg hover:bg-slate-50 transition">
+                       class="flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition border border-slate-100">
 
-                        <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                            <span class="font-bold text-orange-600">
+                                O
+                            </span>
+                        </div>
 
-                            <div>
+                        <div class="flex-1 min-w-0">
 
-                                <div class="font-semibold text-slate-900">
+                            <div class="flex items-center justify-between gap-3">
+
+                                <div class="font-semibold text-slate-900 truncate">
                                     Đơn hàng #@conversation.OrderId
                                 </div>
 
-                                <div class="text-sm text-slate-500 mt-1">
-                                    @(string.IsNullOrEmpty(conversation.LastMessage)
-                                                                ? "Chưa có tin nhắn"
-                                                                : conversation.LastMessage)
-                                                                                       </div>
+                                <div class="text-xs text-slate-400 whitespace-nowrap">
+                                    @((conversation.LastMessageAt ?? conversation.CreatedAt)
+                                                                .ToString("HH:mm"))
+                                                                               </div>
 
                             </div>
 
-                            <div class="text-xs text-slate-400">
-                                @((conversation.LastMessageAt ?? conversation.CreatedAt)
-                                                        .ToString("dd/MM/yyyy HH:mm"))
+                            <div class="text-sm text-slate-500 truncate mt-1">
+                                @(string.IsNullOrEmpty(conversation.LastMessage)
+                                                        ? "Chưa có tin nhắn"
+                                                        : conversation.LastMessage)
                     </div>
 
                         </div>
 
+                        <div class="w-2.5 h-2.5 rounded-full bg-sky-500 flex-shrink-0"></div>
+
                     </a>
                         }
+            }
 
-            </div>
-        }
+        </div>
 
     </div>
 

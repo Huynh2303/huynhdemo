@@ -147,14 +147,14 @@ namespace Demo_web_MVC.Repository.Oder
                     TotalAmount = o.TotalAmount,
                     Status = o.Status,
                     CreateAt = o.CreatedAt,
-
+                    
                     Items = o.OrderItems.Select(item => new OderItemViewModel
                     {
                         Name = item.Variant.Product.Name,
                         Price = item.Price,
                         Quantity = item.Quantity,
                         Variant = item.Variant,
-
+                        SellerId = item.Variant.Product.SellerId,
                         Img = item.Variant.ProductVariantImages
                             .OrderBy(img => img.SortOrder)
                             .Select(img => img.Url)

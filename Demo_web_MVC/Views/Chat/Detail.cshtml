@@ -1,25 +1,22 @@
 ﻿@model Demo_web_MVC.Models.Conversation
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Chi tiết hội thoại";
+
+    var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+
+    var title = Model.Type == "SystemSupport"
+        ? "Hỗ trợ hệ thống"
+        : $"Đơn hàng #{Model.OrderId}";
 }
 
 <div class="max-w-6xl mx-auto p-lg">
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
 
-        <!-- Header -->
         <div class="px-lg py-md border-b border-slate-200 flex items-center justify-between">
-            <div>
-                @if (Model.Type == "SystemSupport")
-                {
-                    <h2 class="text-lg font-bold">Hỗ trợ hệ thống</h2>
-                }
-                else
-                {
-                    <h2 class="text-lg font-bold">Đơn hàng #@Model.OrderId</h2>
-                }
-            </div>
+            <h2 class="text-lg font-bold">@title</h2>
 
             <a asp-action="Index"
                class="text-sm text-sky-600 hover:underline">
@@ -27,44 +24,42 @@
             </a>
         </div>
 
-        <!-- Messages -->
         <div id="messageBox"
-             class="h-[600px] overflow-y-auto p-lg bg-slate-50">
+             class="h-[600px] overflow-y-auto p-lg bg-slate-50 space-y-4">
 
             @if (!Model.Messages.Any())
             {
-                <div id="emptyMessage"
-                     class="text-center text-slate-500">
+                <div id="emptyMessage" class="text-center text-slate-500">
                     Chưa có tin nhắn nào
                 </div>
             }
 
             @foreach (var message in Model.Messages.OrderBy(x => x.CreatedAt))
             {
-                <div class="mb-md">
-                    <div class="bg-white rounded-lg px-md py-sm shadow-sm border border-slate-200">
+                var isMine = message.SenderId == currentUserId;
 
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-semibold text-sm">
-                                @(message.Sender?.FullName ?? "Người dùng")
-                            </span>
+                <div class="flex @(isMine ? "justify-end" : "justify-start")">
+                    <div class="max-w-[65%]">
 
-                            <span class="text-xs text-slate-400">
-                                @message.CreatedAt.ToString("dd/MM/yyyy HH:mm")
-                            </span>
-                        </div>
+                        <div class="
+                                px-md py-sm shadow-sm text-sm leading-relaxed
+                                @(isMine
+                                                             ? "bg-white text-slate-800 rounded-2xl rounded-tr-sm border border-slate-200"
+                                                             : "bg-sky-500 text-white rounded-2xl rounded-tl-sm")">
 
-                        <div class="text-slate-700">
-                            @message.Content
+                        @message.Content
+                    </div>
+
+                        <div class="text-xs text-slate-400 mt-1 @(isMine ? "text-right" : "text-left")">
+                            @message.CreatedAt.ToString("dd/MM/yyyy HH:mm")
                         </div>
 
                     </div>
                 </div>
-            }
+                        }
 
         </div>
 
-        <!-- Form gửi -->
         <div class="border-t border-slate-200 p-lg">
 
             <form id="sendMessageForm"
@@ -106,13 +101,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
 
 <script>
+    const currentUserId = @currentUserId;
     const conversationId = document.getElementById("conversationId").value;
     const messageBox = document.getElementById("messageBox");
     const form = document.getElementById("sendMessageForm");
     const input = document.getElementById("messageContent");
     const sendButton = document.getElementById("sendButton");
 
-    // Kết nối SignalR
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/chatHub")
         .withAutomaticReconnect()
@@ -126,12 +121,10 @@
             console.error(err);
         });
 
-    // Nhận tin nhắn realtime
     connection.on("ReceiveMessage", function (message) {
-        appendMessage(message.senderName, message.content, message.createdAt);
+        appendMessage(message.senderId, message.content, message.createdAt);
     });
 
-    // Gửi tin nhắn bằng ajax, không reload trang
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
@@ -165,28 +158,27 @@
         input.focus();
     });
 
-    function appendMessage(senderName, content, createdAt) {
+    function appendMessage(senderId, content, createdAt) {
         const emptyMessage = document.getElementById("emptyMessage");
 
         if (emptyMessage) {
             emptyMessage.remove();
         }
 
-        const html = `
-            <div class="mb-md">
-                <div class="bg-white rounded-lg px-md py-sm shadow-sm border border-slate-200">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-semibold text-sm">
-                            ${escapeHtml(senderName ?? "Người dùng")}
-                        </span>
+        const isMine = parseInt(senderId) === currentUserId;
 
-                        <span class="text-xs text-slate-400">
-                            ${escapeHtml(createdAt)}
-                        </span>
+        const html = `
+            <div class="flex ${isMine ? "justify-end" : "justify-start"}">
+                <div class="max-w-[65%]">
+                    <div class="px-md py-sm shadow-sm text-sm leading-relaxed
+                        ${isMine
+                            ? "bg-white text-slate-800 rounded-2xl rounded-tr-sm border border-slate-200"
+                            : "bg-sky-500 text-white rounded-2xl rounded-tl-sm"}">
+                        ${escapeHtml(content)}
                     </div>
 
-                    <div class="text-slate-700">
-                        ${escapeHtml(content)}
+                    <div class="text-xs text-slate-400 mt-1 ${isMine ? "text-right" : "text-left"}">
+                        ${escapeHtml(createdAt)}
                     </div>
                 </div>
             </div>
@@ -198,6 +190,7 @@
 
     function escapeHtml(value) {
         return value
+            .toString()
             .replaceAll("&", "&amp;")
             .replaceAll("<", "&lt;")
             .replaceAll(">", "&gt;")
@@ -205,6 +198,5 @@
             .replaceAll("'", "&#039;");
     }
 
-    // Tự kéo xuống tin nhắn cuối khi mở trang
     messageBox.scrollTop = messageBox.scrollHeight;
 </script>
