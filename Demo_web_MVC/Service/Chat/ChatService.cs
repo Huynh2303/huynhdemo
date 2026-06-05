@@ -1,5 +1,6 @@
 ﻿using Demo_web_MVC.Data.AppDatabase;
 using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Chat;
 using Demo_web_MVC.Repository.Chat;
 using System;
 
@@ -166,6 +167,10 @@ namespace Demo_web_MVC.Service.Chat
                 .Where(x => x.Type == "OrderSeller")
                 .OrderByDescending(x => x.LastMessageAt ?? x.CreatedAt)
                 .ToList();
+        }
+        public async Task<List<ChatDropdownViewModel>> GetChatDropdownAsync(int userId)
+        {
+            return await _chatRepository.GetChatDropdownAsync(userId);
         }
     }
 }

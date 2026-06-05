@@ -1,4 +1,5 @@
 ﻿using Demo_web_MVC.Models;
+using Demo_web_MVC.Models.ViewModel.Chat;
 
 namespace Demo_web_MVC.Service.Chat
 {
@@ -10,5 +11,6 @@ namespace Demo_web_MVC.Service.Chat
         Task<Conversation?> GetConversationDetailAsync(int conversationId, int userId, string role);
         Task<ChatMessage> SendMessageAsync(int conversationId, int senderId, string role, string content);
         Task<List<Conversation>>GetOrderSellerConversationsAsync(int sellerId);
+        Task<List<ChatDropdownViewModel>> GetChatDropdownAsync(int userId);
     }
 }

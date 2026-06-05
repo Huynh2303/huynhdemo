@@ -1,6 +1,7 @@
 ﻿using Demo_web_MVC.Service.Chat;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
@@ -120,6 +121,22 @@ namespace Demo_web_MVC.Controllers
 
             return View(conversations);
         }
+        public override async Task OnActionExecutionAsync(
+        ActionExecutingContext context,
+        ActionExecutionDelegate next)
+        {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+                if (int.TryParse(userIdValue, out int userId))
+                {
+                    ViewBag.ChatDropdown =
+                        await _chatService.GetChatDropdownAsync(userId);
+                }
+            }
+
+            await next();
+        }
     }
 }
