@@ -71,5 +71,13 @@ namespace Demo_web_MVC.Repository.Notifications
 
             await _context.SaveChangesAsync();
         }
+        public async Task<Notification?> GetByIdAsync(int notificationId, int userId)
+        {
+            return await _context.Notifications
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                    x.Id == notificationId &&
+                    x.UserId == userId);
+        }
     }
 }

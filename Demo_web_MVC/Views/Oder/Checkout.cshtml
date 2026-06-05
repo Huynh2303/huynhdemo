@@ -1,7 +1,7 @@
 ﻿@model Demo_web_MVC.Models.ViewModel.Oder.CheckoutViewModel
 
-<main class="w-full py-xl">
-        <div class="flex flex-col md:flex-row gap-lg">
+<main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-xl">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-lg items-start">
             <!-- Left Column: Order Details -->
             <div class="flex-1 space-y-lg">
                 <!-- Shipping Address Section -->
@@ -113,7 +113,7 @@
                 </section>
             </div>
             <!-- Right Column: Order Summary -->
-            <aside class="w-full md:w-[380px]">
+        <aside class="w-full">
                 <div class="sticky top-24 bg-white rounded-xl p-lg shadow-[0px_8px_24px_rgba(0,0,0,0.1)] border border-outline-variant/30 flex flex-col gap-lg">
                     <h3 class="font-headline-md text-on-surface border-b border-outline-variant/20 pb-md">Tóm tắt đơn hàng</h3>
                     <div class="space-y-md">

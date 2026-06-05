@@ -13,5 +13,6 @@ namespace Demo_web_MVC.Repository.Notifications
         Task MarkAsReadAsync(int notificationId, int userId);
 
         Task MarkAllAsReadAsync(int userId);
+        Task<Notification?> GetByIdAsync(int notificationId, int userId);
     }
 }

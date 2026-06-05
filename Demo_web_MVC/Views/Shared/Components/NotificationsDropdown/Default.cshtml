@@ -5,7 +5,7 @@
 }
 
 <div class="relative group">
-    <a asp-controller="Notification"
+    <a asp-controller="Notifications"
        asp-action="Index"
        class="relative inline-flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-100 transition"
        title="Thông báo">
@@ -31,11 +31,13 @@
                 Thông báo
             </div>
 
-            @if (Model.Any())
+            @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
-                    <a href="@(item.Url ?? "#")"
+                    <a asp-controller="Notifications"
+                       asp-action="Open"
+                       asp-route-id="@item.Id"
                        class="block px-4 py-3 border-b hover:bg-slate-50 transition
                                       @(item.IsRead ? "bg-white" : "bg-sky-50")">
 
@@ -60,7 +62,7 @@
                 </div>
             }
 
-            <a asp-controller="Notification"
+            <a asp-controller="Notifications"
                asp-action="Index"
                class="block px-4 py-3 text-center text-sm font-semibold text-sky-600 hover:bg-slate-50">
                 Xem tất cả

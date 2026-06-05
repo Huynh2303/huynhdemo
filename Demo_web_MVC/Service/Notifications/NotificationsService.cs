@@ -64,6 +64,24 @@ namespace Demo_web_MVC.Service.Notifications
         {
             await _notificationRepository.MarkAllAsReadAsync(userId);
         }
+        public async Task<NotificationViewModel?> GetByIdAsync(int notificationId, int userId)
+        {
+            var notification = await _notificationRepository
+                .GetByIdAsync(notificationId, userId);
 
+            if (notification == null)
+                return null;
+
+            return new NotificationViewModel
+            {
+                Id = notification.Id,
+                Title = notification.Title,
+                Content = notification.Content,
+                Type = notification.Type,
+                Url = notification.Url,
+                IsRead = notification.IsRead,
+                CreatedAt = notification.CreatedAt
+            };
+        }
     }
 }
