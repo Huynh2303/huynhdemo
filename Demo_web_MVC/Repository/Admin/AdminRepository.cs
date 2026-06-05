@@ -524,7 +524,17 @@ namespace Demo_web_MVC.Repository.Admin
 
                 _context.Products.Remove(product);
             }
-
+            _context.Notifications.Add(new Notification
+            {
+                UserId = product.SellerId!.Value,
+                Title = "Sản phẩm đã bị quản trị viên xử lý",
+                Content = $"Sản phẩm \"{product.Name}\" đã bị admin xóa hoặc ẩn khỏi hệ thống.",
+                Type = "Product",
+                ReferenceId = product.Id,
+                Url = "/Seller/ProductsManager",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
             await _context.SaveChangesAsync();
 
             return true;
@@ -560,7 +570,17 @@ namespace Demo_web_MVC.Repository.Admin
                 ChangeType = "Confirm",
                 Reason = "Admin xác nhận đơn hàng"
             });
-
+            _context.Notifications.Add(new Notification
+            {
+                UserId = order.UserId,
+                Title = "Đơn hàng đã được xác nhận",
+                Content = $"Đơn hàng #{order.Id} đã được admin xác nhận.",
+                Type = "Order",
+                ReferenceId = order.Id,
+                Url = $"/Oder/Details?orderId={order.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
             await _context.SaveChangesAsync();
 
             return true;
@@ -596,7 +616,17 @@ namespace Demo_web_MVC.Repository.Admin
                 ChangeType = "UpdateStatus",
                 Reason = "Admin cập nhật trạng thái đơn hàng"
             });
-
+            _context.Notifications.Add(new Notification
+            {
+                UserId = order.UserId,
+                Title = "Trạng thái đơn hàng đã thay đổi",
+                Content = $"Đơn hàng #{order.Id} đã được cập nhật sang trạng thái {newStatus}.",
+                Type = "Order",
+                ReferenceId = order.Id,
+                Url = $"/Oder/Details?orderId={order.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
             await _context.SaveChangesAsync();
 
             return true;
@@ -633,7 +663,17 @@ namespace Demo_web_MVC.Repository.Admin
                 ChangeType = "Cancel",
                 Reason = "Admin hủy đơn hàng"
             });
-
+            _context.Notifications.Add(new Notification
+            {
+                UserId = order.UserId,
+                Title = "Đơn hàng đã bị hủy",
+                Content = $"Đơn hàng #{order.Id} đã bị admin hủy.",
+                Type = "Order",
+                ReferenceId = order.Id,
+                Url = $"/Oder/Details?orderId={order.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
             await _context.SaveChangesAsync();
 
             return true;
@@ -763,7 +803,19 @@ namespace Demo_web_MVC.Repository.Admin
             }
 
             user.IsActive = isActive;
-
+            _context.Notifications.Add(new Notification
+            {
+                UserId = user.Id,
+                Title = isActive ? "Tài khoản đã được mở lại" : "Tài khoản đã bị khóa",
+                Content = isActive
+                    ? "Tài khoản của bạn đã được admin mở lại."
+                    : "Tài khoản của bạn đã bị admin khóa.",
+                Type = "Account",
+                ReferenceId = user.Id,
+                Url = "/",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
             await _context.SaveChangesAsync();
 
             return true;
@@ -798,6 +850,17 @@ namespace Demo_web_MVC.Repository.Admin
             };
 
             await _context.UserRoles.AddAsync(userRole);
+            _context.Notifications.Add(new Notification
+            {
+                UserId = user.Id,
+                Title = "Bạn đã được cấp quyền nhân viên",
+                Content = "Tài khoản của bạn đã được admin chuyển thành nhân viên.",
+                Type = "Account",
+                ReferenceId = user.Id,
+                Url = "/Admin/Dashboard",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
             await _context.SaveChangesAsync();
 
             return true;

@@ -107,6 +107,37 @@ namespace Demo_web_MVC.Repository.Oder
                 };
 
                 _context.OrderLogs.Add(orderLog);
+
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = userId,
+                    Title = "Đặt hàng thành công",
+                    Content = $"Đơn hàng #{order.Id} đã được tạo thành công.",
+                    Type = "ORDER_CREATED",
+                    ReferenceId = order.Id,
+                    Url = $"/Oder/Details?orderId={order.Id}",
+                    IsRead = false,
+                    CreatedAt = DateTime.Now
+                });
+
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = sellerGroup.Key,
+                    Title = "Có đơn hàng mới",
+                    Content = $"Bạn có đơn hàng mới #{order.Id}.",
+                    Type = "NEW_ORDER",
+                    ReferenceId = order.Id,
+                    Url = $"/Seller/DetailsOrder?orderId={order.Id}",
+                    IsRead = false,
+                    CreatedAt = DateTime.Now
+                });
+                await AddNotificationsForAdminsAsync(
+                    "Có đơn hàng mới",
+                    $"Khách hàng vừa tạo đơn hàng #{order.Id}.",
+                    "NEW_ORDER_ADMIN",
+                    order.Id,
+                    $"/Admin/OrderDetail?orderId={order.Id}"
+                );
             }
 
             _context.CartItems.RemoveRange(selectedItems);
@@ -235,7 +266,19 @@ namespace Demo_web_MVC.Repository.Oder
                 AdditionalInfo = null,
                 CreatedAt = DateTime.Now
             };
+
             _context.OrderLogs.Add(orderLog);
+            _context.Notifications.Add(new Notification
+            {
+                UserId = order.UserId,
+                Title = "Cập nhật đơn hàng",
+                Content = $"Đơn hàng #{order.Id} đã chuyển sang trạng thái {parsedStatus}.",
+                Type = "ORDER_STATUS",
+                ReferenceId = order.Id,
+                Url = $"/Oder/Details?orderId={order.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
             await _context.SaveChangesAsync();
             return true;
         }
@@ -270,6 +313,31 @@ namespace Demo_web_MVC.Repository.Oder
                 CreatedAt = DateTime.Now
             };
             _context.OrderLogs.Add(orderLog);
+            var sellerId = await _context.OrderItems
+                .Where(x => x.OrderId == order.Id)
+                .Select(x => x.Variant.Product.SellerId)
+                .FirstOrDefaultAsync();
+            if (sellerId != null)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = sellerId.Value,
+                    Title = "Khách đã hủy đơn",
+                    Content = $"Khách đã hủy đơn hàng #{order.Id}.",
+                    Type = "ORDER_CANCELLED_BY_CUSTOMER",
+                    ReferenceId = order.Id,
+                    Url = $"/Seller/DetailsOrder?orderId={order.Id}",
+                    IsRead = false,
+                    CreatedAt = DateTime.Now
+                });
+            }
+            await AddNotificationsForAdminsAsync(
+                "Khách đã hủy đơn",
+                $"Khách hàng đã hủy đơn hàng #{order.Id}.",
+                "ORDER_CANCELLED_BY_CUSTOMER_ADMIN",
+                order.Id,
+                $"/Admin/OrderDetail?orderId={order.Id}"
+            );
             await _context.SaveChangesAsync();
 
             return true;
@@ -472,7 +540,24 @@ namespace Demo_web_MVC.Repository.Oder
             };
 
             _context.OrderLogs.Add(orderLog);
-
+            _context.Notifications.Add(new Notification
+            {
+                UserId = order.UserId,
+                Title = "Đơn hàng bị hủy",
+                Content = $"Đơn hàng #{order.Id} đã bị người bán hủy.",
+                Type = "ORDER_CANCELLED",
+                ReferenceId = order.Id,
+                Url = $"/Oder/Details?orderId={order.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
+            await AddNotificationsForAdminsAsync(
+                "Seller đã hủy đơn",
+                $"Seller #{sellerId} đã hủy đơn hàng #{order.Id}.",
+                "ORDER_CANCELLED_BY_SELLER_ADMIN",
+                order.Id,
+                $"/Admin/OrderDetail?orderId={order.Id}"
+            );
             await _context.SaveChangesAsync();
 
             _logger.LogInformation(
@@ -538,7 +623,24 @@ namespace Demo_web_MVC.Repository.Oder
             };
 
             _context.OrderLogs.Add(orderLog);
-
+            _context.Notifications.Add(new Notification
+            {
+                UserId = order.UserId,
+                Title = "Đơn hàng đang giao",
+                Content = $"Đơn hàng #{order.Id} đang được vận chuyển.",
+                Type = "ORDER_SHIPPING",
+                ReferenceId = order.Id,
+                Url = $"/Oder/Details?orderId={order.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
+            await AddNotificationsForAdminsAsync(
+                "Seller đã nhận đơn",
+                $"Seller #{sellerId} đã chuyển đơn hàng #{order.Id} sang đang giao.",
+                "ORDER_SHIPPING_ADMIN",
+                order.Id,
+                $"/Admin/OrderDetail?orderId={order.Id}"
+            );
             await _context.SaveChangesAsync();
 
             _logger.LogInformation(
@@ -547,6 +649,33 @@ namespace Demo_web_MVC.Repository.Oder
                 orderId);
 
             return true;
+        }
+        private async Task AddNotificationsForAdminsAsync(
+    string title,
+    string content,
+    string type,
+    int? referenceId = null,
+    string? url = null)
+        {
+            var adminIds = await _context.Users
+                .Where(u => u.UserRoles.Any(ur => ur.Role.Code == "ADMIN"))
+                .Select(u => u.Id)
+                .ToListAsync();
+
+            foreach (var adminId in adminIds)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = adminId,
+                    Title = title,
+                    Content = content,
+                    Type = type,
+                    ReferenceId = referenceId,
+                    Url = url,
+                    IsRead = false,
+                    CreatedAt = DateTime.Now
+                });
+            }
         }
         private string GetOrderReason(OrderStatus status)
         {

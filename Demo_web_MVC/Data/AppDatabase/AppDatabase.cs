@@ -41,6 +41,7 @@ namespace Demo_web_MVC.Data.AppDatabase
         public virtual DbSet<ConversationParticipant> ConversationParticipants { get; set; }
         public virtual DbSet<ChatMessage> ChatMessages { get; set; }
         public virtual DbSet<MessageAttachment> MessageAttachments { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -509,7 +510,12 @@ namespace Demo_web_MVC.Data.AppDatabase
                     .HasForeignKey(x => x.MessageId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
-
+            //thông báo
+            modelBuilder.Entity<Notification>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
 

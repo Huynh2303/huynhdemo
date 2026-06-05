@@ -8,6 +8,7 @@ using Demo_web_MVC.Repository.Carts;
 using Demo_web_MVC.Repository.Category;
 using Demo_web_MVC.Repository.Chat;
 using Demo_web_MVC.Repository.Dashboard;
+using Demo_web_MVC.Repository.Notifications;
 using Demo_web_MVC.Repository.Oder;
 using Demo_web_MVC.Repository.OrderRisk;
 using Demo_web_MVC.Repository.Paging;
@@ -22,7 +23,7 @@ using Demo_web_MVC.Service.Cart;
 using Demo_web_MVC.Service.Category;
 using Demo_web_MVC.Service.Chat;
 using Demo_web_MVC.Service.Dashboard;
-
+using Demo_web_MVC.Service.Notifications;
 using Demo_web_MVC.Service.Oder;
 using Demo_web_MVC.Service.Payment;
 using Demo_web_MVC.Service.Product;
@@ -36,6 +37,8 @@ using Microsoft.Extensions.FileProviders;
 using NETCore.MailKit.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<INotificationsService, NotificationsService>();
+builder.Services.AddScoped<INotificationsRepository, NotificationsRepository>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IChatRepository,ChatRepository>();
 builder.Services.AddHostedService<BirthBackgroundService>();

@@ -17,15 +17,16 @@ namespace Demo_web_MVC.Controllers
 
     public class UserController : Controller
     {
+        private readonly IConfiguration _configuration;
         private readonly IEmailServices _emailService;
         private readonly ILogger<UserController> _logger;
         private readonly AppDatabase _context;
-        public UserController(ILogger<UserController> logger, AppDatabase context, IEmailServices emailService)
+        public UserController( IConfiguration configuration,ILogger<UserController> logger, AppDatabase context, IEmailServices emailService)
         {
             _logger = logger;
             _context = context;
             _emailService = emailService;
-
+            _configuration = configuration;
         }
         public IActionResult Index()
         {
@@ -106,23 +107,10 @@ namespace Demo_web_MVC.Controllers
                 _logger.LogInformation($"Token xác nhận email cho người dùng {user.Username} đã được tạo.");
 
 
-                //var confirmUrl = Url.Action(
-                //    "Confirm",
-                //    "User",
-                //    new { token = token.Token },
-                //    Request.Scheme
-                //);
+                var baseUrl = _configuration["AppSettings:BaseUrl"];
 
-                //await _emailService.SendEmailAsync(
-                //    user.Email,
-                //    "Xác nhận tài khoản",
-                //    $@"
-                //        <p>Chào {user.FullName},</p>
-                //        <p>Vui lòng bấm vào link bên dưới để xác nhận tài khoản:</p>
-                //        <a href='{confirmUrl}'>Xác nhận tài khoản</a>
-                //    "
-                //);
-                var confirmUrl = $"https://demoecommerce.somee.com/User/Confirm?token={token.Token}";
+                var confirmUrl =
+                    $"{baseUrl}/User/Confirm?token={token.Token}";
 
                 await _emailService.SendEmailAsync(
                     user.Email,
